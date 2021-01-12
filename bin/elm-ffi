@@ -10,7 +10,7 @@ try {
  * @param {string[]} arguments
  */
 function main(arguments) {
-  const usage = "Usage: elm-ffi [--async] [--shebang] [--run] [--legacy] <file.js>..."
+  const usage = "Usage: elm-ffi [--shebang] [--run] [--legacy] <file.js>..."
 
   const [options, files] = arguments.reduce(reduceArgument, [new Map(), []])
   if (files.length === 0) {
@@ -68,12 +68,13 @@ function patchLine(options, a) {
  * @param {string} a
  */
 function jsCodeEval(options, a) {
-  const code = (options.has("async") ? "await " : "") + a
+  a.startsWith("await ") ? options.set("async", "") : options.delete("async")
+
   return createBinding(
     options,
     createTryCatch(
       options,
-      "callback(_Scheduler_succeed(_Json_wrap(" + code + ")))",
+      "callback(_Scheduler_succeed(_Json_wrap(" + a + ")))",
       "callback(_Scheduler_fail(String(e)))"
     )
   )
