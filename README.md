@@ -8,7 +8,7 @@ Read [The Limits of Elm/JS Interop](https://guide.elm-lang.org/interop/limits.ht
 
 ## Usage
 
-Create following module:
+1. Create following module:
 
 ```elm
 module Interop.JsCode exposing (..)
@@ -33,4 +33,4 @@ eval _ =
     Task.fail "Function is not implemented."
 ```
 
-And run `elm-ffi` on JavaScript file produced by Elm compiler.
+2. Run `elm-ffi elm.js` on JavaScript file produced by Elm compiler.
