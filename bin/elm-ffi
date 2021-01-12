@@ -1,0 +1,116 @@
+#!/usr/bin/env node
+
+try {
+  main(process.argv.slice(2))
+} catch (e) {
+  die(String(e))
+}
+
+/**
+ * @param {string[]} arguments
+ */
+function main(arguments) {
+  const usage = "Usage: elm-ffi [--async] [--shebang] [--run] <file.js>..."
+
+  const [options, files] = arguments.reduce(reduceArgument, [new Map(), []])
+  if (files.length === 0) {
+    die(usage)
+  }
+
+  files.forEach((a) => processFile(options, a))
+  console.log("Elm FFI done.")
+}
+
+/**
+ * @param {Map<String, String>} options
+ * @param {string} a
+ */
+function processFile(options, a) {
+  let lines = require("fs").readFileSync(a, "utf-8").split("\n")
+
+  lines = lines.map((a) => patchLine(options, a))
+
+  if (options.has("shebang")) {
+    lines.unshift("#!/usr/bin/env node")
+  }
+
+  if (options.has("run")) {
+    lines.push("this.Elm.Main.init();")
+  }
+
+  require("fs").writeFileSync(a, lines.join("\n"))
+}
+
+/**
+ * @param {Map<String, String>} options
+ * @param {string} a
+ */
+function patchLine(options, a) {
+  const fnRegex = /\$author\$project\$Interop\$JsCode\$eval\('(.*)'\)/
+
+  a = a.replace(fnRegex, (a, b) => jsCodeEval(options, b.replace(/\\'/g, "'")))
+
+  return a
+}
+
+/**
+ * @param {Map<String, String>} options
+ * @param {string} a
+ */
+function jsCodeEval(options, a) {
+  const code = (options.has("async") ? "await " : "") + a
+  return createBinding(
+    options,
+    createTryCatch(
+      options,
+      "callback(_Scheduler_succeed(_Json_wrap(" + code + ")))",
+      "callback(_Scheduler_fail(String(e)))"
+    )
+  )
+}
+
+/**
+ * @param {Map<String, String>} options
+ * @param {string} a
+ */
+function createBinding(options, a) {
+  return (
+    "_Scheduler_binding(" +
+    (options.has("async")
+      ? "async (callback) => { " + a + " }"
+      : "function (callback) { " + a + " }") +
+    ")"
+  )
+}
+
+/**
+ * @param {Map<String, String>} options
+ * @param {string} a
+ * @param {string} b
+ */
+function createTryCatch(options, a, b) {
+  return "try { " + a + " } catch (e) { " + b + " }"
+}
+
+/**
+ * @param {[Map<String, String>, Array<String>]} acc
+ * @param {string} a
+ * @returns {[Map<String, String>, Array<String>]}
+ */
+function reduceArgument([options, arguments], a) {
+  if (a.startsWith("--")) {
+    const [k, ...rest] = a.split("=")
+    options.set(k.substr(2), rest.join("="))
+  } else {
+    arguments.push(a)
+  }
+  return [options, arguments]
+}
+
+/**
+ * @param {string} a
+ */
+function die(a) {
+  console.error(a)
+  process.exit(1)
+}
