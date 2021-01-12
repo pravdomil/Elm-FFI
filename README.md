@@ -34,3 +34,7 @@ eval _ =
 ```
 
 2. Run `elm-ffi elm.js` on JavaScript file produced by Elm compiler.
+
+## Options
+
+To show commandline options run `elm-ffi`.
