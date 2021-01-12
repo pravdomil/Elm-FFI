@@ -18,7 +18,8 @@ function main(arguments) {
   }
 
   files.forEach((a) => processFile(options, a))
-  console.log("Elm FFI done.")
+  const fileCount = files.length + " " + (files.length === 1 ? "file" : "files")
+  console.log("Elm FFI patched " + fileCount + ".")
 }
 
 /**
