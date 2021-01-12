@@ -84,7 +84,7 @@ function jsCodeEval(options, a) {
  * @param {string} a
  */
 function createBinding(options, a) {
-  return "_Scheduler_binding(" + createFn(options, a) + ")"
+  return "_Scheduler_binding(" + createFn(options, ["callback"], a) + ")"
 }
 
 /**
@@ -98,12 +98,13 @@ function createTryCatch(options, a, b) {
 
 /**
  * @param {Map<String, String>} options
+ * @param {Array<string>} params
  * @param {string} a
  */
-function createFn(options, a) {
+function createFn(options, params, a) {
   return options.has("async")
-    ? "async (callback) => { " + a + " }"
-    : "function (callback) { " + a + " }"
+    ? "async (" + params.join(", ") + ") => { " + a + " }"
+    : "function (" + params.join(", ") + ") { " + a + " }"
 }
 
 /**
