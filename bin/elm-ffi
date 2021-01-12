@@ -10,7 +10,7 @@ try {
  * @param {string[]} arguments
  */
 function main(arguments) {
-  const usage = "Usage: elm-ffi [--async] [--shebang] [--run] <file.js>..."
+  const usage = "Usage: elm-ffi [--async] [--shebang] [--run] [--legacy] <file.js>..."
 
   const [options, files] = arguments.reduce(reduceArgument, [new Map(), []])
   if (files.length === 0) {
@@ -49,6 +49,16 @@ function patchLine(options, a) {
   const fnRegex = /\$author\$project\$Interop\$JsCode\$eval\('(.*)'\)/
 
   a = a.replace(fnRegex, (a, b) => jsCodeEval(options, b.replace(/\\'/g, "'")))
+
+  if (options.has("legacy")) {
+    a = a.replace(
+      "return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;",
+      "return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);"
+    )
+    a = a.replace("? (name == 'init')", "? ((name == 'init')")
+    a = a.replace(": (obj[name] = exports[name]);", "): (obj[name] = exports[name]);")
+    a = a.replace(/\bchar\b/g, "char_")
+  }
 
   return a
 }
