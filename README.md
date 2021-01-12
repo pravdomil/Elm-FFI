@@ -30,7 +30,7 @@ type alias Exception =
 -}
 eval : String -> Task Exception Decode.Value
 eval _ =
-    Task.fail "Function is not implemented."
+    Task.fail "Compiled file needs to be processed via elm-ffi command."
 ```
 
 2. Run `elm-ffi elm.js` on JavaScript file produced by Elm compiler.
