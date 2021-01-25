@@ -36,7 +36,7 @@ function processFile(options, a) {
   }
 
   if (options.has("run")) {
-    lines.push("this.Elm.Main.init();")
+    lines[lines.length - 1] = lines[lines.length - 1].replace("(0)}", "(0)()}")
   }
 
   require("fs").writeFileSync(a, lines.join("\n"))
