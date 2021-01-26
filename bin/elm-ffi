@@ -59,6 +59,8 @@ function patchLine(options, a) {
     a = a.replace("? (name == 'init')", "? ((name == 'init')")
     a = a.replace(": (obj[name] = exports[name]);", "): (obj[name] = exports[name]);")
     a = a.replace(/\bchar\b/g, "char_")
+    a = a.replace(/Array.isArray\(/g, "(function(a) { return \"length\" in a })(")
+    a = a.replace(/JSON.stringify\(/g, "(function(a) { return String(a) })(")
   }
 
   return a
