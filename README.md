@@ -11,7 +11,7 @@ Read [The Limits of Elm/JS Interop](https://guide.elm-lang.org/interop/limits.ht
 1. Create following module:
 
 ```elm
-module Interop.JsCode exposing (..)
+module Interop.JavaScript exposing (..)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
@@ -20,15 +20,22 @@ import Json.Decode as Decode
 import Task exposing (Task)
 
 
-type alias Exception =
-    String
+run : String -> Task Exception Decode.Value
+run _ =
+    Task.fail (Exception "Compiled file needs to be processed via elm-ffi command.")
 
 
-{-| To run JavaScript code.
--}
-eval : String -> Task Exception Decode.Value
-eval _ =
-    Task.fail "Compiled file needs to be processed via elm-ffi command."
+
+--
+
+
+type Exception
+    = Exception String
+
+
+exceptionToString : Exception -> String
+exceptionToString (Exception a) =
+    a
 ```
 
 2. Run `elm-ffi elm.js` on JavaScript file produced by Elm compiler.

@@ -47,9 +47,9 @@ function processFile(options, a) {
  * @param {string} a
  */
 function patchLine(options, a) {
-  const fnRegex = /\$author\$project\$Interop\$JsCode\$eval\('(.*)'\)/
+  const fnRegex = /\$author\$project\$Interop\$JavaScript\$run\('(.*)'\)/
 
-  a = a.replace(fnRegex, (a, b) => jsCodeEval(options, b.replace(/\\'/g, "'")))
+  a = a.replace(fnRegex, (a, b) => isJavaScriptRun(options, b.replace(/\\'/g, "'")))
 
   if (options.has("legacy")) {
     a = a.replace(
@@ -70,7 +70,7 @@ function patchLine(options, a) {
  * @param {Map<String, String>} options
  * @param {string} a
  */
-function jsCodeEval(options, a) {
+function isJavaScriptRun(options, a) {
   a.startsWith("await ") ? options.set("async", "") : options.delete("async")
 
   return createBinding(
@@ -78,7 +78,7 @@ function jsCodeEval(options, a) {
     createTryCatch(
       options,
       "callback(_Scheduler_succeed(_Json_wrap(" + a + ")))",
-      "callback(_Scheduler_fail(String(e)))"
+      "callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e))))"
     )
   )
 }
