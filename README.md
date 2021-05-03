@@ -20,12 +20,12 @@ import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
 
 
-run : String -> Task Exception Decode.Value
+run : String -> Task Error Decode.Value
 run _ =
     Task.fail (Exception "Compiled file needs to be processed via elm-ffi command.")
 
 
-decode : Decoder a -> Task Exception Decode.Value -> Task Exception a
+decode : Decoder a -> Task Error Decode.Value -> Task Error a
 decode decoder a =
     a
         |> Task.andThen
@@ -35,7 +35,7 @@ decode decoder a =
                         Task.succeed b
 
                     Err b ->
-                        Task.fail (Exception ("TypeError: " ++ Decode.errorToString b))
+                        Task.fail (DecodeError b)
             )
 
 
@@ -43,13 +43,19 @@ decode decoder a =
 --
 
 
-type Exception
+type Error
     = Exception String
+    | DecodeError Decode.Error
 
 
-exceptionToString : Exception -> String
-exceptionToString (Exception a) =
-    a
+errorToString : Error -> String
+errorToString a =
+    case a of
+        Exception b ->
+            "Exception: " ++ b
+
+        DecodeError b ->
+            "DecodeError: " ++ Decode.errorToString b
 ```
 
 2. Run `elm-ffi elm.js` on JavaScript file produced by Elm compiler.
