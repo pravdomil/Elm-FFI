@@ -76,11 +76,15 @@ function patchFunction(options, moduleName, a) {
 
   return createBindingFn(
     options,
-    createTryCatch(
-      options,
-      "callback(_Scheduler_succeed(_Json_wrap(" + a + ")))",
-      "callback(_Scheduler_fail(" + moduleName + "$Exception(_Json_wrap(e))))"
-    )
+    [
+      "var result",
+      createTryCatch(
+        options,
+        "result = $elm$core$Result$Ok(_Json_wrap(" + a + "))",
+        "result = $elm$core$Result$Err(" + moduleName + "$Exception(_Json_wrap(e)))"
+      ),
+      'result.$ === "Ok" ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a))',
+    ].join("; ")
   )
 }
 
