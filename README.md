@@ -22,6 +22,10 @@ import Task exposing (Task)
 
 run : String -> Task Error Decode.Value
 run _ =
+    let
+        _ =
+            Exception
+    in
     Task.fail FileNotPatched
 
 
