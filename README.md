@@ -52,7 +52,11 @@ errorToString : Error -> String
 errorToString a =
     case a of
         Exception b ->
-            "Got JavaScript exception:\n" ++ (b |> Decode.decodeValue (Decode.field "message" Decode.string) |> Result.withDefault "unknown")
+            "Got JavaScript exception:\n"
+                ++ (b
+                        |> Decode.decodeValue (Decode.field "message" Decode.string)
+                        |> Result.withDefault "No message provided."
+                   )
 
         DecodeError b ->
             "Cannot decode JavaScript value because:\n" ++ Decode.errorToString b
