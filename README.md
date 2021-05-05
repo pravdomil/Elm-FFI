@@ -52,10 +52,10 @@ errorToString : Error -> String
 errorToString a =
     case a of
         Exception b ->
-            "Exception: " ++ (b |> Decode.decodeValue (Decode.field "message" Decode.string) |> Result.withDefault "unknown")
+            "Got JavaScript exception:\n" ++ (b |> Decode.decodeValue (Decode.field "message" Decode.string) |> Result.withDefault "unknown")
 
         DecodeError b ->
-            "DecodeError: " ++ Decode.errorToString b
+            "Cannot decode JavaScript value because:\n" ++ Decode.errorToString b
 ```
 
 2. Run `elm-ffi elm.js` on JavaScript file produced by Elm compiler.
