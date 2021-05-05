@@ -49,7 +49,7 @@ function processFile(options, a) {
 function patchLine(options, a) {
   const fnRegex = /\$author\$project\$Interop\$JavaScript\$run\('(.*)'\)/
 
-  a = a.replace(fnRegex, (a, b) => isJavaScriptRun(options, b.replace(/\\'/g, "'")))
+  a = a.replace(fnRegex, (a, b) => patchFunction(options, b.replace(/\\'/g, "'")))
 
   if (options.has("legacy")) {
     a = a.replace(
@@ -70,7 +70,7 @@ function patchLine(options, a) {
  * @param {Map<String, String>} options
  * @param {string} a
  */
-function isJavaScriptRun(options, a) {
+function patchFunction(options, a) {
   a.startsWith("await ") ? options.set("async", "") : options.delete("async")
 
   return createBinding(
