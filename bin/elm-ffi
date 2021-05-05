@@ -74,7 +74,7 @@ function patchLine(options, a) {
 function patchFunction(options, moduleName, a) {
   a.startsWith("await ") ? options.set("async", "") : options.delete("async")
 
-  return createBinding(
+  return createBindingFn(
     options,
     createTryCatch(
       options,
@@ -88,7 +88,7 @@ function patchFunction(options, moduleName, a) {
  * @param {Map<String, String>} options
  * @param {string} a
  */
-function createBinding(options, a) {
+function createBindingFn(options, a) {
   return "_Scheduler_binding(" + createFn(options, ["callback"], a) + ")"
 }
 
