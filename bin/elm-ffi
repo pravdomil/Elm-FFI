@@ -78,7 +78,7 @@ function patchFunction(options, a) {
     createTryCatch(
       options,
       "callback(_Scheduler_succeed(_Json_wrap(" + a + ")))",
-      "callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e))))"
+      "callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(e))))"
     )
   )
 }

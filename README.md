@@ -44,7 +44,7 @@ decode decoder a =
 
 
 type Error
-    = Exception String
+    = Exception Decode.Value
     | DecodeError Decode.Error
 
 
@@ -52,7 +52,7 @@ errorToString : Error -> String
 errorToString a =
     case a of
         Exception b ->
-            "Exception: " ++ b
+            "Exception: " ++ (b |> Decode.decodeValue (Decode.field "message" Decode.string) |> Result.withDefault "unknown")
 
         DecodeError b ->
             "DecodeError: " ++ Decode.errorToString b
