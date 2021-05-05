@@ -22,7 +22,7 @@ import Task exposing (Task)
 
 run : String -> Task Error Decode.Value
 run _ =
-    Task.fail (Exception "Compiled file needs to be processed via elm-ffi command.")
+    Task.fail FileNotPatched
 
 
 decode : Decoder a -> Task Error Decode.Value -> Task Error a
@@ -44,13 +44,17 @@ decode decoder a =
 
 
 type Error
-    = Exception Decode.Value
+    = FileNotPatched
+    | Exception Decode.Value
     | DecodeError Decode.Error
 
 
 errorToString : Error -> String
 errorToString a =
     case a of
+        FileNotPatched ->
+            "Compiled file needs to be processed via elm-ffi command."
+
         Exception b ->
             "Got JavaScript exception:\n"
                 ++ (b
