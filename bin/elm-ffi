@@ -47,9 +47,9 @@ function processFile(options, a) {
  * @param {string} a
  */
 function patchLine(options, a) {
-  const fnRegex = /\$author\$project\$Interop\$JavaScript\$run\('(.*)'\)/
+  const fnRegex = /(\$author\$project[^(]*\$Interop\$JavaScript)\$run\('(.*)'\)/
 
-  a = a.replace(fnRegex, (a, b) => patchFunction(options, b.replace(/\\'/g, "'")))
+  a = a.replace(fnRegex, (a, b, c) => patchFunction(options, b, c.replace(/\\'/g, "'")))
 
   if (options.has("legacy")) {
     a = a.replace(
@@ -68,9 +68,10 @@ function patchLine(options, a) {
 
 /**
  * @param {Map<String, String>} options
+ * @param {string} moduleName
  * @param {string} a
  */
-function patchFunction(options, a) {
+function patchFunction(options, moduleName, a) {
   a.startsWith("await ") ? options.set("async", "") : options.delete("async")
 
   return createBinding(
@@ -78,7 +79,7 @@ function patchFunction(options, a) {
     createTryCatch(
       options,
       "callback(_Scheduler_succeed(_Json_wrap(" + a + ")))",
-      "callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(e))))"
+      "callback(_Scheduler_fail(" + moduleName + "$Exception(_Json_wrap(e))))"
     )
   )
 }
