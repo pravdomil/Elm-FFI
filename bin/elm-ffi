@@ -83,7 +83,7 @@ function patchFunction(options, moduleName, a) {
         "result = { $: 0, a: _Json_wrap(" + a + ") }",
         "result = { $: 1, a: " + moduleName + "$Exception(_Json_wrap(e)) }"
       ),
-      'result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a))',
+      "result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a))",
     ].join("; ")
   )
 }
