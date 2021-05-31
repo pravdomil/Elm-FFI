@@ -24,6 +24,9 @@ run : String -> Task Error Decode.Value
 run _ =
     let
         _ =
+            anyDecoder
+
+        _ =
             Exception
     in
     Task.fail FileNotPatched
@@ -41,6 +44,11 @@ decode decoder a =
                     Err b ->
                         Task.fail (DecodeError b)
             )
+
+
+anyDecoder : Decoder a
+anyDecoder =
+    Decode.fail "Compiled file needs to be processed via elm-ffi command."
 
 
 

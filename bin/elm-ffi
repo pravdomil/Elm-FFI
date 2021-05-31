@@ -50,6 +50,12 @@ function patchLine(options, a) {
   const runFnRegex = /(\$author\$project[0-9A-Za-z_$]*\$JavaScript)\$run\('(.*)'\)/
   a = a.replace(runFnRegex, (a, b, c) => patchFunction(options, b, c.replace(/\\'/g, "'")))
 
+  const anyDecoderRegex = /(\$author\$project[0-9A-Za-z_$]*\$JavaScript\$anyDecoder = )(.*);/
+  a = a.replace(
+    anyDecoderRegex,
+    (_, b) => b + "_Json_decodePrim(function(a) { return $elm$core$Result$Ok(a) });"
+  )
+
   if (options.has("legacy")) {
     a = a.replace(
       "return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;",
