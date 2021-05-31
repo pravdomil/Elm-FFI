@@ -47,9 +47,9 @@ function processFile(options, a) {
  * @param {string} a
  */
 function patchLine(options, a) {
-  const fnRegex = /(\$author\$project[0-9A-Za-z_$]*\$JavaScript)\$run\('(.*)'\)/
+  const runFnRegex = /(\$author\$project[0-9A-Za-z_$]*\$JavaScript)\$run\('(.*)'\)/
 
-  a = a.replace(fnRegex, (a, b, c) => patchFunction(options, b, c.replace(/\\'/g, "'")))
+  a = a.replace(runFnRegex, (a, b, c) => patchFunction(options, b, c.replace(/\\'/g, "'")))
 
   if (options.has("legacy")) {
     a = a.replace(
