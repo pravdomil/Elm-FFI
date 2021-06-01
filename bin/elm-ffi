@@ -67,7 +67,7 @@ function legacyPatch(a) {
       b = b.replace("? (name == 'init')", "? ((name == 'init')")
       b = b.replace(": (obj[name] = exports[name]);", "): (obj[name] = exports[name]);")
       b = b.replace(/\bchar\b/g, "char_")
-      b = b.replace(/Array.isArray\(/g, "(function(a) { return \"length\" in a })(")
+      b = b.replace(/Array.isArray\(/g, '(function(a) { return "length" in a })(')
       b = b.replace(/JSON.stringify\(/g, "(function(a) { return String(a) })(")
       return b
     })
