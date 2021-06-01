@@ -48,7 +48,7 @@ decode decoder a =
 
 anyDecoder : Decoder a
 anyDecoder =
-    Decode.fail "Compiled file needs to be processed via elm-ffi command."
+    Decode.fail (errorToString FileNotPatched)
 
 
 
