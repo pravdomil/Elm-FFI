@@ -27,48 +27,51 @@ function main(arguments) {
  * @param {string} a
  */
 function processFile(options, a) {
-  let lines = require("fs").readFileSync(a, "utf-8").split("\n")
+  let b = require("fs").readFileSync(a, "utf-8")
 
-  lines = lines.map((a) => patchLine(options, a))
+  b = b.replace(/(\$author\$project[0-9A-Za-z_$]*\$JavaScript)\$run\('(.*)'\)/g, (a, b, c) =>
+    patchFunction(options, b, c.replace(/\\'/g, "'"))
+  )
 
-  if (options.has("shebang")) {
-    lines.unshift("#!/usr/bin/env node")
-  }
-
-  if (options.has("run")) {
-    lines[lines.length - 1] = lines[lines.length - 1].replace("(0)}", "(0)()}")
-  }
-
-  require("fs").writeFileSync(a, lines.join("\n"))
-}
-
-/**
- * @param {Map<String, String>} options
- * @param {string} a
- */
-function patchLine(options, a) {
-  const runFnRegex = /(\$author\$project[0-9A-Za-z_$]*\$JavaScript)\$run\('(.*)'\)/
-  a = a.replace(runFnRegex, (a, b, c) => patchFunction(options, b, c.replace(/\\'/g, "'")))
-
-  const anyDecoderRegex = /(\$author\$project[0-9A-Za-z_$]*\$JavaScript\$anyDecoder = )(.*);/
-  a = a.replace(
-    anyDecoderRegex,
+  b = b.replace(
+    /(\$author\$project[0-9A-Za-z_$]*\$JavaScript\$anyDecoder = )(.*?);/gs,
     (_, b) => b + "_Json_decodePrim(function(a) { return $elm$core$Result$Ok(a) });"
   )
 
   if (options.has("legacy")) {
-    a = a.replace(
-      "return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;",
-      "return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);"
-    )
-    a = a.replace("? (name == 'init')", "? ((name == 'init')")
-    a = a.replace(": (obj[name] = exports[name]);", "): (obj[name] = exports[name]);")
-    a = a.replace(/\bchar\b/g, "char_")
-    a = a.replace(/Array.isArray\(/g, '(function(a) { return "length" in a })(')
-    a = a.replace(/JSON.stringify\(/g, "(function(a) { return String(a) })(")
+    b = legacyPatch(b)
   }
 
+  if (options.has("shebang")) {
+    b = "#!/usr/bin/env node\n" + b
+  }
+
+  if (options.has("run")) {
+    b = b.replace(/\(0\)}}\);}\(this\)\);$/, "(0)()}});}(this));")
+  }
+
+  require("fs").writeFileSync(a, b)
+}
+
+/**
+ * @param {string} a
+ */
+function legacyPatch(a) {
   return a
+    .split("\n")
+    .map((b) => {
+      b = b.replace(
+        "return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;",
+        "return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);"
+      )
+      b = b.replace("? (name == 'init')", "? ((name == 'init')")
+      b = b.replace(": (obj[name] = exports[name]);", "): (obj[name] = exports[name]);")
+      b = b.replace(/\bchar\b/g, "char_")
+      b = b.replace(/Array.isArray\(/g, "(function(a) { return \"length\" in a })(")
+      b = b.replace(/JSON.stringify\(/g, "(function(a) { return String(a) })(")
+      return b
+    })
+    .join("\n")
 }
 
 /**
