@@ -76,6 +76,49 @@ errorToString a =
 
         DecodeError b ->
             "Cannot decode JavaScript value because:\n" ++ Decode.errorToString b
+
+
+
+--
+
+
+cli : Task String String -> Program () () ()
+cli a =
+    let
+        cmd : Cmd ()
+        cmd =
+            a
+                |> Task.andThen
+                    (\v ->
+                        log v
+                            |> Task.andThen (\_ -> exit 0)
+                            |> Task.mapError errorToString
+                    )
+                |> Task.onError
+                    (\v ->
+                        logError v
+                            |> Task.andThen (\_ -> exit 1)
+                            |> Task.mapError errorToString
+                    )
+                |> Task.attempt (\_ -> ())
+
+        log : String -> Task Error Decode.Value
+        log _ =
+            run "console.log(_v8)"
+
+        logError : String -> Task Error Decode.Value
+        logError _ =
+            run "console.error(_v9)"
+
+        exit : Int -> Task Error Decode.Value
+        exit _ =
+            run "process.exit(_v7)"
+    in
+    Platform.worker
+        { init = \_ -> ( (), cmd )
+        , update = \_ _ -> ( (), Cmd.none )
+        , subscriptions = \_ -> Sub.none
+        }
 ```
 
 2. Run `elm-ffi elm.js` on JavaScript file produced by Elm compiler.
