@@ -4,125 +4,13 @@ Read [The Limits of Elm/JS Interop](https://guide.elm-lang.org/interop/limits.ht
 
 ## Install
 
-`npm i pravdomil/elm-ffi -g`
+1. `npm i pravdomil/elm-ffi`
+1. Add `node_modules/elm-ffi/src` into `elm.json`/`source-directories`.
+1. Use `Interop.JavaScript` module.
 
 ## Usage
 
-1. Create following module:
-
-```elm
-module Interop.JavaScript exposing (..)
-
-{-| Part of <https://github.com/pravdomil/Elm-FFI>.
--}
-
-import Json.Decode as Decode exposing (Decoder)
-import Task exposing (Task)
-
-
-run : String -> Task Error Decode.Value
-run _ =
-    let
-        _ =
-            anyDecoder
-
-        _ =
-            Exception
-    in
-    Task.fail FileNotPatched
-
-
-decode : Decoder a -> Task Error Decode.Value -> Task Error a
-decode decoder a =
-    a
-        |> Task.andThen
-            (\v ->
-                case v |> Decode.decodeValue decoder of
-                    Ok b ->
-                        Task.succeed b
-
-                    Err b ->
-                        Task.fail (DecodeError b)
-            )
-
-
-anyDecoder : Decoder a
-anyDecoder =
-    Decode.fail (errorToString FileNotPatched)
-
-
-
---
-
-
-type Error
-    = FileNotPatched
-    | Exception Decode.Value
-    | DecodeError Decode.Error
-
-
-errorToString : Error -> String
-errorToString a =
-    case a of
-        FileNotPatched ->
-            "Compiled file needs to be processed via elm-ffi command."
-
-        Exception b ->
-            "Got JavaScript exception:\n"
-                ++ (b
-                        |> Decode.decodeValue (Decode.field "message" Decode.string)
-                        |> Result.withDefault "No message provided."
-                   )
-
-        DecodeError b ->
-            "Cannot decode JavaScript value because:\n" ++ Decode.errorToString b
-
-
-
---
-
-
-cli : Task String String -> Program () () ()
-cli a =
-    let
-        cmd : Cmd ()
-        cmd =
-            a
-                |> Task.andThen
-                    (\v ->
-                        log v
-                            |> Task.andThen (\_ -> exit 0)
-                            |> Task.mapError errorToString
-                    )
-                |> Task.onError
-                    (\v ->
-                        logError v
-                            |> Task.andThen (\_ -> exit 1)
-                            |> Task.mapError errorToString
-                    )
-                |> Task.attempt (\_ -> ())
-
-        log : String -> Task Error Decode.Value
-        log _ =
-            run "console.log(_v8)"
-
-        logError : String -> Task Error Decode.Value
-        logError _ =
-            run "console.error(_v9)"
-
-        exit : Int -> Task Error Decode.Value
-        exit _ =
-            run "process.exit(_v7)"
-    in
-    Platform.worker
-        { init = \_ -> ( (), cmd )
-        , update = \_ _ -> ( (), Cmd.none )
-        , subscriptions = \_ -> Sub.none
-        }
-```
-
-2. Run `elm-ffi elm.js` on JavaScript file produced by Elm compiler.
-
-## Options
+1. `elm make src/Main.elm --output elm.js`
+1. `elm-ffi elm.js`
 
 To show commandline options run `elm-ffi`.
