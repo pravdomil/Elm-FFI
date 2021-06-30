@@ -29,12 +29,12 @@ function main(arguments) {
 function processFile(options, a) {
   let b = require("fs").readFileSync(a, "utf-8")
 
-  b = b.replace(/(\$author\$project[0-9A-Za-z_$]*\$JavaScript)\$run\('(.*)'\)/g, (a, b, c) =>
+  b = b.replace(/(\$author\$project\$Interop\$JavaScript)\$run\('(.*)'\)/g, (a, b, c) =>
     patchFunction(options, b, c.replace(/\\'/g, "'"))
   )
 
   b = b.replace(
-    /(\$author\$project[0-9A-Za-z_$]*\$JavaScript\$anyDecoder = )(.*?);/gs,
+    /(\$author\$project\$Interop\$JavaScript\$anyDecoder = )(.*?);/gs,
     (_, b) => b + "_Json_decodePrim(function(a) { return $elm$core$Result$Ok(a) });"
   )
 
