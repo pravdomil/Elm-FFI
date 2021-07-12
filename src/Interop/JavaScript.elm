@@ -1,4 +1,4 @@
-module Interop.JavaScript exposing (Error(..), anyDecoder, cli, decode, errorToString, run)
+module Interop.JavaScript exposing (Error(..), anyDecoder, cli, cliWithStdin, decode, errorToString, run)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
@@ -74,6 +74,17 @@ cli fn =
     cliHelper
         (readArgs
             |> Task.map (\v -> { args = v })
+            |> Task.mapError errorToString
+            |> Task.andThen fn
+        )
+
+
+cliWithStdin : ({ args : List String, stdin : String } -> Task String String) -> Program () () ()
+cliWithStdin fn =
+    cliHelper
+        (Task.map2 (\v1 v2 -> { args = v1, stdin = v2 })
+            readArgs
+            readStdin
             |> Task.mapError errorToString
             |> Task.andThen fn
         )
