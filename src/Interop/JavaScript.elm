@@ -1,4 +1,4 @@
-module Interop.JavaScript exposing (..)
+module Interop.JavaScript exposing (Error(..), anyDecoder, cli, decode, errorToString, run)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
@@ -92,31 +92,36 @@ cli fn =
                             |> Task.mapError errorToString
                     )
                 |> Task.attempt (\_ -> ())
-
-        readArgs : Task Error (List String)
-        readArgs =
-            run "process.argv"
-                |> decode (Decode.list Decode.string)
-
-        readStdin : Task Error String
-        readStdin =
-            run "require('fs').readFileSync(0, 'utf8')"
-                |> decode Decode.string
-
-        writeStdout : String -> Task Error Decode.Value
-        writeStdout _ =
-            run "process.stdout.write(_v9)"
-
-        writeStderr : String -> Task Error Decode.Value
-        writeStderr _ =
-            run "process.stderr.write(_v8)"
-
-        exit : Int -> Task Error Decode.Value
-        exit _ =
-            run "process.exit(_v7)"
     in
     Platform.worker
         { init = \_ -> ( (), cmd )
         , update = \_ _ -> ( (), Cmd.none )
         , subscriptions = \_ -> Sub.none
         }
+
+
+readArgs : Task Error (List String)
+readArgs =
+    run "process.argv"
+        |> decode (Decode.list Decode.string)
+
+
+readStdin : Task Error String
+readStdin =
+    run "require('fs').readFileSync(0, 'utf8')"
+        |> decode Decode.string
+
+
+writeStdout : String -> Task Error Decode.Value
+writeStdout _ =
+    run "process.stdout.write(_v0)"
+
+
+writeStderr : String -> Task Error Decode.Value
+writeStderr _ =
+    run "process.stderr.write(_v0)"
+
+
+exit : Int -> Task Error Decode.Value
+exit _ =
+    run "process.exit(_v0)"
