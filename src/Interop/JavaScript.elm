@@ -69,14 +69,13 @@ errorToString a =
 --
 
 
-cli : ({ args : List String, stdin : String } -> Task String String) -> Program () () ()
+cli : ({ args : List String } -> Task String String) -> Program () () ()
 cli fn =
     let
         cmd : Cmd ()
         cmd =
-            Task.map2 (\v1 v2 -> { args = v1, stdin = v2 })
-                readArgs
-                readStdin
+            readArgs
+                |> Task.map (\v -> { args = v })
                 |> Task.mapError errorToString
                 |> Task.andThen fn
                 |> Task.andThen
