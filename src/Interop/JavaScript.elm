@@ -89,6 +89,11 @@ cli a =
                     )
                 |> Task.attempt (\_ -> ())
 
+        readStdin : Task Error String
+        readStdin =
+            run "require('fs').readFileSync(0, 'utf8')"
+                |> decode Decode.string
+
         writeStdout : String -> Task Error Decode.Value
         writeStdout _ =
             run "console.log(_v8)"
