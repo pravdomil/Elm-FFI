@@ -4,7 +4,7 @@ Read [The Limits of Elm/JS Interop](https://guide.elm-lang.org/interop/limits.ht
 
 ## Install
 
-1. `npm i pravdomil/elm-ffi`
+1. `npm i pravdomil/elm-ffi --save-dev`
 1. Add `node_modules/elm-ffi/src` into `elm.json`/`source-directories`.
 1. Use `Interop.JavaScript` module.
 
