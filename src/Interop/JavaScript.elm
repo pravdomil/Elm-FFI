@@ -71,13 +71,20 @@ errorToString a =
 
 cli : ({ args : List String } -> Task String String) -> Program () () ()
 cli fn =
+    cliHelper
+        (readArgs
+            |> Task.map (\v -> { args = v })
+            |> Task.mapError errorToString
+            |> Task.andThen fn
+        )
+
+
+cliHelper : Task String String -> Program () () ()
+cliHelper fn =
     let
         cmd : Cmd ()
         cmd =
-            readArgs
-                |> Task.map (\v -> { args = v })
-                |> Task.mapError errorToString
-                |> Task.andThen fn
+            fn
                 |> Task.andThen
                     (\v ->
                         writeStdout v
