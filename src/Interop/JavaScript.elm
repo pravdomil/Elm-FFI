@@ -80,11 +80,11 @@ cli fn =
 
 
 cliHelper : Task String String -> Program () () ()
-cliHelper fn =
+cliHelper a =
     let
         cmd : Cmd ()
         cmd =
-            fn
+            a
                 |> Task.andThen
                     (\v ->
                         writeStdout v
