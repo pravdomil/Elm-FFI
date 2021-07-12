@@ -69,12 +69,14 @@ errorToString a =
 --
 
 
-cli : Task String String -> Program () () ()
-cli a =
+cli : (String -> Task String String) -> Program () () ()
+cli fn =
     let
         cmd : Cmd ()
         cmd =
-            a
+            readStdin
+                |> Task.mapError errorToString
+                |> Task.andThen fn
                 |> Task.andThen
                     (\v ->
                         writeStdout v
@@ -96,11 +98,11 @@ cli a =
 
         writeStdout : String -> Task Error Decode.Value
         writeStdout _ =
-            run "console.log(_v8)"
+            run "process.stdout.write(_v9)"
 
         writeStderr : String -> Task Error Decode.Value
         writeStderr _ =
-            run "console.error(_v9)"
+            run "process.stderr.write(_v8)"
 
         exit : Int -> Task Error Decode.Value
         exit _ =
