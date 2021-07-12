@@ -69,12 +69,14 @@ errorToString a =
 --
 
 
-cli : (String -> Task String String) -> Program () () ()
+cli : ({ args : List String, stdin : String } -> Task String String) -> Program () () ()
 cli fn =
     let
         cmd : Cmd ()
         cmd =
-            readStdin
+            Task.map2 (\v1 v2 -> { args = v1, stdin = v2 })
+                readArgs
+                readStdin
                 |> Task.mapError errorToString
                 |> Task.andThen fn
                 |> Task.andThen
@@ -90,6 +92,11 @@ cli fn =
                             |> Task.mapError errorToString
                     )
                 |> Task.attempt (\_ -> ())
+
+        readArgs : Task Error (List String)
+        readArgs =
+            run "process.argv"
+                |> decode (Decode.list Decode.string)
 
         readStdin : Task Error String
         readStdin =
