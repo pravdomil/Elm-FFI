@@ -77,24 +77,24 @@ cli a =
             a
                 |> Task.andThen
                     (\v ->
-                        log v
+                        writeStdout v
                             |> Task.andThen (\_ -> exit 0)
                             |> Task.mapError errorToString
                     )
                 |> Task.onError
                     (\v ->
-                        logError v
+                        writeStderr v
                             |> Task.andThen (\_ -> exit 1)
                             |> Task.mapError errorToString
                     )
                 |> Task.attempt (\_ -> ())
 
-        log : String -> Task Error Decode.Value
-        log _ =
+        writeStdout : String -> Task Error Decode.Value
+        writeStdout _ =
             run "console.log(_v8)"
 
-        logError : String -> Task Error Decode.Value
-        logError _ =
+        writeStderr : String -> Task Error Decode.Value
+        writeStderr _ =
             run "console.error(_v9)"
 
         exit : Int -> Task Error Decode.Value
