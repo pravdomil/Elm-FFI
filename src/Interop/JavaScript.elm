@@ -55,11 +55,10 @@ errorToString a =
             "Compiled file needs to be processed via elm-ffi command."
 
         Exception b ->
-            "Got JavaScript exception:\n"
-                ++ (b
-                        |> Decode.decodeValue (Decode.field "message" Decode.string)
-                        |> Result.withDefault "No message provided."
-                   )
+            b
+                |> Decode.decodeValue (Decode.field "message" Decode.string)
+                |> Result.map (\v -> "Got JavaScript exception:\n" ++ v)
+                |> Result.withDefault "Got JavaScript exception."
 
         DecodeError b ->
             "Cannot decode JavaScript value because:\n" ++ Decode.errorToString b
