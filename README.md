@@ -1,5 +1,7 @@
 # Elm FFI
 
+Foreign function interface for Elm.
+
 Read [The Limits of Elm/JS Interop](https://guide.elm-lang.org/interop/limits.html) first.
 
 ## Install
