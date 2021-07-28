@@ -44,6 +44,7 @@ function processFile(options, a) {
 
   if (options.has("shebang")) {
     b = "#!/usr/bin/env node\n" + b
+    require("fs").chmodSync(a, 0o755)
   }
 
   if (options.has("run")) {
