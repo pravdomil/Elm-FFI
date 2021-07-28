@@ -7,12 +7,12 @@ try {
 }
 
 /**
- * @param {string[]} arguments
+ * @param {string[]} args
  */
-function main(arguments) {
+function main(args) {
   const usage = "Usage: elm-ffi [--shebang] [--run] [--legacy] <file.js>..."
 
-  const [options, files] = arguments.reduce(reduceArgument, [new Map(), []])
+  const [options, files] = args.reduce(reduceArgument, [new Map(), []])
   if (files.length === 0) {
     die(usage)
   }
@@ -130,14 +130,14 @@ function createFn(options, params, a) {
  * @param {string} a
  * @returns {[Map<String, String>, Array<String>]}
  */
-function reduceArgument([options, arguments], a) {
+function reduceArgument([options, args], a) {
   if (a.startsWith("--")) {
     const [k, ...rest] = a.split("=")
     options.set(k.substr(2), rest.join("="))
   } else {
-    arguments.push(a)
+    args.push(a)
   }
-  return [options, arguments]
+  return [options, args]
 }
 
 /**
