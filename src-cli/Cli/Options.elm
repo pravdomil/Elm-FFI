@@ -5,7 +5,7 @@ import Parser as P exposing ((|.), (|=), Parser)
 
 type alias Options =
     { shebang : Bool
-    , autorun : Bool
+    , run : Bool
     , legacy : Bool
     , files : List String
     }
@@ -23,7 +23,7 @@ toString a =
                 "false"
     in
     [ "shebang: " ++ boolToString a.shebang
-    , "autorun: " ++ boolToString a.autorun
+    , "run: " ++ boolToString a.run
     , "legacy:  " ++ boolToString a.legacy
     , "files:   " ++ String.join "," a.files
     ]
@@ -47,8 +47,8 @@ parser =
             P.oneOf
                 [ P.succeed (\v -> P.Loop { acc | shebang = v })
                     |= boolArg "shebang"
-                , P.succeed (\v -> P.Loop { acc | autorun = v })
-                    |= boolArg "autorun"
+                , P.succeed (\v -> P.Loop { acc | run = v })
+                    |= boolArg "run"
                 , P.succeed (\v -> P.Loop { acc | legacy = v })
                     |= boolArg "legacy"
 
@@ -80,7 +80,7 @@ parser =
     in
     P.loop
         { shebang = False
-        , autorun = False
+        , run = False
         , legacy = False
         , files = []
         }
