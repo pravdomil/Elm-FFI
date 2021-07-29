@@ -16,8 +16,19 @@ mainTask { args } =
     Options.parse (List.drop 2 args)
         |> taskFromResult
         |> Task.mapError CannotParseArgs
+        |> Task.andThen checkFiles
         |> Task.map (\v -> "Welcome to elm-ffi.\n\nI got following options:\n" ++ Options.toString v ++ "\n")
         |> Task.mapError (errorToString >> (\v -> v ++ "\n"))
+
+
+checkFiles : Options -> Task Error Options
+checkFiles a =
+    case a.files of
+        [] ->
+            Task.fail NoInputFiles
+
+        _ ->
+            Task.succeed a
 
 
 
@@ -26,6 +37,7 @@ mainTask { args } =
 
 type Error
     = CannotParseArgs (List Parser.DeadEnd)
+    | NoInputFiles
 
 
 errorToString : Error -> String
@@ -37,6 +49,9 @@ errorToString a =
     in
     case a of
         CannotParseArgs _ ->
+            usage
+
+        NoInputFiles ->
             usage
 
 
