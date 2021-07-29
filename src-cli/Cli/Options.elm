@@ -23,7 +23,7 @@ toString a =
                 "false"
     in
     [ "shebang: " ++ boolToString a.shebang
-    , "run: " ++ boolToString a.run
+    , "run:     " ++ boolToString a.run
     , "legacy:  " ++ boolToString a.legacy
     , "files:   " ++ String.join "," a.files
     ]
