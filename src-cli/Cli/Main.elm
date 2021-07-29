@@ -17,7 +17,21 @@ mainTask { args } =
         |> taskFromResult
         |> Task.mapError CannotParseArgs
         |> Task.andThen checkFiles
-        |> Task.map (\v -> "Welcome to elm-ffi.\n\nI got following options:\n" ++ Options.toString v ++ "\n")
+        |> Task.andThen (\v -> v.files |> List.map (patchFile v) |> Task.sequence)
+        |> Task.map
+            (\v ->
+                let
+                    count : String
+                    count =
+                        case List.length v of
+                            1 ->
+                                "1 file"
+
+                            vv ->
+                                String.fromInt vv ++ " files"
+                in
+                "Elm FFI patched " ++ count ++ "."
+            )
         |> Task.mapError (errorToString >> (\v -> v ++ "\n"))
 
 
@@ -29,6 +43,11 @@ checkFiles a =
 
         _ ->
             Task.succeed a
+
+
+patchFile : Options -> String -> Task Error ()
+patchFile opt a =
+    Task.succeed ()
 
 
 
