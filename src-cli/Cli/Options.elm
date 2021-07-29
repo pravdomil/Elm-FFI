@@ -11,6 +11,25 @@ type alias Options =
     }
 
 
+toString : Options -> String
+toString a =
+    let
+        boolToString : Bool -> String
+        boolToString b =
+            if b then
+                "true"
+
+            else
+                "false"
+    in
+    [ "shebang: " ++ boolToString a.shebang
+    , "autorun: " ++ boolToString a.autorun
+    , "legacy:  " ++ boolToString a.legacy
+    , "files:   " ++ String.join "," a.files
+    ]
+        |> String.join "\n"
+
+
 
 --
 
