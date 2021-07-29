@@ -30,7 +30,7 @@ function processFile(options, a) {
   let b = require("fs").readFileSync(a, "utf-8")
 
   b = b.replace(/(\$author\$project\$Interop\$JavaScript)\$run\('(.*)'\)/g, (a, b, c) =>
-    patchFunction(options, b, c.replaceAll("\\'", "'")
+    patchFunction(options, b, c.replaceAll("\\'", "'").replaceAll("\\n", "\n"))
   )
 
   b = b.replace(
