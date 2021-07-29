@@ -6,6 +6,7 @@ import Parser as P exposing ((|.), (|=), Parser)
 type alias Options =
     { shebang : Bool
     , autorun : Bool
+    , legacy : Bool
     , files : List String
     }
 
@@ -29,6 +30,8 @@ parser =
                     |= boolArg "shebang"
                 , P.succeed (\v -> P.Loop { acc | autorun = v })
                     |= boolArg "autorun"
+                , P.succeed (\v -> P.Loop { acc | legacy = v })
+                    |= boolArg "legacy"
 
                 --
                 , P.succeed (\v -> P.Loop { acc | files = v :: acc.files })
@@ -55,6 +58,7 @@ parser =
     P.loop
         { shebang = False
         , autorun = False
+        , legacy = False
         , files = []
         }
         loop
