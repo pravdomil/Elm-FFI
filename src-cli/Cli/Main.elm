@@ -57,6 +57,19 @@ patchFile opt a =
         applyPatch : String -> Task Error String
         applyPatch b =
             Task.succeed (Patch.apply b)
+
+        applyShebang : String -> Task Error String
+        applyShebang b =
+            if opt.shebang then
+                --      0o755
+                chmod a 0x01ED
+                    |> Task.map
+                        (\_ ->
+                            "#!/usr/bin/env node\n" ++ b
+                        )
+
+            else
+                Task.succeed b
     in
     read a
         |> Task.andThen applyPatch
