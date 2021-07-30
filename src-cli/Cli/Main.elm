@@ -78,11 +78,20 @@ patchFile opt a =
 
             else
                 Task.succeed b
+
+        applyLegacy : String -> Task Error String
+        applyLegacy b =
+            if opt.legacy then
+                Task.fail LegacyNotImplemented
+
+            else
+                Task.succeed b
     in
     read a
         |> Task.andThen applyPatch
         |> Task.andThen applyShebang
         |> Task.andThen applyRun
+        |> Task.andThen applyLegacy
         |> Task.andThen (write a)
 
 
@@ -94,6 +103,7 @@ type Error
     = CannotParseArgs (List Parser.DeadEnd)
     | NoInputFiles
     | JavaScriptError JavaScript.Error
+    | LegacyNotImplemented
 
 
 errorToString : Error -> String
@@ -112,6 +122,9 @@ errorToString a =
 
         JavaScriptError b ->
             JavaScript.errorToString b
+
+        LegacyNotImplemented ->
+            "Legacy option is not implemented."
 
 
 
