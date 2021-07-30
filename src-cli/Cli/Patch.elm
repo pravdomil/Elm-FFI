@@ -1,6 +1,17 @@
 module Cli.Patch exposing (..)
 
 
+apply : String -> String
+apply a =
+    a
+        |> String.replace
+            "var $author$project$Interop$JavaScript$fn = function (_v0) {\n\treturn function (_v1) {\n\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t};\n};"
+            ("var $author$project$Interop$JavaScript$fn = " ++ function)
+        |> String.replace
+            "var $author$project$Interop$JavaScript$asyncFn = function (_v0) {\n\treturn function (_v1) {\n\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t};\n};"
+            ("var $author$project$Interop$JavaScript$asyncFn = " ++ asyncFunction)
+
+
 function : String
 function =
     """function(name) {
