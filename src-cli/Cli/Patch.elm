@@ -6,14 +6,14 @@ apply a =
     a
         |> String.replace
             "var $author$project$Interop$JavaScript$fn = function (_v0) {\n\treturn function (_v1) {\n\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t};\n};"
-            ("var $author$project$Interop$JavaScript$fn = " ++ function)
+            ("var $author$project$Interop$JavaScript$fn = " ++ fn)
         |> String.replace
             "var $author$project$Interop$JavaScript$asyncFn = function (_v0) {\n\treturn function (_v1) {\n\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t};\n};"
-            ("var $author$project$Interop$JavaScript$asyncFn = " ++ asyncFunction)
+            ("var $author$project$Interop$JavaScript$asyncFn = " ++ asyncFn)
 
 
-function : String
-function =
+fn : String
+fn =
     """function(name) {
          var fn = new Function(['args'], 'return ' + name + '.apply(' + name + ', args)')
 
@@ -29,8 +29,8 @@ function =
     """
 
 
-asyncFunction : String
-asyncFunction =
+asyncFn : String
+asyncFn =
     """function(name) {
          var fn = new Function(['args'], 'return ' + name + '.apply(' + name + ', args)')
 
