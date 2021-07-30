@@ -70,6 +70,14 @@ patchFile opt a =
 
             else
                 Task.succeed b
+
+        applyRun : String -> Task Error String
+        applyRun b =
+            if opt.run then
+                Task.succeed (String.dropRight 16 b ++ "(0)()}});}(this));")
+
+            else
+                Task.succeed b
     in
     read a
         |> Task.andThen applyPatch
