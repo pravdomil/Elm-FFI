@@ -57,6 +57,7 @@ patchFile opt a =
 type Error
     = CannotParseArgs (List Parser.DeadEnd)
     | NoInputFiles
+    | JavaScriptError JavaScript.Error
 
 
 errorToString : Error -> String
@@ -72,6 +73,9 @@ errorToString a =
 
         NoInputFiles ->
             usage
+
+        JavaScriptError b ->
+            JavaScript.errorToString b
 
 
 
