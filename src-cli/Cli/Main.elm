@@ -1,7 +1,9 @@
 module Cli.Main exposing (..)
 
 import Cli.Options as Options exposing (Options)
+import Cli.Patch as Patch
 import Interop.JavaScript as JavaScript
+import Json.Decode as Decode
 import Parser
 import Task exposing (Task)
 
@@ -47,7 +49,11 @@ checkFiles a =
 
 patchFile : Options -> String -> Task Error ()
 patchFile opt a =
-    Task.succeed ()
+    read a
+        |> Task.andThen applyPatch
+        |> Task.andThen applyShebang
+        |> Task.andThen applyRun
+        |> Task.andThen (write a)
 
 
 
