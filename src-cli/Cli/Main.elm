@@ -53,6 +53,11 @@ checkFiles a =
 
 patchFile : Options -> String -> Task Error ()
 patchFile opt a =
+    let
+        applyPatch : String -> Task Error String
+        applyPatch b =
+            Task.succeed (Patch.apply b)
+    in
     read a
         |> Task.andThen applyPatch
         |> Task.andThen applyShebang
