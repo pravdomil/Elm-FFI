@@ -4,6 +4,7 @@ import Cli.Options as Options exposing (Options)
 import Cli.Patch as Patch
 import Interop.JavaScript as JavaScript
 import Json.Decode as Decode
+import Json.Encode as Encode
 import Parser
 import Task exposing (Task)
 
@@ -139,3 +140,16 @@ taskFromResult a =
 
         Err b ->
             Task.fail b
+
+
+
+--
+
+
+read : String -> Task Error String
+read =
+    JavaScript.run
+        "await require('fs/promises').readFile(a, 'utf-8')"
+        Encode.string
+        Decode.string
+        >> Task.mapError JavaScriptError
