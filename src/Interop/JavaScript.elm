@@ -123,25 +123,35 @@ cliHelper a =
 readArgs : Task Error (List String)
 readArgs =
     run "process.argv"
-        |> decode (Decode.list Decode.string)
+        (\() -> Encode.null)
+        (Decode.list Decode.string)
+        ()
 
 
 readStdin : Task Error String
 readStdin =
     run "require('fs').readFileSync(0, 'utf8')"
-        |> decode Decode.string
+        (\() -> Encode.null)
+        Decode.string
+        ()
 
 
-writeStdout : String -> Task Error Decode.Value
-writeStdout _ =
-    run "process.stdout.write(_v0)"
+writeStdout : String -> Task Error ()
+writeStdout =
+    run "process.stdout.write(a)"
+        Encode.string
+        (Decode.succeed ())
 
 
-writeStderr : String -> Task Error Decode.Value
-writeStderr _ =
-    run "process.stderr.write(_v0)"
+writeStderr : String -> Task Error ()
+writeStderr =
+    run "process.stderr.write(a)"
+        Encode.string
+        (Decode.succeed ())
 
 
-exit : Int -> Task Error Decode.Value
-exit _ =
-    run "process.exit(_v0)"
+exit : Int -> Task Error ()
+exit =
+    run "process.exit(a)"
+        Encode.int
+        (Decode.succeed ())
