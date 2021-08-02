@@ -153,3 +153,15 @@ read =
         Encode.string
         Decode.string
         >> Task.mapError JavaScriptError
+
+
+write : String -> String -> Task Error ()
+write =
+    JavaScript.run2 "await require('fs/promises').writeFile(a, b)"
+        Encode.string
+        Encode.string
+        (Decode.succeed ())
+        |> (\fn v1 v2 ->
+                fn v1 v2
+                    |> Task.mapError JavaScriptError
+           )
