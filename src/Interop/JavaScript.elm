@@ -1,4 +1,4 @@
-module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, decode, errorToString, run)
+module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorToString, run)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
@@ -17,20 +17,6 @@ run _ =
             Exception
     in
     Task.fail FileNotPatched
-
-
-decode : Decoder a -> Task Error Decode.Value -> Task Error a
-decode decoder a =
-    a
-        |> Task.andThen
-            (\v ->
-                case v |> Decode.decodeValue decoder of
-                    Ok b ->
-                        Task.succeed b
-
-                    Err b ->
-                        Task.fail (DecodeError b)
-            )
 
 
 
