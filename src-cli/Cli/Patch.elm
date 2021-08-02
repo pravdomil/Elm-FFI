@@ -5,42 +5,38 @@ apply : String -> String
 apply a =
     a
         |> String.replace
-            "var $author$project$Interop$JavaScript$fn = function (_v0) {\n\treturn function (_v1) {\n\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t};\n};"
-            ("var $author$project$Interop$JavaScript$fn = " ++ fn)
+            "var task = function (arg) {\n\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t};"
+            fn
         |> String.replace
-            "var $author$project$Interop$JavaScript$asyncFn = function (_v0) {\n\treturn function (_v1) {\n\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t};\n};"
-            ("var $author$project$Interop$JavaScript$asyncFn = " ++ asyncFn)
+            "var task = F2(\n\t\t\tfunction (arg, arg2) {\n\t\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t\t});"
+            fn2
 
 
 fn : String
 fn =
-    """function(name) {
-         var fn = new Function(['args'], 'return ' + name + '.apply(' + name + ', args)')
+    """var fn = new Function('a', code);
 
-         return $author$project$Interop$JavaScript$Function(function(args) {
-           return _Scheduler_binding(function(callback) {
-             var result;
-             try       { result = _Scheduler_succeed(_Json_wrap(fn(args))) }
-             catch (e) { result = _Scheduler_fail   ($author$project$Interop$JavaScript$Exception(_Json_wrap(e))) }
-             callback(result)
-           })
+       var task = function(arg) {
+         return _Scheduler_binding(function(callback) {
+           var result;
+           try       { result = _Scheduler_succeed(_Json_wrap(fn(_Json_unwrap(arg)))) }
+           catch (e) { result = _Scheduler_fail   ($author$project$Interop$JavaScript$Exception(_Json_wrap(e))) }
+           callback(result)
          })
        };
     """
 
 
-asyncFn : String
-asyncFn =
-    """function(name) {
-         var fn = new Function(['args'], 'return ' + name + '.apply(' + name + ', args)')
+fn2 : String
+fn2 =
+    """var fn = new Function('a', 'b', code);
 
-         return $author$project$Interop$JavaScript$Function(function(args) {
-           return _Scheduler_binding(async function(callback) {
-             var result;
-             try       { result = _Scheduler_succeed(_Json_wrap(await fn(args))) }
-             catch (e) { result = _Scheduler_fail   ($author$project$Interop$JavaScript$Exception(_Json_wrap(e))) }
-             callback(result)
-           })
+       var task = F2(function(arg, arg2) {
+         return _Scheduler_binding(function(callback) {
+           var result;
+           try       { result = _Scheduler_succeed(_Json_wrap(fn(_Json_unwrap(arg), _Json_unwrap(arg2)))) }
+           catch (e) { result = _Scheduler_fail   ($author$project$Interop$JavaScript$Exception(_Json_wrap(e))) }
+           callback(result)
          })
-       };
+       });
     """
