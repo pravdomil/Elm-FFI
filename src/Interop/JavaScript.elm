@@ -4,19 +4,28 @@ module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorToString,
 -}
 
 import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
 import Task exposing (Task)
 
 
-run : String -> Task Error Decode.Value
-run _ =
+run : String -> (a -> Decode.Value) -> Decoder b -> a -> Task Error b
+run code encoder decoder =
     let
-        _ =
-            anyDecoder
-
-        _ =
-            Exception
+        task : Decode.Value -> Task Error Decode.Value
+        task arg =
+            Task.fail FileNotPatched
     in
-    Task.fail FileNotPatched
+    \arg ->
+        task (encoder arg)
+            |> Task.andThen
+                (\v ->
+                    case v |> Decode.decodeValue decoder of
+                        Ok b ->
+                            Task.succeed b
+
+                        Err b ->
+                            Task.fail (DecodeError b)
+                )
 
 
 
