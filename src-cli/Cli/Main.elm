@@ -148,8 +148,7 @@ taskFromResult a =
 
 read : String -> Task Error String
 read =
-    JavaScript.run
-        "await require('fs/promises').readFile(a, 'utf-8')"
+    JavaScript.run "await require('fs/promises').readFile(a, 'utf-8')"
         Encode.string
         Decode.string
         >> Task.mapError JavaScriptError
