@@ -1,4 +1,4 @@
-module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorToString, run)
+module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorToString, run, run2)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
@@ -17,6 +17,26 @@ run code encoder decoder =
     in
     \arg ->
         task (encoder arg)
+            |> Task.andThen
+                (\v ->
+                    case v |> Decode.decodeValue decoder of
+                        Ok b ->
+                            Task.succeed b
+
+                        Err b ->
+                            Task.fail (DecodeError b)
+                )
+
+
+run2 : String -> (a -> Decode.Value) -> (b -> Decode.Value) -> Decoder c -> a -> b -> Task Error c
+run2 code encoder encoder2 decoder =
+    let
+        task : Decode.Value -> Decode.Value -> Task Error Decode.Value
+        task arg arg2 =
+            Task.fail FileNotPatched
+    in
+    \arg arg2 ->
+        task (encoder arg) (encoder2 arg2)
             |> Task.andThen
                 (\v ->
                     case v |> Decode.decodeValue decoder of
