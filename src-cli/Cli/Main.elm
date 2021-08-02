@@ -165,3 +165,15 @@ write =
                 fn v1 v2
                     |> Task.mapError JavaScriptError
            )
+
+
+chmod : String -> Int -> Task Error ()
+chmod =
+    JavaScript.run2 "await require('fs/promises').chmod(a, b)"
+        Encode.string
+        Encode.int
+        (Decode.succeed ())
+        |> (\fn v1 v2 ->
+                fn v1 v2
+                    |> Task.mapError JavaScriptError
+           )
