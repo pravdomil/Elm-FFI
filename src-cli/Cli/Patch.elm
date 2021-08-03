@@ -18,10 +18,10 @@ fn =
 
        var task = function(arg) {
          return _Scheduler_binding(function(callback) {
-           var result;
-           try       { result = _Scheduler_succeed(_Json_wrap(fn(_Json_unwrap(arg)))) }
-           catch (e) { result = _Scheduler_fail   ($author$project$Interop$JavaScript$Exception(_Json_wrap(e))) }
-           callback(result)
+           var a;
+           try       { a = _Scheduler_succeed(_Json_wrap(fn(_Json_unwrap(arg)))) }
+           catch (e) { a = _Scheduler_fail   ($author$project$Interop$JavaScript$Exception(_Json_wrap(e))) }
+           callback(a)
          })
        };
     """
@@ -33,10 +33,10 @@ fn2 =
 
        var task = F2(function(arg, arg2) {
          return _Scheduler_binding(function(callback) {
-           var result;
-           try       { result = _Scheduler_succeed(_Json_wrap(fn(_Json_unwrap(arg), _Json_unwrap(arg2)))) }
-           catch (e) { result = _Scheduler_fail   ($author$project$Interop$JavaScript$Exception(_Json_wrap(e))) }
-           callback(result)
+           var a;
+           try       { a = _Scheduler_succeed(_Json_wrap(fn(_Json_unwrap(arg), _Json_unwrap(arg2)))) }
+           catch (e) { a = _Scheduler_fail   ($author$project$Interop$JavaScript$Exception(_Json_wrap(e))) }
+           callback(a)
          })
        });
     """
