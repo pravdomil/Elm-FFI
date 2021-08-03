@@ -4172,6 +4172,7 @@ var $author$project$ElmFfi$Patch$parser = function () {
 	};
 	return A2($elm$parser$Parser$loop, _List_Nil, loop);
 }();
+var $elm$core$String$trim = _String_trim;
 var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 	return A2(
 		$elm$core$Result$map,
@@ -4187,7 +4188,7 @@ var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 							return b;
 						} else {
 							var b = vv.a;
-							return $author$project$ElmFfi$Patch$runFnName + (', function(a) { return ' + (b + ' },'));
+							return $author$project$ElmFfi$Patch$runFnName + (', function(a) { return ' + ($elm$core$String$trim(b) + ' },'));
 						}
 					},
 					v));
