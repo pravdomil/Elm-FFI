@@ -82,7 +82,7 @@ stringToFunction a =
                                     b
 
                                 Run b ->
-                                    runFnName ++ ", function(a) { return " ++ b ++ " },"
+                                    runFnName ++ ", function(a) { return " ++ String.trim b ++ " },"
                         )
                     |> String.join ""
             )
