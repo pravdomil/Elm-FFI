@@ -148,7 +148,7 @@ taskFromResult a =
 
 read : String -> Task Error String
 read =
-    JavaScript.run "await require('fs/promises').readFile(a, 'utf-8')"
+    JavaScript.run "require('fs/promises').readFile(a, 'utf-8')"
         Encode.string
         Decode.string
         >> Task.mapError JavaScriptError
@@ -156,7 +156,7 @@ read =
 
 write : String -> String -> Task Error ()
 write =
-    JavaScript.run2 "await require('fs/promises').writeFile(a, b)"
+    JavaScript.run2 "require('fs/promises').writeFile(a, b)"
         Encode.string
         Encode.string
         (Decode.succeed ())
@@ -168,7 +168,7 @@ write =
 
 chmod : String -> Int -> Task Error ()
 chmod =
-    JavaScript.run2 "await require('fs/promises').chmod(a, b)"
+    JavaScript.run2 "require('fs/promises').chmod(a, b)"
         Encode.string
         Encode.int
         (Decode.succeed ())
