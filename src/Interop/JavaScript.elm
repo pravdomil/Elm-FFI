@@ -11,6 +11,9 @@ import Task exposing (Task)
 run : String -> (a -> Decode.Value) -> Decoder b -> a -> Task Error b
 run code encoder decoder =
     let
+        _ =
+            Exception
+
         task : Decode.Value -> Task Error Decode.Value
         task arg =
             Task.fail FileNotPatched
@@ -31,6 +34,9 @@ run code encoder decoder =
 run2 : String -> (a -> Decode.Value) -> (b -> Decode.Value) -> Decoder c -> a -> b -> Task Error c
 run2 code encoder encoder2 decoder =
     let
+        _ =
+            Exception
+
         task : Decode.Value -> Decode.Value -> Task Error Decode.Value
         task arg arg2 =
             Task.fail FileNotPatched
