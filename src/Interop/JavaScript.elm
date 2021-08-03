@@ -46,7 +46,7 @@ errorToString a =
         FileNotPatched ->
             "Compiled file needs to be processed via elm-ffi command."
 
-        Exception b ->
+        Exception _ ->
             [ Just "Got JavaScript exception."
             , errorCode a |> Maybe.map (\v -> "Code: " ++ v)
             , errorMessage a |> Maybe.map (\v -> "Message: " ++ v)
