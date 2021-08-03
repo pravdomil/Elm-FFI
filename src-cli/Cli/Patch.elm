@@ -14,7 +14,7 @@ apply a =
 
 fn : String
 fn =
-    """var fn = new Function('a', code);
+    """var fn = new Function('a', 'return ' + code);
 
        var task = function(arg) {
          return _Scheduler_binding(function(callback) {
@@ -29,7 +29,7 @@ fn =
 
 fn2 : String
 fn2 =
-    """var fn = new Function('a', 'b', code);
+    """var fn = new Function('a', 'b', 'return ' + code);
 
        var task = F2(function(arg, arg2) {
          return _Scheduler_binding(function(callback) {
