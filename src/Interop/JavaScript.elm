@@ -15,7 +15,7 @@ run code encoder decoder arg =
             Exception
 
         task : Decode.Value -> Task Error Decode.Value
-        task arg =
+        task arg_ =
             Task.fail FileNotPatched
     in
     task (encoder arg)
@@ -37,7 +37,7 @@ run2 code encoder encoder2 decoder arg arg2 =
             Exception
 
         task : Decode.Value -> Decode.Value -> Task Error Decode.Value
-        task arg arg2 =
+        task arg_ arg2_ =
             Task.fail FileNotPatched
     in
     task (encoder arg) (encoder2 arg2)
