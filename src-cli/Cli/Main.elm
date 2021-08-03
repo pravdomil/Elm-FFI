@@ -6,6 +6,7 @@ import Interop.JavaScript as JavaScript
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Parser
+import Parser.DeadEnd as DeadEnd
 import Task exposing (Task)
 
 
@@ -57,7 +58,9 @@ patchFile opt a =
     let
         applyPatch : String -> Task Error String
         applyPatch b =
-            Task.succeed (Patch.apply b)
+            Patch.apply b
+                |> taskFromResult
+                |> Task.mapError PatchError
 
         applyShebang : String -> Task Error String
         applyShebang b =
@@ -104,6 +107,7 @@ type Error
     = CannotParseArgs (List Parser.DeadEnd)
     | NoInputFiles
     | JavaScriptError JavaScript.Error
+    | PatchError (List Parser.DeadEnd)
     | LegacyNotImplemented
 
 
@@ -123,6 +127,9 @@ errorToString a =
 
         JavaScriptError b ->
             JavaScript.errorToString b
+
+        PatchError b ->
+            "Patch error:\n" ++ DeadEnd.toString b
 
         LegacyNotImplemented ->
             "Legacy option is not implemented."
