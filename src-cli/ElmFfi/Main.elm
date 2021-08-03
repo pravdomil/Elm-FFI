@@ -40,6 +40,7 @@ mainTask { args } =
                 in
                 "Elm FFI patched " ++ count ++ "."
             )
+        |> Task.map (\v -> v ++ "\n")
         |> Task.mapError (errorToString >> (\v -> v ++ "\n"))
 
 
