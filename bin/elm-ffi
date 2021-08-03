@@ -3182,8 +3182,8 @@ var $author$project$Interop$JavaScript$Exception = function (a) {
 };
 var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
 var $elm$core$Task$fail = _Scheduler_fail;
-var $author$project$Interop$JavaScript$run = F4(
-	function (code, encoder, decoder, arg) {
+var $author$project$Interop$JavaScript$run = F3(
+	function (code, arg, decoder) {
 		var task = function(arg_) {
          return _Scheduler_binding(function(callback) {
            function ok(a) {
@@ -3226,14 +3226,15 @@ var $author$project$Interop$JavaScript$run = F4(
 						$author$project$Interop$JavaScript$DecodeError(b));
 				}
 			},
-			task(
-				encoder(arg)));
+			task(arg));
 	});
 var $elm$json$Json$Decode$succeed = _Json_succeed;
-var $author$project$Interop$JavaScript$exit = A3(
-	$author$project$Interop$JavaScript$run, function(a) { return process.exit(a) },
-	$elm$json$Json$Encode$int,
-	$elm$json$Json$Decode$succeed(0));
+var $author$project$Interop$JavaScript$exit = function (code) {
+	return A3(
+		$author$project$Interop$JavaScript$run, function(a) { return process.exit(a) },
+		$elm$json$Json$Encode$int(code),
+		$elm$json$Json$Decode$succeed(0));
+};
 var $elm$core$Task$mapError = F2(
 	function (convert, task) {
 		return A2(
@@ -3247,14 +3248,18 @@ var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$core$Platform$worker = _Platform_worker;
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Interop$JavaScript$writeStderr = A3(
-	$author$project$Interop$JavaScript$run, function(a) { return process.stderr.write(a) },
-	$elm$json$Json$Encode$string,
-	$elm$json$Json$Decode$succeed(0));
-var $author$project$Interop$JavaScript$writeStdout = A3(
-	$author$project$Interop$JavaScript$run, function(a) { return process.stdout.write(a) },
-	$elm$json$Json$Encode$string,
-	$elm$json$Json$Decode$succeed(0));
+var $author$project$Interop$JavaScript$writeStderr = function (data) {
+	return A3(
+		$author$project$Interop$JavaScript$run, function(a) { return process.stderr.write(a) },
+		$elm$json$Json$Encode$string(data),
+		$elm$json$Json$Decode$succeed(0));
+};
+var $author$project$Interop$JavaScript$writeStdout = function (data) {
+	return A3(
+		$author$project$Interop$JavaScript$run, function(a) { return process.stdout.write(a) },
+		$elm$json$Json$Encode$string(data),
+		$elm$json$Json$Decode$succeed(0));
+};
 var $author$project$Interop$JavaScript$cliHelper = function (a) {
 	var cmd = A2(
 		$elm$core$Task$attempt,
@@ -3304,13 +3309,10 @@ var $author$project$Interop$JavaScript$cliHelper = function (a) {
 };
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Encode$null = _Json_encodeNull;
-var $author$project$Interop$JavaScript$readArgs = A4(
+var $author$project$Interop$JavaScript$readArgs = A3(
 	$author$project$Interop$JavaScript$run, function(a) { return process.argv },
-	function (_v0) {
-		return $elm$json$Json$Encode$null;
-	},
-	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-	0);
+	$elm$json$Json$Encode$null,
+	$elm$json$Json$Decode$list($elm$json$Json$Decode$string));
 var $author$project$Interop$JavaScript$cli = function (fn) {
 	return $author$project$Interop$JavaScript$cliHelper(
 		A2(
@@ -3928,7 +3930,6 @@ var $author$project$ElmFfi$Main$PatchError = function (a) {
 	return {$: 3, a: a};
 };
 var $author$project$ElmFfi$Patch$fn = 'var task = function(arg_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       };\n    ';
-var $author$project$ElmFfi$Patch$fn2 = 'var task = F2(function(arg_, arg2_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_), _Json_unwrap(arg2_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       });\n    ';
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
 		return A2(
@@ -3937,20 +3938,13 @@ var $elm$core$String$replace = F3(
 			A2($elm$core$String$split, before, string));
 	});
 var $author$project$ElmFfi$Patch$implementRunTask = function (a) {
-	return A3(
-		$elm$core$String$replace,
-		'var task = F2(\n\t\t\tfunction (arg_, arg2_) {\n\t\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t\t});',
-		$author$project$ElmFfi$Patch$fn2,
-		A3($elm$core$String$replace, 'var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t};', $author$project$ElmFfi$Patch$fn, a));
+	return A3($elm$core$String$replace, 'var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t};', $author$project$ElmFfi$Patch$fn, a);
 };
 var $author$project$ElmFfi$Patch$Code = function (a) {
 	return {$: 0, a: a};
 };
 var $author$project$ElmFfi$Patch$Run = function (a) {
 	return {$: 1, a: a};
-};
-var $author$project$ElmFfi$Patch$Run2 = function (a) {
-	return {$: 2, a: a};
 };
 var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
 	function (isGood, offset, row, col, s0) {
@@ -4107,7 +4101,6 @@ var $author$project$ElmFfi$Patch$quotedString = function () {
 		},
 		$elm$parser$Parser$symbol('\''));
 }();
-var $author$project$ElmFfi$Patch$run2FnName = '$author$project$Interop$JavaScript' + '$run2';
 var $author$project$ElmFfi$Patch$runFnName = '$author$project$Interop$JavaScript' + '$run';
 var $author$project$ElmFfi$Patch$parser = function () {
 	var spaces = $elm$parser$Parser$chompWhile(
@@ -4133,47 +4126,10 @@ var $author$project$ElmFfi$Patch$parser = function () {
 							return $elm$parser$Parser$Loop(
 								A2(
 									$elm$core$List$cons,
-									$author$project$ElmFfi$Patch$Code($author$project$ElmFfi$Patch$run2FnName + ' = '),
-									acc));
-						}),
-					$elm$parser$Parser$symbol($author$project$ElmFfi$Patch$run2FnName + ' = ')),
-					A2(
-					$elm$parser$Parser$keeper,
-					$elm$parser$Parser$succeed(
-						function (_v2) {
-							return $elm$parser$Parser$Loop(
-								A2(
-									$elm$core$List$cons,
 									$author$project$ElmFfi$Patch$Code($author$project$ElmFfi$Patch$runFnName + ' = '),
 									acc));
 						}),
 					$elm$parser$Parser$symbol($author$project$ElmFfi$Patch$runFnName + ' = ')),
-					A2(
-					$elm$parser$Parser$keeper,
-					A2(
-						$elm$parser$Parser$ignorer,
-						A2(
-							$elm$parser$Parser$ignorer,
-							A2(
-								$elm$parser$Parser$ignorer,
-								A2(
-									$elm$parser$Parser$ignorer,
-									$elm$parser$Parser$succeed(
-										function (v) {
-											return $elm$parser$Parser$Loop(
-												A2(
-													$elm$core$List$cons,
-													$author$project$ElmFfi$Patch$Run2(v),
-													acc));
-										}),
-									$elm$parser$Parser$symbol($author$project$ElmFfi$Patch$run2FnName)),
-								spaces),
-							$elm$parser$Parser$symbol(',')),
-						spaces),
-					A2(
-						$elm$parser$Parser$ignorer,
-						A2($elm$parser$Parser$ignorer, $author$project$ElmFfi$Patch$quotedString, spaces),
-						$elm$parser$Parser$symbol(','))),
 					A2(
 					$elm$parser$Parser$keeper,
 					A2(
@@ -4226,16 +4182,12 @@ var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 				A2(
 					$elm$core$List$map,
 					function (vv) {
-						switch (vv.$) {
-							case 0:
-								var b = vv.a;
-								return b;
-							case 1:
-								var b = vv.a;
-								return $author$project$ElmFfi$Patch$runFnName + (', function(a) { return ' + (b + ' },'));
-							default:
-								var b = vv.a;
-								return $author$project$ElmFfi$Patch$run2FnName + (', function(a, b) { return ' + (b + ' },'));
+						if (!vv.$) {
+							var b = vv.a;
+							return b;
+						} else {
+							var b = vv.a;
+							return $author$project$ElmFfi$Patch$runFnName + (', function(a) { return ' + (b + ' },'));
 						}
 					},
 					v));
@@ -4251,75 +4203,51 @@ var $author$project$ElmFfi$Patch$apply = function (a) {
 var $author$project$ElmFfi$Main$JavaScriptError = function (a) {
 	return {$: 2, a: a};
 };
-var $author$project$Interop$JavaScript$run2 = F6(
-	function (code, encoder, encoder2, decoder, arg, arg2) {
-		var task = F2(function(arg_, arg2_) {
-         return _Scheduler_binding(function(callback) {
-           function ok(a) {
-             callback(_Scheduler_succeed(_Json_wrap(a)));
-           }
-
-           function err(a) {
-             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));
-           }
-
-           var a;
-           try       { a = { $: 0, a: code(_Json_unwrap(arg_), _Json_unwrap(arg2_)) } }
-           catch (e) { a = { $: 1, a: e } }
-
-           if (a.$ === 0) {
-             if (a.a instanceof Promise) {
-               a.a.then(ok).catch(err)
-             }
-             else {
-               ok(a.a)
-             }
-           }
-           else {
-             err(a.a)
-           }
-         })
-       });
-    
-		var _v0 = $author$project$Interop$JavaScript$Exception;
-		return A2(
-			$elm$core$Task$andThen,
-			function (v) {
-				var _v1 = A2($elm$json$Json$Decode$decodeValue, decoder, v);
-				if (!_v1.$) {
-					var b = _v1.a;
-					return $elm$core$Task$succeed(b);
-				} else {
-					var b = _v1.a;
-					return $elm$core$Task$fail(
-						$author$project$Interop$JavaScript$DecodeError(b));
-				}
-			},
-			A2(
-				task,
-				encoder(arg),
-				encoder2(arg2)));
-	});
-var $author$project$ElmFfi$Main$chmod = F3(
-	function (fn, v1, v2) {
+var $elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v0, obj) {
+					var k = _v0.a;
+					var v = _v0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(0),
+			pairs));
+};
+var $author$project$ElmFfi$Main$chmod = F2(
+	function (path, mode) {
 		return A2(
 			$elm$core$Task$mapError,
 			$author$project$ElmFfi$Main$JavaScriptError,
-			A2(fn, v1, v2));
-	})(
-	A4(
-		$author$project$Interop$JavaScript$run2, function(a, b) { return require('fs/promises').chmod(a, b) },
-		$elm$json$Json$Encode$string,
-		$elm$json$Json$Encode$int,
-		$elm$json$Json$Decode$succeed(0)));
+			A3(
+				$author$project$Interop$JavaScript$run, function(a) { return require('fs/promises').chmod(a.path, a.mode) },
+				$elm$json$Json$Encode$object(
+					_List_fromArray(
+						[
+							_Utils_Tuple2(
+							'path',
+							$elm$json$Json$Encode$string(path)),
+							_Utils_Tuple2(
+							'mode',
+							$elm$json$Json$Encode$int(mode))
+						])),
+				$elm$json$Json$Decode$succeed(0)));
+	});
 var $elm$core$String$dropRight = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3($elm$core$String$slice, 0, -n, string);
 	});
-var $author$project$ElmFfi$Main$read = A2(
-	$elm$core$Basics$composeR,
-	A3($author$project$Interop$JavaScript$run, function(a) { return require('fs/promises').readFile(a, 'utf-8') }, $elm$json$Json$Encode$string, $elm$json$Json$Decode$string),
-	$elm$core$Task$mapError($author$project$ElmFfi$Main$JavaScriptError));
+var $author$project$ElmFfi$Main$read = function (path) {
+	return A2(
+		$elm$core$Task$mapError,
+		$author$project$ElmFfi$Main$JavaScriptError,
+		A3(
+			$author$project$Interop$JavaScript$run, function(a) { return require('fs/promises').readFile(a, 'utf-8') },
+			$elm$json$Json$Encode$string(path),
+			$elm$json$Json$Decode$string));
+};
 var $author$project$ElmFfi$Main$taskFromResult = function (a) {
 	if (!a.$) {
 		var b = a.a;
@@ -4329,18 +4257,25 @@ var $author$project$ElmFfi$Main$taskFromResult = function (a) {
 		return $elm$core$Task$fail(b);
 	}
 };
-var $author$project$ElmFfi$Main$write = F3(
-	function (fn, v1, v2) {
+var $author$project$ElmFfi$Main$write = F2(
+	function (path, data) {
 		return A2(
 			$elm$core$Task$mapError,
 			$author$project$ElmFfi$Main$JavaScriptError,
-			A2(fn, v1, v2));
-	})(
-	A4(
-		$author$project$Interop$JavaScript$run2, function(a, b) { return require('fs/promises').writeFile(a, b) },
-		$elm$json$Json$Encode$string,
-		$elm$json$Json$Encode$string,
-		$elm$json$Json$Decode$succeed(0)));
+			A3(
+				$author$project$Interop$JavaScript$run, function(a) { return require('fs/promises').writeFile(a.path, a.data) },
+				$elm$json$Json$Encode$object(
+					_List_fromArray(
+						[
+							_Utils_Tuple2(
+							'path',
+							$elm$json$Json$Encode$string(path)),
+							_Utils_Tuple2(
+							'data',
+							$elm$json$Json$Encode$string(data))
+						])),
+				$elm$json$Json$Decode$succeed(0)));
+	});
 var $author$project$ElmFfi$Main$patchFile = F2(
 	function (opt, a) {
 		var applyShebang = function (b) {
