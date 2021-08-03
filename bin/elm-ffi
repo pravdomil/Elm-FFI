@@ -3927,6 +3927,22 @@ var $author$project$ElmFfi$Main$LegacyNotImplemented = {$: 4};
 var $author$project$ElmFfi$Main$PatchError = function (a) {
 	return {$: 3, a: a};
 };
+var $author$project$ElmFfi$Patch$fn = 'var task = function(arg_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       };\n    ';
+var $author$project$ElmFfi$Patch$fn2 = 'var task = F2(function(arg_, arg2_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_), _Json_unwrap(arg2_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       });\n    ';
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
+var $author$project$ElmFfi$Patch$implementRunTask = function (a) {
+	return A3(
+		$elm$core$String$replace,
+		'var task = F2(\n\t\t\tfunction (arg_, arg2_) {\n\t\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t\t});',
+		$author$project$ElmFfi$Patch$fn2,
+		A3($elm$core$String$replace, 'var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t};', $author$project$ElmFfi$Patch$fn, a));
+};
 var $author$project$ElmFfi$Patch$Code = function (a) {
 	return {$: 0, a: a};
 };
@@ -4200,7 +4216,7 @@ var $author$project$ElmFfi$Patch$parser = function () {
 	};
 	return A2($elm$parser$Parser$loop, _List_Nil, loop);
 }();
-var $author$project$ElmFfi$Patch$codeToFunction = function (a) {
+var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 	return A2(
 		$elm$core$Result$map,
 		function (v) {
@@ -4226,27 +4242,11 @@ var $author$project$ElmFfi$Patch$codeToFunction = function (a) {
 		},
 		A2($elm$parser$Parser$run, $author$project$ElmFfi$Patch$parser, a));
 };
-var $author$project$ElmFfi$Patch$fn = 'var task = function(arg_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       };\n    ';
-var $author$project$ElmFfi$Patch$fn2 = 'var task = F2(function(arg_, arg2_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_), _Json_unwrap(arg2_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       });\n    ';
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
-	});
-var $author$project$ElmFfi$Patch$implementRunTask = function (a) {
-	return A3(
-		$elm$core$String$replace,
-		'var task = F2(\n\t\t\tfunction (arg_, arg2_) {\n\t\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t\t});',
-		$author$project$ElmFfi$Patch$fn2,
-		A3($elm$core$String$replace, 'var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t};', $author$project$ElmFfi$Patch$fn, a));
-};
 var $author$project$ElmFfi$Patch$apply = function (a) {
 	return A2(
 		$elm$core$Result$map,
 		$author$project$ElmFfi$Patch$implementRunTask,
-		$author$project$ElmFfi$Patch$codeToFunction(a));
+		$author$project$ElmFfi$Patch$stringToFunction(a));
 };
 var $author$project$ElmFfi$Main$JavaScriptError = function (a) {
 	return {$: 2, a: a};
@@ -4395,35 +4395,40 @@ var $author$project$ElmFfi$Main$mainTask = function (_v0) {
 		A2(
 			$elm$core$Task$map,
 			function (v) {
-				var count = function () {
-					var _v1 = $elm$core$List$length(v);
-					if (_v1 === 1) {
-						return '1 file';
-					} else {
-						var vv = _v1;
-						return $elm$core$String$fromInt(vv) + ' files';
-					}
-				}();
-				return 'Elm FFI patched ' + (count + '.');
+				return v + '\n';
 			},
 			A2(
-				$elm$core$Task$andThen,
+				$elm$core$Task$map,
 				function (v) {
-					return $elm$core$Task$sequence(
-						A2(
-							$elm$core$List$map,
-							$author$project$ElmFfi$Main$patchFile(v),
-							v.U));
+					var count = function () {
+						var _v1 = $elm$core$List$length(v);
+						if (_v1 === 1) {
+							return '1 file';
+						} else {
+							var vv = _v1;
+							return $elm$core$String$fromInt(vv) + ' files';
+						}
+					}();
+					return 'Elm FFI patched ' + (count + '.');
 				},
 				A2(
 					$elm$core$Task$andThen,
-					$author$project$ElmFfi$Main$checkFiles,
+					function (v) {
+						return $elm$core$Task$sequence(
+							A2(
+								$elm$core$List$map,
+								$author$project$ElmFfi$Main$patchFile(v),
+								v.U));
+					},
 					A2(
-						$elm$core$Task$mapError,
-						$author$project$ElmFfi$Main$CannotParseArgs,
-						$author$project$ElmFfi$Main$taskFromResult(
-							$author$project$ElmFfi$Options$parse(
-								A2($elm$core$List$drop, 2, args))))))));
+						$elm$core$Task$andThen,
+						$author$project$ElmFfi$Main$checkFiles,
+						A2(
+							$elm$core$Task$mapError,
+							$author$project$ElmFfi$Main$CannotParseArgs,
+							$author$project$ElmFfi$Main$taskFromResult(
+								$author$project$ElmFfi$Options$parse(
+									A2($elm$core$List$drop, 2, args)))))))));
 };
 var $author$project$ElmFfi$Main$main = $author$project$Interop$JavaScript$cli($author$project$ElmFfi$Main$mainTask);
 var $author$project$Main$main = $author$project$ElmFfi$Main$main;
