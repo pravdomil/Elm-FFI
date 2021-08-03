@@ -56,6 +56,17 @@ errorToString a =
             "Cannot decode JavaScript value because:\n" ++ Decode.errorToString b
 
 
+errorCode : Error -> Maybe String
+errorCode a =
+    case a of
+        Exception b ->
+            b
+                |> Decode.decodeValue (Decode.field "code" Decode.string)
+                |> Result.toMaybe
+
+        _ ->
+            Nothing
+
 
 --
 
