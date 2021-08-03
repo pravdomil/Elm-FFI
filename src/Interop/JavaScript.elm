@@ -68,6 +68,19 @@ errorCode a =
             Nothing
 
 
+errorMessage : Error -> Maybe String
+errorMessage a =
+    case a of
+        Exception b ->
+            b
+                |> Decode.decodeValue (Decode.field "message" Decode.string)
+                |> Result.toMaybe
+
+        _ ->
+            Nothing
+
+
+
 --
 
 
