@@ -9,7 +9,7 @@ import Task exposing (Task)
 
 
 run : String -> (a -> Decode.Value) -> Decoder b -> a -> Task Error b
-run code encoder decoder =
+run code encoder decoder arg =
     let
         _ =
             Exception
@@ -18,21 +18,20 @@ run code encoder decoder =
         task arg =
             Task.fail FileNotPatched
     in
-    \arg ->
-        task (encoder arg)
-            |> Task.andThen
-                (\v ->
-                    case v |> Decode.decodeValue decoder of
-                        Ok b ->
-                            Task.succeed b
+    task (encoder arg)
+        |> Task.andThen
+            (\v ->
+                case v |> Decode.decodeValue decoder of
+                    Ok b ->
+                        Task.succeed b
 
-                        Err b ->
-                            Task.fail (DecodeError b)
-                )
+                    Err b ->
+                        Task.fail (DecodeError b)
+            )
 
 
 run2 : String -> (a -> Decode.Value) -> (b -> Decode.Value) -> Decoder c -> a -> b -> Task Error c
-run2 code encoder encoder2 decoder =
+run2 code encoder encoder2 decoder arg arg2 =
     let
         _ =
             Exception
@@ -41,17 +40,16 @@ run2 code encoder encoder2 decoder =
         task arg arg2 =
             Task.fail FileNotPatched
     in
-    \arg arg2 ->
-        task (encoder arg) (encoder2 arg2)
-            |> Task.andThen
-                (\v ->
-                    case v |> Decode.decodeValue decoder of
-                        Ok b ->
-                            Task.succeed b
+    task (encoder arg) (encoder2 arg2)
+        |> Task.andThen
+            (\v ->
+                case v |> Decode.decodeValue decoder of
+                    Ok b ->
+                        Task.succeed b
 
-                        Err b ->
-                            Task.fail (DecodeError b)
-                )
+                    Err b ->
+                        Task.fail (DecodeError b)
+            )
 
 
 
