@@ -155,32 +155,32 @@ taskFromResult a =
 
 
 read : String -> Task Error String
-read =
+read path =
     JavaScript.run "require('fs/promises').readFile(a, 'utf-8')"
-        Encode.string
+        (Encode.string path)
         Decode.string
-        >> Task.mapError JavaScriptError
+        |> Task.mapError JavaScriptError
 
 
 write : String -> String -> Task Error ()
-write =
-    JavaScript.run2 "require('fs/promises').writeFile(a, b)"
-        Encode.string
-        Encode.string
+write path data =
+    JavaScript.run "require('fs/promises').writeFile(a.path, a.data)"
+        (Encode.object
+            [ ( "path", Encode.string path )
+            , ( "data", Encode.string data )
+            ]
+        )
         (Decode.succeed ())
-        |> (\fn v1 v2 ->
-                fn v1 v2
-                    |> Task.mapError JavaScriptError
-           )
+        |> Task.mapError JavaScriptError
 
 
 chmod : String -> Int -> Task Error ()
-chmod =
-    JavaScript.run2 "require('fs/promises').chmod(a, b)"
-        Encode.string
-        Encode.int
+chmod path mode =
+    JavaScript.run "require('fs/promises').chmod(a.path, a.mode)"
+        (Encode.object
+            [ ( "path", Encode.string path )
+            , ( "mode", Encode.int mode )
+            ]
+        )
         (Decode.succeed ())
-        |> (\fn v1 v2 ->
-                fn v1 v2
-                    |> Task.mapError JavaScriptError
-           )
+        |> Task.mapError JavaScriptError

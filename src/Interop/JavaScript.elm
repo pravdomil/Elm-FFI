@@ -8,8 +8,8 @@ import Json.Encode as Encode
 import Task exposing (Task)
 
 
-run : String -> (a -> Decode.Value) -> Decoder b -> a -> Task Error b
-run code encoder decoder arg =
+run : String -> Decode.Value -> Decoder b -> Task Error b
+run code arg decoder =
     let
         _ =
             Exception
@@ -18,7 +18,7 @@ run code encoder decoder arg =
         task arg_ =
             Task.fail FileNotPatched
     in
-    task (encoder arg)
+    task arg
         |> Task.andThen
             (\v ->
                 case v |> Decode.decodeValue decoder of
@@ -115,35 +115,33 @@ cliHelper a =
 readArgs : Task Error (List String)
 readArgs =
     run "process.argv"
-        (\() -> Encode.null)
+        Encode.null
         (Decode.list Decode.string)
-        ()
 
 
 readStdin : Task Error String
 readStdin =
     run "require('fs').readFileSync(0, 'utf8')"
-        (\() -> Encode.null)
+        Encode.null
         Decode.string
-        ()
 
 
 writeStdout : String -> Task Error ()
-writeStdout =
+writeStdout data =
     run "process.stdout.write(a)"
-        Encode.string
+        (Encode.string data)
         (Decode.succeed ())
 
 
 writeStderr : String -> Task Error ()
-writeStderr =
+writeStderr data =
     run "process.stderr.write(a)"
-        Encode.string
+        (Encode.string data)
         (Decode.succeed ())
 
 
 exit : Int -> Task Error ()
-exit =
+exit code =
     run "process.exit(a)"
-        Encode.int
+        (Encode.int code)
         (Decode.succeed ())
