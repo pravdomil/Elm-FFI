@@ -1,7 +1,7 @@
-module Cli.Main exposing (..)
+module ElmFfi.Main exposing (..)
 
-import Cli.Options as Options exposing (Options)
-import Cli.Patch as Patch
+import ElmFfi.Options as Options exposing (Options)
+import ElmFfi.Patch as Patch
 import Interop.JavaScript as JavaScript
 import Json.Decode as Decode
 import Json.Encode as Encode

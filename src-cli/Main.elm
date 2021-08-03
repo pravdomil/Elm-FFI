@@ -1,7 +1,7 @@
 module Main exposing (..)
 
-import Cli.Main
+import ElmFfi.Main
 
 
 main =
-    Cli.Main.main
+    ElmFfi.Main.main

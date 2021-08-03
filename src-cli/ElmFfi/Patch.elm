@@ -1,4 +1,4 @@
-module Cli.Patch exposing (..)
+module ElmFfi.Patch exposing (..)
 
 
 apply : String -> String

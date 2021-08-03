@@ -1,4 +1,4 @@
-module Cli.Options exposing (..)
+module ElmFfi.Options exposing (..)
 
 import Parser as P exposing ((|.), (|=), Parser)
 
