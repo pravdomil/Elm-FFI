@@ -3129,25 +3129,65 @@ var $elm$core$Task$attempt = F2(
 	});
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$json$Json$Decode$field = _Json_decodeField;
-var $elm$core$Result$map = F2(
-	function (func, ra) {
-		if (!ra.$) {
-			var a = ra.a;
-			return $elm$core$Result$Ok(
-				func(a));
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$core$Result$toMaybe = function (result) {
+	if (!result.$) {
+		var v = result.a;
+		return $elm$core$Maybe$Just(v);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Interop$JavaScript$errorCode = function (a) {
+	if (a.$ === 1) {
+		var b = a.a;
+		return $elm$core$Result$toMaybe(
+			A2(
+				$elm$json$Json$Decode$decodeValue,
+				A2($elm$json$Json$Decode$field, 'code', $elm$json$Json$Decode$string),
+				b));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Interop$JavaScript$errorMessage = function (a) {
+	if (a.$ === 1) {
+		var b = a.a;
+		return $elm$core$Result$toMaybe(
+			A2(
+				$elm$json$Json$Decode$decodeValue,
+				A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string),
+				b));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (!_v0.$) {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
 		} else {
-			var e = ra.a;
-			return $elm$core$Result$Err(e);
+			return xs;
 		}
 	});
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $elm$core$Result$withDefault = F2(
-	function (def, result) {
-		if (!result.$) {
-			var a = result.a;
-			return a;
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
 		} else {
-			return def;
+			return $elm$core$Maybe$Nothing;
 		}
 	});
 var $author$project$Interop$JavaScript$errorToString = function (a) {
@@ -3157,17 +3197,27 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 		case 1:
 			var b = a.a;
 			return A2(
-				$elm$core$Result$withDefault,
-				'Got JavaScript exception.',
+				$elm$core$String$join,
+				'\n',
 				A2(
-					$elm$core$Result$map,
-					function (v) {
-						return 'Got JavaScript exception:\n' + v;
-					},
-					A2(
-						$elm$json$Json$Decode$decodeValue,
-						A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string),
-						b)));
+					$elm$core$List$filterMap,
+					$elm$core$Basics$identity,
+					_List_fromArray(
+						[
+							$elm$core$Maybe$Just('Got JavaScript exception.'),
+							A2(
+							$elm$core$Maybe$map,
+							function (v) {
+								return 'Code: ' + v;
+							},
+							$author$project$Interop$JavaScript$errorCode(a)),
+							A2(
+							$elm$core$Maybe$map,
+							function (v) {
+								return 'Message: ' + v;
+							},
+							$author$project$Interop$JavaScript$errorMessage(a))
+						])));
 		default:
 			var b = a.a;
 			return 'Cannot decode JavaScript value because:\n' + $elm$json$Json$Decode$errorToString(b);
@@ -3940,6 +3990,17 @@ var $elm$core$String$replace = F3(
 var $author$project$ElmFfi$Patch$implementRunTask = function (a) {
 	return A3($elm$core$String$replace, 'var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t};', $author$project$ElmFfi$Patch$fn, a);
 };
+var $elm$core$Result$map = F2(
+	function (func, ra) {
+		if (!ra.$) {
+			var a = ra.a;
+			return $elm$core$Result$Ok(
+				func(a));
+		} else {
+			var e = ra.a;
+			return $elm$core$Result$Err(e);
+		}
+	});
 var $author$project$ElmFfi$Patch$Code = function (a) {
 	return {$: 0, a: a};
 };
