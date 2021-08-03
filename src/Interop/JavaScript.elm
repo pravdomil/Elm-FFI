@@ -1,4 +1,4 @@
-module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorToString, run)
+module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorCode, errorMessage, errorToString, run)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
