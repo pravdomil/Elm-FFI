@@ -55,12 +55,9 @@ errorToString a =
             "Compiled file needs to be processed via elm-ffi command."
 
         Exception _ ->
-            [ Just "Got JavaScript exception."
-            , errorCode a |> Maybe.map (\v -> "Code: " ++ v |> indent)
-            , errorMessage a |> Maybe.map indent
-            ]
-                |> List.filterMap identity
-                |> String.join "\n"
+            "Got JavaScript exception."
+                ++ (errorCode a |> Maybe.map (\v -> "\n" ++ indent ("Code: " ++ v)) |> Maybe.withDefault "")
+                ++ (errorMessage a |> Maybe.map (\v -> "\n" ++ indent v) |> Maybe.withDefault "")
 
         DecodeError b ->
             "Cannot decode JavaScript value because:\n" ++ indent (Decode.errorToString b)
