@@ -3195,7 +3195,6 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 		case 0:
 			return 'Compiled file needs to be processed via elm-ffi command.';
 		case 1:
-			var b = a.a;
 			return A2(
 				$elm$core$String$join,
 				'\n',
@@ -4310,7 +4309,7 @@ var $author$project$ElmFfi$Main$read = function (path) {
 			$elm$json$Json$Encode$string(path),
 			$elm$json$Json$Decode$string));
 };
-var $author$project$ElmFfi$Main$taskFromResult = function (a) {
+var $author$project$ElmFfi$Main$resultToTask = function (a) {
 	if (!a.$) {
 		var b = a.a;
 		return $elm$core$Task$succeed(b);
@@ -4356,7 +4355,7 @@ var $author$project$ElmFfi$Main$patchFile = F2(
 			return A2(
 				$elm$core$Task$mapError,
 				$author$project$ElmFfi$Main$PatchError,
-				$author$project$ElmFfi$Main$taskFromResult(
+				$author$project$ElmFfi$Main$resultToTask(
 					$author$project$ElmFfi$Patch$apply(b)));
 		};
 		var applyLegacy = function (b) {
@@ -4423,7 +4422,7 @@ var $author$project$ElmFfi$Main$mainTask = function (_v0) {
 						A2(
 							$elm$core$Task$mapError,
 							$author$project$ElmFfi$Main$CannotParseArgs,
-							$author$project$ElmFfi$Main$taskFromResult(
+							$author$project$ElmFfi$Main$resultToTask(
 								$author$project$ElmFfi$Options$parse(
 									A2($elm$core$List$drop, 2, args)))))))));
 };
