@@ -63,7 +63,7 @@ errorToString a =
                 |> String.join "\n"
 
         DecodeError b ->
-            "Cannot decode JavaScript value because:\n" ++ Decode.errorToString b
+            "Cannot decode JavaScript value because:\n" ++ indent (Decode.errorToString b)
 
 
 errorCode : Error -> Maybe String
