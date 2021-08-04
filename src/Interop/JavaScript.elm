@@ -57,7 +57,7 @@ errorToString a =
         Exception _ ->
             [ Just "Got JavaScript exception."
             , errorCode a |> Maybe.map (\v -> "Code: " ++ v |> indent)
-            , errorMessage a |> Maybe.map (\v -> "Message: " ++ v |> indent)
+            , errorMessage a |> Maybe.map indent
             ]
                 |> List.filterMap identity
                 |> String.join "\n"
