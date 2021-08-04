@@ -3162,24 +3162,6 @@ var $author$project$Interop$JavaScript$errorMessage = function (a) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _v0 = f(mx);
-		if (!_v0.$) {
-			var x = _v0.a;
-			return A2($elm$core$List$cons, x, xs);
-		} else {
-			return xs;
-		}
-	});
-var $elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
-	});
 var $elm$core$Maybe$map = F2(
 	function (f, maybe) {
 		if (!maybe.$) {
@@ -3188,6 +3170,15 @@ var $elm$core$Maybe$map = F2(
 				f(value));
 		} else {
 			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
 		}
 	});
 var $author$project$Interop$JavaScript$errorToString = function (a) {
@@ -3204,29 +3195,27 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 		case 0:
 			return 'Compiled file needs to be processed via elm-ffi command.';
 		case 1:
-			return A2(
-				$elm$core$String$join,
-				'\n',
+			return 'Got JavaScript exception.' + (A2(
+				$elm$core$Maybe$withDefault,
+				'',
 				A2(
-					$elm$core$List$filterMap,
-					$elm$core$Basics$identity,
-					_List_fromArray(
-						[
-							$elm$core$Maybe$Just('Got JavaScript exception.'),
-							A2(
-							$elm$core$Maybe$map,
-							function (v) {
-								return indent('Code: ' + v);
-							},
-							$author$project$Interop$JavaScript$errorCode(a)),
-							A2(
-							$elm$core$Maybe$map,
-							indent,
-							$author$project$Interop$JavaScript$errorMessage(a))
-						])));
+					$elm$core$Maybe$map,
+					function (v) {
+						return '\n' + indent('Code: ' + v);
+					},
+					$author$project$Interop$JavaScript$errorCode(a))) + A2(
+				$elm$core$Maybe$withDefault,
+				'',
+				A2(
+					$elm$core$Maybe$map,
+					function (v) {
+						return '\n' + indent(v);
+					},
+					$author$project$Interop$JavaScript$errorMessage(a))));
 		default:
 			var b = a.a;
-			return 'Cannot decode JavaScript value because:\n' + $elm$json$Json$Decode$errorToString(b);
+			return 'Cannot decode JavaScript value because:\n' + indent(
+				$elm$json$Json$Decode$errorToString(b));
 	}
 };
 var $elm$json$Json$Encode$int = _Json_wrap;
