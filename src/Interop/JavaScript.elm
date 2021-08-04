@@ -42,14 +42,22 @@ type Error
 
 errorToString : Error -> String
 errorToString a =
+    let
+        indent : String -> String
+        indent b =
+            b
+                |> String.split "\n"
+                |> List.map ((++) "  ")
+                |> String.join "\n"
+    in
     case a of
         FileNotPatched ->
             "Compiled file needs to be processed via elm-ffi command."
 
         Exception _ ->
             [ Just "Got JavaScript exception."
-            , errorCode a |> Maybe.map (\v -> "Code: " ++ v)
-            , errorMessage a |> Maybe.map (\v -> "Message: " ++ v)
+            , errorCode a |> Maybe.map (\v -> "Code: " ++ v |> indent)
+            , errorMessage a |> Maybe.map (\v -> "Message: " ++ v |> indent)
             ]
                 |> List.filterMap identity
                 |> String.join "\n"
