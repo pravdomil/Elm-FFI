@@ -22,7 +22,7 @@ main =
 mainTask : { args : List String } -> Task String String
 mainTask { args } =
     Options.parse (List.drop 2 args)
-        |> taskFromResult
+        |> resultToTask
         |> Task.mapError CannotParseArgs
         |> Task.andThen checkFiles
         |> Task.andThen (\v -> v.files |> List.map (patchFile v) |> Task.sequence)
@@ -60,7 +60,7 @@ patchFile opt a =
         applyPatch : String -> Task Error String
         applyPatch b =
             Patch.apply b
-                |> taskFromResult
+                |> resultToTask
                 |> Task.mapError PatchError
 
         applyShebang : String -> Task Error String
@@ -140,8 +140,8 @@ errorToString a =
 --
 
 
-taskFromResult : Result x a -> Task x a
-taskFromResult a =
+resultToTask : Result x a -> Task x a
+resultToTask a =
     case a of
         Ok b ->
             Task.succeed b
