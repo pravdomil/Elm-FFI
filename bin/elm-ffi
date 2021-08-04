@@ -3221,9 +3221,7 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 							$author$project$Interop$JavaScript$errorCode(a)),
 							A2(
 							$elm$core$Maybe$map,
-							function (v) {
-								return indent('Message: ' + v);
-							},
+							indent,
 							$author$project$Interop$JavaScript$errorMessage(a))
 						])));
 		default:
