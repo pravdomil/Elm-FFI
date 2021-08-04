@@ -3191,6 +3191,15 @@ var $elm$core$Maybe$map = F2(
 		}
 	});
 var $author$project$Interop$JavaScript$errorToString = function (a) {
+	var indent = function (b) {
+		return A2(
+			$elm$core$String$join,
+			'\n',
+			A2(
+				$elm$core$List$map,
+				$elm$core$Basics$append('  '),
+				A2($elm$core$String$split, '\n', b)));
+	};
 	switch (a.$) {
 		case 0:
 			return 'Compiled file needs to be processed via elm-ffi command.';
@@ -3207,13 +3216,13 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 							A2(
 							$elm$core$Maybe$map,
 							function (v) {
-								return 'Code: ' + v;
+								return indent('Code: ' + v);
 							},
 							$author$project$Interop$JavaScript$errorCode(a)),
 							A2(
 							$elm$core$Maybe$map,
 							function (v) {
-								return 'Message: ' + v;
+								return indent('Message: ' + v);
 							},
 							$author$project$Interop$JavaScript$errorMessage(a))
 						])));
