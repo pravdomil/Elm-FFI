@@ -11,8 +11,22 @@ import Task exposing (Task)
 run : String -> Decode.Value -> Decoder b -> Task Error b
 run code arg decoder =
     let
-        _ =
+        toException : Decode.Value -> Error
+        toException b =
             Exception
+                (b
+                    |> Decode.decodeValue (Decode.field "code" Decode.string)
+                    |> Result.withDefault ""
+                )
+                (b
+                    |> Decode.decodeValue
+                        (Decode.oneOf
+                            [ Decode.string
+                            , Decode.field "message" Decode.string
+                            ]
+                        )
+                    |> Result.withDefault ""
+                )
 
         task : Decode.Value -> Task Error Decode.Value
         task arg_ =
@@ -36,7 +50,7 @@ run code arg decoder =
 
 type Error
     = FileNotPatched
-    | Exception Decode.Value
+    | Exception String String
     | DecodeError Decode.Error
 
 
@@ -54,10 +68,20 @@ errorToString a =
         FileNotPatched ->
             "Compiled file needs to be processed via elm-ffi command."
 
-        Exception _ ->
+        Exception code msg ->
             "Got JavaScript exception."
-                ++ (errorCode a |> Maybe.map (\v -> "\n" ++ indent ("Code: " ++ v)) |> Maybe.withDefault "")
-                ++ (errorMessage a |> Maybe.map (\v -> "\n" ++ indent v) |> Maybe.withDefault "")
+                ++ (if String.isEmpty code then
+                        ""
+
+                    else
+                        "\n" ++ indent ("Code: " ++ code)
+                   )
+                ++ (if String.isEmpty msg then
+                        ""
+
+                    else
+                        "\n" ++ indent msg
+                   )
 
         DecodeError b ->
             "Cannot decode JavaScript value because:\n" ++ indent (Decode.errorToString b)

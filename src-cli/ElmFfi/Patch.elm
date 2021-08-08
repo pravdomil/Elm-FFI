@@ -31,7 +31,7 @@ fn =
            }
 
            function err(a) {
-             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));
+             callback(_Scheduler_fail(toException(_Json_wrap(a))));
            }
 
            var a;
