@@ -54,15 +54,7 @@ parser =
 
                 --
                 , P.succeed (\v -> P.Loop { acc | files = v :: acc.files })
-                    |= P.getChompedString
-                        (P.succeed ()
-                            |. P.chompIf ((/=) '\u{0000}')
-                            |. P.chompUntilEndOr "\u{0000}"
-                        )
-                    |. P.oneOf
-                        [ P.symbol "\u{0000}"
-                        , P.end
-                        ]
+                    |= argument
 
                 --
                 , P.succeed (\_ -> P.Done { acc | files = List.reverse acc.files })
@@ -73,10 +65,23 @@ parser =
         boolArg name =
             P.succeed True
                 |. P.symbol ("--" ++ name)
-                |. P.oneOf
-                    [ P.symbol "\u{0000}"
-                    , P.end
-                    ]
+                |. argEnd
+
+        argument : Parser String
+        argument =
+            P.getChompedString
+                (P.succeed ()
+                    |. P.chompIf (\v -> v /= '-' && v /= '\u{0000}')
+                    |. P.chompUntilEndOr "\u{0000}"
+                )
+                |. argEnd
+
+        argEnd : Parser ()
+        argEnd =
+            P.oneOf
+                [ P.symbol "\u{0000}"
+                , P.end
+                ]
     in
     P.loop
         { shebang = False
