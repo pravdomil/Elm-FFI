@@ -3127,60 +3127,9 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
-var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $elm$core$Result$toMaybe = function (result) {
-	if (!result.$) {
-		var v = result.a;
-		return $elm$core$Maybe$Just(v);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
+var $elm$core$String$isEmpty = function (string) {
+	return string === '';
 };
-var $author$project$Interop$JavaScript$errorCode = function (a) {
-	if (a.$ === 1) {
-		var b = a.a;
-		return $elm$core$Result$toMaybe(
-			A2(
-				$elm$json$Json$Decode$decodeValue,
-				A2($elm$json$Json$Decode$field, 'code', $elm$json$Json$Decode$string),
-				b));
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Interop$JavaScript$errorMessage = function (a) {
-	if (a.$ === 1) {
-		var b = a.a;
-		return $elm$core$Result$toMaybe(
-			A2(
-				$elm$json$Json$Decode$decodeValue,
-				A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string),
-				b));
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $author$project$Interop$JavaScript$errorToString = function (a) {
 	var indent = function (b) {
 		return A2(
@@ -3195,23 +3144,9 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 		case 0:
 			return 'Compiled file needs to be processed via elm-ffi command.';
 		case 1:
-			return 'Got JavaScript exception.' + (A2(
-				$elm$core$Maybe$withDefault,
-				'',
-				A2(
-					$elm$core$Maybe$map,
-					function (v) {
-						return '\n' + indent('Code: ' + v);
-					},
-					$author$project$Interop$JavaScript$errorCode(a))) + A2(
-				$elm$core$Maybe$withDefault,
-				'',
-				A2(
-					$elm$core$Maybe$map,
-					function (v) {
-						return '\n' + indent(v);
-					},
-					$author$project$Interop$JavaScript$errorMessage(a))));
+			var code = a.a;
+			var msg = a.b;
+			return 'Got JavaScript exception.' + (($elm$core$String$isEmpty(code) ? '' : ('\n' + indent('Code: ' + code))) + ($elm$core$String$isEmpty(msg) ? '' : ('\n' + indent(msg))));
 		default:
 			var b = a.a;
 			return 'Cannot decode JavaScript value because:\n' + indent(
@@ -3222,13 +3157,50 @@ var $elm$json$Json$Encode$int = _Json_wrap;
 var $author$project$Interop$JavaScript$DecodeError = function (a) {
 	return {$: 2, a: a};
 };
-var $author$project$Interop$JavaScript$Exception = function (a) {
-	return {$: 1, a: a};
-};
+var $author$project$Interop$JavaScript$Exception = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
 var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
+var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$core$Task$fail = _Scheduler_fail;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (!result.$) {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
+	});
 var $author$project$Interop$JavaScript$run = F3(
 	function (code, arg, decoder) {
+		var toException = function (b) {
+			return A2(
+				$author$project$Interop$JavaScript$Exception,
+				A2(
+					$elm$core$Result$withDefault,
+					'',
+					A2(
+						$elm$json$Json$Decode$decodeValue,
+						A2($elm$json$Json$Decode$field, 'code', $elm$json$Json$Decode$string),
+						b)),
+				A2(
+					$elm$core$Result$withDefault,
+					'',
+					A2(
+						$elm$json$Json$Decode$decodeValue,
+						$elm$json$Json$Decode$oneOf(
+							_List_fromArray(
+								[
+									$elm$json$Json$Decode$string,
+									A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string)
+								])),
+						b)));
+		};
 		var task = function(arg_) {
          return _Scheduler_binding(function(callback) {
            function ok(a) {
@@ -3236,7 +3208,7 @@ var $author$project$Interop$JavaScript$run = F3(
            }
 
            function err(a) {
-             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));
+             callback(_Scheduler_fail(toException(_Json_wrap(a))));
            }
 
            var a;
@@ -3257,16 +3229,15 @@ var $author$project$Interop$JavaScript$run = F3(
          })
        };
     
-		var _v0 = $author$project$Interop$JavaScript$Exception;
 		return A2(
 			$elm$core$Task$andThen,
 			function (v) {
-				var _v1 = A2($elm$json$Json$Decode$decodeValue, decoder, v);
-				if (!_v1.$) {
-					var b = _v1.a;
+				var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, v);
+				if (!_v0.$) {
+					var b = _v0.a;
 					return $elm$core$Task$succeed(b);
 				} else {
-					var b = _v1.a;
+					var b = _v0.a;
 					return $elm$core$Task$fail(
 						$author$project$Interop$JavaScript$DecodeError(b));
 				}
@@ -3777,9 +3748,6 @@ var $elm$parser$Parser$Advanced$Token = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
 	});
-var $elm$core$String$isEmpty = function (string) {
-	return string === '';
-};
 var $elm$parser$Parser$Advanced$isSubString = _Parser_isSubString;
 var $elm$core$Basics$not = _Basics_not;
 var $elm$parser$Parser$Advanced$token = function (_v0) {
@@ -3973,7 +3941,7 @@ var $author$project$ElmFfi$Main$LegacyNotImplemented = {$: 4};
 var $author$project$ElmFfi$Main$PatchError = function (a) {
 	return {$: 3, a: a};
 };
-var $author$project$ElmFfi$Patch$fn = 'var task = function(arg_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       };\n    ';
+var $author$project$ElmFfi$Patch$fn = 'var task = function(arg_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail(toException(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       };\n    ';
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
 		return A2(
