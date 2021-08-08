@@ -3149,7 +3149,7 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 			return 'Got JavaScript exception.' + (($elm$core$String$isEmpty(code) ? '' : ('\n' + indent('Code: ' + code))) + ($elm$core$String$isEmpty(msg) ? '' : ('\n' + indent(msg))));
 		default:
 			var b = a.a;
-			return 'Cannot decode JavaScript value because:\n' + indent(
+			return 'Cannot decode value because:\n' + indent(
 				$elm$json$Json$Decode$errorToString(b));
 	}
 };
