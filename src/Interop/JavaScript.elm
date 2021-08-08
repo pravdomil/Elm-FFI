@@ -50,8 +50,16 @@ run code arg decoder =
 
 type Error
     = FileNotPatched
-    | Exception String String
+    | Exception Code Message
     | DecodeError Decode.Error
+
+
+type alias Code =
+    String
+
+
+type alias Message =
+    String
 
 
 errorToString : Error -> String
