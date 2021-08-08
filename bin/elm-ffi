@@ -3810,6 +3810,26 @@ var $elm$parser$Parser$symbol = function (str) {
 			$elm$parser$Parser$ExpectingSymbol(str)));
 };
 var $author$project$ElmFfi$Options$parser = function () {
+	var argEnd = $elm$parser$Parser$oneOf(
+		_List_fromArray(
+			[
+				$elm$parser$Parser$symbol('\u0000'),
+				$elm$parser$Parser$end
+			]));
+	var argument = A2(
+		$elm$parser$Parser$ignorer,
+		$elm$parser$Parser$getChompedString(
+			A2(
+				$elm$parser$Parser$ignorer,
+				A2(
+					$elm$parser$Parser$ignorer,
+					$elm$parser$Parser$succeed(0),
+					$elm$parser$Parser$chompIf(
+						function (v) {
+							return (v !== '-') && (v !== '\u0000');
+						})),
+				$elm$parser$Parser$chompUntilEndOr('\u0000'))),
+		argEnd);
 	var boolArg = function (name) {
 		return A2(
 			$elm$parser$Parser$ignorer,
@@ -3817,12 +3837,7 @@ var $author$project$ElmFfi$Options$parser = function () {
 				$elm$parser$Parser$ignorer,
 				$elm$parser$Parser$succeed(true),
 				$elm$parser$Parser$symbol('--' + name)),
-			$elm$parser$Parser$oneOf(
-				_List_fromArray(
-					[
-						$elm$parser$Parser$symbol('\u0000'),
-						$elm$parser$Parser$end
-					])));
+			argEnd);
 	};
 	var loop = function (acc) {
 		return $elm$parser$Parser$oneOf(
@@ -3869,23 +3884,7 @@ var $author$project$ElmFfi$Options$parser = function () {
 										U: A2($elm$core$List$cons, v, acc.U)
 									}));
 						}),
-					A2(
-						$elm$parser$Parser$ignorer,
-						$elm$parser$Parser$getChompedString(
-							A2(
-								$elm$parser$Parser$keeper,
-								$elm$parser$Parser$succeed($elm$core$Basics$identity),
-								A2(
-									$elm$parser$Parser$ignorer,
-									$elm$parser$Parser$chompIf(
-										$elm$core$Basics$neq('\u0000')),
-									$elm$parser$Parser$chompUntilEndOr('\u0000')))),
-						$elm$parser$Parser$oneOf(
-							_List_fromArray(
-								[
-									$elm$parser$Parser$symbol('\u0000'),
-									$elm$parser$Parser$end
-								])))),
+					argument),
 					A2(
 					$elm$parser$Parser$keeper,
 					$elm$parser$Parser$succeed(
