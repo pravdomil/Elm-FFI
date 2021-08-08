@@ -84,7 +84,7 @@ errorToString a =
                    )
 
         DecodeError b ->
-            "Cannot decode JavaScript value because:\n" ++ indent (Decode.errorToString b)
+            "Cannot decode value because:\n" ++ indent (Decode.errorToString b)
 
 
 
