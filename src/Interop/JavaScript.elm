@@ -1,4 +1,4 @@
-module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorCode, errorMessage, errorToString, run)
+module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorToString, run)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
@@ -61,30 +61,6 @@ errorToString a =
 
         DecodeError b ->
             "Cannot decode JavaScript value because:\n" ++ indent (Decode.errorToString b)
-
-
-errorCode : Error -> Maybe String
-errorCode a =
-    case a of
-        Exception b ->
-            b
-                |> Decode.decodeValue (Decode.field "code" Decode.string)
-                |> Result.toMaybe
-
-        _ ->
-            Nothing
-
-
-errorMessage : Error -> Maybe String
-errorMessage a =
-    case a of
-        Exception b ->
-            b
-                |> Decode.decodeValue (Decode.field "message" Decode.string)
-                |> Result.toMaybe
-
-        _ ->
-            Nothing
 
 
 
