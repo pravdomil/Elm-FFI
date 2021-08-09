@@ -24,33 +24,34 @@ implementRunTask a =
 
 fn : String
 fn =
-    """var task = function(arg_) {
-         return _Scheduler_binding(function(callback) {
-           function ok(a) {
-             callback(_Scheduler_succeed(_Json_wrap(a)));
-           }
+    """
+var task = function(arg_) {
+  return _Scheduler_binding(function(callback) {
+    function ok(a) {
+      callback(_Scheduler_succeed(_Json_wrap(a)));
+    }
 
-           function err(a) {
-             callback(_Scheduler_fail(toException(_Json_wrap(a))));
-           }
+    function err(a) {
+      callback(_Scheduler_fail(toException(_Json_wrap(a))));
+    }
 
-           var a;
-           try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }
-           catch (e) { a = { $: 1, a: e } }
+    var a;
+    try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }
+    catch (e) { a = { $: 1, a: e } }
 
-           if (a.$ === 0) {
-             if (a.a instanceof Promise) {
-               a.a.then(ok).catch(err)
-             }
-             else {
-               ok(a.a)
-             }
-           }
-           else {
-             err(a.a)
-           }
-         })
-       };
+    if (a.$ === 0) {
+      if (a.a instanceof Promise) {
+        a.a.then(ok).catch(err)
+      }
+      else {
+        ok(a.a)
+      }
+    }
+    else {
+      err(a.a)
+    }
+  })
+};
     """
 
 
