@@ -3201,33 +3201,52 @@ var $author$project$Interop$JavaScript$run = F3(
 								])),
 						b)));
 		};
-		var task = function(arg_) {
-         return _Scheduler_binding(function(callback) {
-           function ok(a) {
-             callback(_Scheduler_succeed(_Json_wrap(a)));
-           }
+		
+var task = function(arg_) {
+  return _Scheduler_binding(function(callback) {
+    var canceled = false
+    var cancelFn = undefined
 
-           function err(a) {
-             callback(_Scheduler_fail(toException(_Json_wrap(a))));
-           }
+    function onCancel(a) {
+      cancelFn = a
+    }
 
-           var a;
-           try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }
-           catch (e) { a = { $: 1, a: e } }
+    function try_(fn) {
+      try       { return { $: 0, a: fn() } }
+      catch (e) { return { $: 1, a: e    } }
+    }
 
-           if (a.$ === 0) {
-             if (a.a instanceof Promise) {
-               a.a.then(ok).catch(err)
-             }
-             else {
-               ok(a.a)
-             }
-           }
-           else {
-             err(a.a)
-           }
-         })
-       };
+    function ok(a) {
+      if (!canceled) callback(_Scheduler_succeed(_Json_wrap(a)));
+    }
+
+    function err(a) {
+      if (!canceled) callback(_Scheduler_fail(toException(_Json_wrap(a))));
+    }
+
+    var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })
+
+    if (a.$ === 0) {
+      if (a.a instanceof Promise) {
+        a.a.then(ok).catch(err)
+      }
+      else {
+        ok(a.a)
+      }
+    }
+    else {
+      err(a.a)
+    }
+
+    return function() {
+      if (cancelFn) {
+        var a = try_(cancelFn)
+        if (a.$ === 1) err(a.a)
+      }
+      canceled = true
+    }
+  })
+};
     
 		return A2(
 			$elm$core$Task$andThen,
@@ -3247,7 +3266,7 @@ var $author$project$Interop$JavaScript$run = F3(
 var $elm$json$Json$Decode$succeed = _Json_succeed;
 var $author$project$Interop$JavaScript$exit = function (code) {
 	return A3(
-		$author$project$Interop$JavaScript$run, function(a) { return process.exit(a) },
+		$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.exit(a) },
 		$elm$json$Json$Encode$int(code),
 		$elm$json$Json$Decode$succeed(0));
 };
@@ -3266,13 +3285,13 @@ var $elm$core$Platform$worker = _Platform_worker;
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Interop$JavaScript$writeStderr = function (data) {
 	return A3(
-		$author$project$Interop$JavaScript$run, function(a) { return process.stderr.write(a) },
+		$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.stderr.write(a) },
 		$elm$json$Json$Encode$string(data),
 		$elm$json$Json$Decode$succeed(0));
 };
 var $author$project$Interop$JavaScript$writeStdout = function (data) {
 	return A3(
-		$author$project$Interop$JavaScript$run, function(a) { return process.stdout.write(a) },
+		$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.stdout.write(a) },
 		$elm$json$Json$Encode$string(data),
 		$elm$json$Json$Decode$succeed(0));
 };
@@ -3326,7 +3345,7 @@ var $author$project$Interop$JavaScript$cliHelper = function (a) {
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$Interop$JavaScript$readArgs = A3(
-	$author$project$Interop$JavaScript$run, function(a) { return process.argv },
+	$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.argv },
 	$elm$json$Json$Encode$null,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string));
 var $author$project$Interop$JavaScript$cli = function (fn) {
@@ -3941,7 +3960,7 @@ var $author$project$ElmFfi$Main$LegacyNotImplemented = {$: 4};
 var $author$project$ElmFfi$Main$PatchError = function (a) {
 	return {$: 3, a: a};
 };
-var $author$project$ElmFfi$Patch$fn = 'var task = function(arg_) {\n         return _Scheduler_binding(function(callback) {\n           function ok(a) {\n             callback(_Scheduler_succeed(_Json_wrap(a)));\n           }\n\n           function err(a) {\n             callback(_Scheduler_fail(toException(_Json_wrap(a))));\n           }\n\n           var a;\n           try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }\n           catch (e) { a = { $: 1, a: e } }\n\n           if (a.$ === 0) {\n             if (a.a instanceof Promise) {\n               a.a.then(ok).catch(err)\n             }\n             else {\n               ok(a.a)\n             }\n           }\n           else {\n             err(a.a)\n           }\n         })\n       };\n    ';
+var $author$project$ElmFfi$Patch$fn = '\nvar task = function(arg_) {\n  return _Scheduler_binding(function(callback) {\n    var canceled = false\n    var cancelFn = undefined\n\n    function onCancel(a) {\n      cancelFn = a\n    }\n\n    function try_(fn) {\n      try       { return { $: 0, a: fn() } }\n      catch (e) { return { $: 1, a: e    } }\n    }\n\n    function ok(a) {\n      if (!canceled) callback(_Scheduler_succeed(_Json_wrap(a)));\n    }\n\n    function err(a) {\n      if (!canceled) callback(_Scheduler_fail(toException(_Json_wrap(a))));\n    }\n\n    var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })\n\n    if (a.$ === 0) {\n      if (a.a instanceof Promise) {\n        a.a.then(ok).catch(err)\n      }\n      else {\n        ok(a.a)\n      }\n    }\n    else {\n      err(a.a)\n    }\n\n    return function() {\n      if (cancelFn) {\n        var a = try_(cancelFn)\n        if (a.$ === 1) err(a.a)\n      }\n      canceled = true\n    }\n  })\n};\n    ';
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
 		return A2(
@@ -4211,7 +4230,7 @@ var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 							return b;
 						} else {
 							var b = vv.a;
-							return $author$project$ElmFfi$Patch$runFnName + (', function(a) { return ' + ($elm$core$String$trim(b) + ' },'));
+							return $author$project$ElmFfi$Patch$runFnName + (', function(a, onCancel) { return ' + ($elm$core$String$trim(b) + ' },'));
 						}
 					},
 					v));
@@ -4246,7 +4265,7 @@ var $author$project$ElmFfi$Main$chmod = F2(
 			$elm$core$Task$mapError,
 			$author$project$ElmFfi$Main$JavaScriptError,
 			A3(
-				$author$project$Interop$JavaScript$run, function(a) { return require('fs/promises').chmod(a.path, a.mode) },
+				$author$project$Interop$JavaScript$run, function(a, onCancel) { return require('fs/promises').chmod(a.path, a.mode) },
 				$elm$json$Json$Encode$object(
 					_List_fromArray(
 						[
@@ -4268,7 +4287,7 @@ var $author$project$ElmFfi$Main$read = function (path) {
 		$elm$core$Task$mapError,
 		$author$project$ElmFfi$Main$JavaScriptError,
 		A3(
-			$author$project$Interop$JavaScript$run, function(a) { return require('fs/promises').readFile(a, 'utf-8') },
+			$author$project$Interop$JavaScript$run, function(a, onCancel) { return require('fs/promises').readFile(a, 'utf-8') },
 			$elm$json$Json$Encode$string(path),
 			$elm$json$Json$Decode$string));
 };
@@ -4287,7 +4306,7 @@ var $author$project$ElmFfi$Main$write = F2(
 			$elm$core$Task$mapError,
 			$author$project$ElmFfi$Main$JavaScriptError,
 			A3(
-				$author$project$Interop$JavaScript$run, function(a) { return require('fs/promises').writeFile(a.path, a.data) },
+				$author$project$Interop$JavaScript$run, function(a, onCancel) { return require('fs/promises').writeFile(a.path, a.data) },
 				$elm$json$Json$Encode$object(
 					_List_fromArray(
 						[
