@@ -27,6 +27,11 @@ fn =
     """
 var task = function(arg_) {
   return _Scheduler_binding(function(callback) {
+    function try(fn) {
+      try       { return { $: 0, a: fn() } }
+      catch (e) { return { $: 1, a: e    } }
+    }
+
     function ok(a) {
       callback(_Scheduler_succeed(_Json_wrap(a)));
     }
@@ -35,9 +40,7 @@ var task = function(arg_) {
       callback(_Scheduler_fail(toException(_Json_wrap(a))));
     }
 
-    var a;
-    try       { a = { $: 0, a: code(_Json_unwrap(arg_)) } }
-    catch (e) { a = { $: 1, a: e } }
+    var a = try(function() { return code(_Json_unwrap(arg_)) })
 
     if (a.$ === 0) {
       if (a.a instanceof Promise) {
