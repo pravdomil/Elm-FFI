@@ -27,20 +27,27 @@ fn =
     """
 var task = function(arg_) {
   return _Scheduler_binding(function(callback) {
-    function try(fn) {
+    var canceled = false
+    var cancelFn = undefined
+
+    function onCancel(a) {
+      cancelFn = a
+    }
+
+    function try_(fn) {
       try       { return { $: 0, a: fn() } }
       catch (e) { return { $: 1, a: e    } }
     }
 
     function ok(a) {
-      callback(_Scheduler_succeed(_Json_wrap(a)));
+      if (!canceled) callback(_Scheduler_succeed(_Json_wrap(a)));
     }
 
     function err(a) {
-      callback(_Scheduler_fail(toException(_Json_wrap(a))));
+      if (!canceled) callback(_Scheduler_fail(toException(_Json_wrap(a))));
     }
 
-    var a = try(function() { return code(_Json_unwrap(arg_)) })
+    var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })
 
     if (a.$ === 0) {
       if (a.a instanceof Promise) {
@@ -52,6 +59,14 @@ var task = function(arg_) {
     }
     else {
       err(a.a)
+    }
+
+    return function() {
+      if (cancelFn) {
+        var a = try_(cancelFn)
+        if (a.$ === 1) err(a.a)
+      }
+      canceled = true
     }
   })
 };
@@ -86,7 +101,7 @@ stringToFunction a =
                                     b
 
                                 Run b ->
-                                    runFnName ++ ", function(a) { return " ++ String.trim b ++ " },"
+                                    runFnName ++ ", function(a, onCancel) { return " ++ String.trim b ++ " },"
                         )
                     |> String.join ""
             )
