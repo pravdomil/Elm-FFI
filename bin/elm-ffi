@@ -3127,9 +3127,29 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
+var $elm$core$String$endsWith = _String_endsWith;
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
+var $elm$core$String$trim = _String_trim;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Interop$JavaScript$errorToString = function (a) {
 	var indent = function (b) {
 		return A2(
@@ -3146,10 +3166,21 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 		case 1:
 			var code = a.a;
 			var msg = a.b;
-			return 'Got JavaScript exception.' + (($elm$core$String$isEmpty(code) ? '' : ('\n' + indent('Code: ' + code))) + ($elm$core$String$isEmpty(msg) ? '' : ('\n' + indent(msg))));
+			var firstLine = function (v) {
+				return A2($elm$core$String$endsWith, '.', v) ? v : (v + '.');
+			}(
+				$elm$core$String$trim(
+					A2(
+						$elm$core$Maybe$withDefault,
+						'',
+						$elm$core$List$head(
+							A2($elm$core$String$split, '\n', msg)))));
+			return _Utils_ap(
+				$elm$core$String$isEmpty(firstLine) ? 'There was an error, but we got no details.' : firstLine,
+				$elm$core$String$isEmpty(code) ? '' : (' (' + (code + ')')));
 		default:
 			var b = a.a;
-			return 'Cannot decode value because:\n' + indent(
+			return 'There was a decode error. More details:\n' + indent(
 				$elm$json$Json$Decode$errorToString(b));
 	}
 };
@@ -3217,11 +3248,11 @@ var task = function(arg_) {
     }
 
     function ok(a) {
-      if (canceled === false) callback(_Scheduler_succeed(_Json_wrap(a)));
+      if (canceled === false) callback(_Scheduler_succeed(_Json_wrap(a)))
     }
 
     function err(a) {
-      if (canceled === false) callback(_Scheduler_fail(toException(_Json_wrap(a))));
+      if (canceled === false) callback(_Scheduler_fail(toException(_Json_wrap(a))))
     }
 
     var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })
@@ -3960,7 +3991,7 @@ var $author$project$ElmFfi$Main$LegacyNotImplemented = {$: 4};
 var $author$project$ElmFfi$Main$PatchError = function (a) {
 	return {$: 3, a: a};
 };
-var $author$project$ElmFfi$Patch$fn = '\nvar task = function(arg_) {\n  return _Scheduler_binding(function(callback) {\n    var canceled = false\n    var cancelFn = undefined\n\n    function onCancel(a) {\n      cancelFn = a\n    }\n\n    function try_(fn) {\n      try       { return { $: 0, a: fn() } }\n      catch (e) { return { $: 1, a: e    } }\n    }\n\n    function ok(a) {\n      if (canceled === false) callback(_Scheduler_succeed(_Json_wrap(a)));\n    }\n\n    function err(a) {\n      if (canceled === false) callback(_Scheduler_fail(toException(_Json_wrap(a))));\n    }\n\n    var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })\n\n    if (a.$ === 0) {\n      if (a.a instanceof Promise) {\n        a.a.then(ok).catch(err)\n      }\n      else {\n        ok(a.a)\n      }\n    }\n    else {\n      err(a.a)\n    }\n\n    return function() {\n      if (cancelFn) {\n        var a = try_(cancelFn)\n        if (a.$ === 1) err(a.a)\n      }\n      canceled = true\n    }\n  })\n};\n    ';
+var $author$project$ElmFfi$Patch$fn = '\nvar task = function(arg_) {\n  return _Scheduler_binding(function(callback) {\n    var canceled = false\n    var cancelFn = undefined\n\n    function onCancel(a) {\n      cancelFn = a\n    }\n\n    function try_(fn) {\n      try       { return { $: 0, a: fn() } }\n      catch (e) { return { $: 1, a: e    } }\n    }\n\n    function ok(a) {\n      if (canceled === false) callback(_Scheduler_succeed(_Json_wrap(a)))\n    }\n\n    function err(a) {\n      if (canceled === false) callback(_Scheduler_fail(toException(_Json_wrap(a))))\n    }\n\n    var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })\n\n    if (a.$ === 0) {\n      if (a.a instanceof Promise) {\n        a.a.then(ok).catch(err)\n      }\n      else {\n        ok(a.a)\n      }\n    }\n    else {\n      err(a.a)\n    }\n\n    return function() {\n      if (cancelFn) {\n        var a = try_(cancelFn)\n        if (a.$ === 1) err(a.a)\n      }\n      canceled = true\n    }\n  })\n};\n    ';
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
 		return A2(
@@ -4214,7 +4245,6 @@ var $author$project$ElmFfi$Patch$parser = function () {
 	};
 	return A2($elm$parser$Parser$loop, _List_Nil, loop);
 }();
-var $elm$core$String$trim = _String_trim;
 var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 	return A2(
 		$elm$core$Result$map,
