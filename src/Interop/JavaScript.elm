@@ -107,7 +107,7 @@ errorToString a =
                    )
 
         DecodeError b ->
-            "Cannot decode value because:\n" ++ indent (Decode.errorToString b)
+            "There was a decode error. More details:\n" ++ indent (Decode.errorToString b)
 
 
 
