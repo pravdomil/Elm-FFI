@@ -77,18 +77,33 @@ errorToString a =
             "Compiled file needs to be processed via elm-ffi command."
 
         Exception code msg ->
-            "Got JavaScript exception."
+            let
+                firstLine : String
+                firstLine =
+                    msg
+                        |> String.split "\n"
+                        |> List.head
+                        |> Maybe.withDefault ""
+                        |> String.trim
+                        |> (\v ->
+                                if String.endsWith "." v then
+                                    v
+
+                                else
+                                    v ++ "."
+                           )
+            in
+            (if String.isEmpty firstLine then
+                "There was an error, but we got no details."
+
+             else
+                firstLine
+            )
                 ++ (if String.isEmpty code then
                         ""
 
                     else
-                        "\n" ++ indent ("Code: " ++ code)
-                   )
-                ++ (if String.isEmpty msg then
-                        ""
-
-                    else
-                        "\n" ++ indent msg
+                        " (" ++ code ++ ")"
                    )
 
         DecodeError b ->
