@@ -15,7 +15,14 @@ run code arg decoder =
         toException b =
             Exception
                 (b
-                    |> Decode.decodeValue (Decode.field "code" Decode.string)
+                    |> Decode.decodeValue
+                        (Decode.field "code"
+                            (Decode.oneOf
+                                [ Decode.string
+                                , Decode.int |> Decode.map String.fromInt
+                                ]
+                            )
+                        )
                     |> Result.withDefault ""
                 )
                 (b
