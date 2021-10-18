@@ -15,6 +15,10 @@ run code arg decoder =
         toException b =
             Exception
                 (b
+                    |> Decode.decodeValue (Decode.at [ "name" ] Decode.string)
+                    |> Result.withDefault ""
+                )
+                (b
                     |> Decode.decodeValue
                         (Decode.field "code"
                             (Decode.oneOf
@@ -57,8 +61,12 @@ run code arg decoder =
 
 type Error
     = FileNotPatched
-    | Exception Code Message
+    | Exception Name Code Message
     | DecodeError Decode.Error
+
+
+type alias Name =
+    String
 
 
 type alias Code =
@@ -83,7 +91,7 @@ errorToString a =
         FileNotPatched ->
             "Compiled file needs to be processed via elm-ffi command."
 
-        Exception code msg ->
+        Exception name code msg ->
             let
                 firstLine : String
                 firstLine =
@@ -106,12 +114,7 @@ errorToString a =
              else
                 firstLine
             )
-                ++ (if String.isEmpty code then
-                        ""
-
-                    else
-                        " (" ++ code ++ ")"
-                   )
+                ++ (" (" ++ ([ name, code ] |> List.filter (String.isEmpty >> not) |> String.join " ") ++ ")")
 
         DecodeError b ->
             "There was a decode error. More details:\n" ++ indent (Decode.errorToString b)
