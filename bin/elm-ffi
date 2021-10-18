@@ -3127,7 +3127,23 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
 var $elm$core$String$endsWith = _String_endsWith;
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -3140,6 +3156,7 @@ var $elm$core$List$head = function (list) {
 var $elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
+var $elm$core$Basics$not = _Basics_not;
 var $elm$core$String$trim = _String_trim;
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -3164,8 +3181,9 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 		case 0:
 			return 'Compiled file needs to be processed via elm-ffi command.';
 		case 1:
-			var code = a.a;
-			var msg = a.b;
+			var name = a.a;
+			var code = a.b;
+			var msg = a.c;
 			var firstLine = function (v) {
 				return A2($elm$core$String$endsWith, '.', v) ? v : (v + '.');
 			}(
@@ -3175,9 +3193,14 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 						'',
 						$elm$core$List$head(
 							A2($elm$core$String$split, '\n', msg)))));
-			return _Utils_ap(
-				$elm$core$String$isEmpty(firstLine) ? 'There was an error, but we got no details.' : firstLine,
-				$elm$core$String$isEmpty(code) ? '' : (' (' + (code + ')')));
+			return ($elm$core$String$isEmpty(firstLine) ? 'There was an error, but we got no details.' : firstLine) + (' (' + (A2(
+				$elm$core$String$join,
+				' ',
+				A2(
+					$elm$core$List$filter,
+					A2($elm$core$Basics$composeR, $elm$core$String$isEmpty, $elm$core$Basics$not),
+					_List_fromArray(
+						[name, code]))) + ')'));
 		default:
 			var b = a.a;
 			return 'There was a decode error. More details:\n' + indent(
@@ -3188,14 +3211,20 @@ var $elm$json$Json$Encode$int = _Json_wrap;
 var $author$project$Interop$JavaScript$DecodeError = function (a) {
 	return {$: 2, a: a};
 };
-var $author$project$Interop$JavaScript$Exception = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
+var $author$project$Interop$JavaScript$Exception = F3(
+	function (a, b, c) {
+		return {$: 1, a: a, b: b, c: c};
 	});
 var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$core$Task$fail = _Scheduler_fail;
-var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $elm$json$Json$Decode$map = _Json_map1;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $elm$core$Result$withDefault = F2(
@@ -3210,14 +3239,33 @@ var $elm$core$Result$withDefault = F2(
 var $author$project$Interop$JavaScript$run = F3(
 	function (code, arg, decoder) {
 		var toException = function (b) {
-			return A2(
+			return A3(
 				$author$project$Interop$JavaScript$Exception,
 				A2(
 					$elm$core$Result$withDefault,
 					'',
 					A2(
 						$elm$json$Json$Decode$decodeValue,
-						A2($elm$json$Json$Decode$field, 'code', $elm$json$Json$Decode$string),
+						A2(
+							$elm$json$Json$Decode$at,
+							_List_fromArray(
+								['name']),
+							$elm$json$Json$Decode$string),
+						b)),
+				A2(
+					$elm$core$Result$withDefault,
+					'',
+					A2(
+						$elm$json$Json$Decode$decodeValue,
+						A2(
+							$elm$json$Json$Decode$field,
+							'code',
+							$elm$json$Json$Decode$oneOf(
+								_List_fromArray(
+									[
+										$elm$json$Json$Decode$string,
+										A2($elm$json$Json$Decode$map, $elm$core$String$fromInt, $elm$json$Json$Decode$int)
+									]))),
 						b)),
 				A2(
 					$elm$core$Result$withDefault,
@@ -3406,11 +3454,6 @@ var $author$project$ElmFfi$Main$checkFiles = function (a) {
 		return $elm$core$Task$succeed(a);
 	}
 };
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -3799,7 +3842,6 @@ var $elm$parser$Parser$Advanced$Token = F2(
 		return {$: 0, a: a, b: b};
 	});
 var $elm$parser$Parser$Advanced$isSubString = _Parser_isSubString;
-var $elm$core$Basics$not = _Basics_not;
 var $elm$parser$Parser$Advanced$token = function (_v0) {
 	var str = _v0.a;
 	var expecting = _v0.b;
