@@ -3306,7 +3306,7 @@ var task = function(arg_) {
     var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })
 
     if (a.$ === 0) {
-      if (a.a instanceof Promise) {
+      if (typeof Promise !== "undefined" && a.a instanceof Promise) {
         a.a.then(ok).catch(err)
       }
       else {
@@ -3530,11 +3530,9 @@ var $author$project$ElmFfi$Main$errorToString = function (a) {
 		case 2:
 			var b = a.a;
 			return $author$project$Interop$JavaScript$errorToString(b);
-		case 3:
+		default:
 			var b = a.a;
 			return 'Patch error:\n' + $author$project$Parser$DeadEnd$toString(b);
-		default:
-			return 'Legacy option is not implemented.';
 	}
 };
 var $elm$parser$Parser$Done = function (a) {
@@ -4029,11 +4027,10 @@ var $author$project$ElmFfi$Options$parse = function (a) {
 		$author$project$ElmFfi$Options$parser,
 		A2($elm$core$String$join, '\u0000', a));
 };
-var $author$project$ElmFfi$Main$LegacyNotImplemented = {$: 4};
 var $author$project$ElmFfi$Main$PatchError = function (a) {
 	return {$: 3, a: a};
 };
-var $author$project$ElmFfi$Patch$fn = '\nvar task = function(arg_) {\n  return _Scheduler_binding(function(callback) {\n    var canceled = false\n    var cancelFn = undefined\n\n    function onCancel(a) {\n      cancelFn = a\n    }\n\n    function try_(fn) {\n      try       { return { $: 0, a: fn() } }\n      catch (e) { return { $: 1, a: e    } }\n    }\n\n    function ok(a) {\n      if (canceled === false) callback(_Scheduler_succeed(_Json_wrap(a)))\n    }\n\n    function err(a) {\n      if (canceled === false) callback(_Scheduler_fail(toException(_Json_wrap(a))))\n    }\n\n    var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })\n\n    if (a.$ === 0) {\n      if (a.a instanceof Promise) {\n        a.a.then(ok).catch(err)\n      }\n      else {\n        ok(a.a)\n      }\n    }\n    else {\n      err(a.a)\n    }\n\n    return function() {\n      if (cancelFn) {\n        var a = try_(cancelFn)\n        if (a.$ === 1) err(a.a)\n      }\n      canceled = true\n    }\n  })\n};\n    ';
+var $author$project$ElmFfi$Patch$fn = '\nvar task = function(arg_) {\n  return _Scheduler_binding(function(callback) {\n    var canceled = false\n    var cancelFn = undefined\n\n    function onCancel(a) {\n      cancelFn = a\n    }\n\n    function try_(fn) {\n      try       { return { $: 0, a: fn() } }\n      catch (e) { return { $: 1, a: e    } }\n    }\n\n    function ok(a) {\n      if (canceled === false) callback(_Scheduler_succeed(_Json_wrap(a)))\n    }\n\n    function err(a) {\n      if (canceled === false) callback(_Scheduler_fail(toException(_Json_wrap(a))))\n    }\n\n    var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })\n\n    if (a.$ === 0) {\n      if (typeof Promise !== "undefined" && a.a instanceof Promise) {\n        a.a.then(ok).catch(err)\n      }\n      else {\n        ok(a.a)\n      }\n    }\n    else {\n      err(a.a)\n    }\n\n    return function() {\n      if (cancelFn) {\n        var a = try_(cancelFn)\n        if (a.$ === 1) err(a.a)\n      }\n      canceled = true\n    }\n  })\n};\n    ';
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
 		return A2(
@@ -4413,7 +4410,52 @@ var $author$project$ElmFfi$Main$patchFile = F2(
 					$author$project$ElmFfi$Patch$apply(b)));
 		};
 		var applyLegacy = function (b) {
-			return opt.aO ? $elm$core$Task$fail($author$project$ElmFfi$Main$LegacyNotImplemented) : $elm$core$Task$succeed(b);
+			return opt.aO ? $elm$core$Task$succeed(
+				A3(
+					$elm$core$String$replace,
+					'var res = (ctr > 500) ? A3(',
+					'var res = (ctr > 100) ? A3(',
+					A3(
+						$elm$core$String$replace,
+						'JSON.stringify(',
+						'(function(a) { return String(a) })(',
+						A3(
+							$elm$core$String$replace,
+							'Array.isArray(',
+							'(function(a) { return \"length\" in a })(',
+							A3(
+								$elm$core$String$replace,
+								'(char.',
+								'(char_.',
+								A3(
+									$elm$core$String$replace,
+									'(char)',
+									'(char_)',
+									A3(
+										$elm$core$String$replace,
+										'\tchar ',
+										'\tchar_ ',
+										A3(
+											$elm$core$String$replace,
+											' char.',
+											' char_.',
+											A3(
+												$elm$core$String$replace,
+												' char;',
+												' char_;',
+												A3(
+													$elm$core$String$replace,
+													' char ',
+													' char_ ',
+													A3(
+														$elm$core$String$replace,
+														': (obj[name] = exports[name]);',
+														'): (obj[name] = exports[name]);',
+														A3(
+															$elm$core$String$replace,
+															'? (name == \'init\')',
+															'? ((name == \'init\')',
+															A3($elm$core$String$replace, 'return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;', 'return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);', b))))))))))))) : $elm$core$Task$succeed(b);
 		};
 		return A2(
 			$elm$core$Task$andThen,
