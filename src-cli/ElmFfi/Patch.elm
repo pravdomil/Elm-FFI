@@ -50,7 +50,7 @@ var task = function(arg_) {
     var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })
 
     if (a.$ === 0) {
-      if (a.a instanceof Promise) {
+      if (typeof Promise !== "undefined" && a.a instanceof Promise) {
         a.a.then(ok).catch(err)
       }
       else {
