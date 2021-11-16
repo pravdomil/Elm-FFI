@@ -87,7 +87,38 @@ patchFile opt a =
         applyLegacy : String -> Task Error String
         applyLegacy b =
             if opt.legacy then
-                Task.fail LegacyNotImplemented
+                Task.succeed
+                    (b
+                        -- fix nested ternary operator
+                        |> String.replace
+                            "return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;"
+                            "return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);"
+                        |> String.replace
+                            "? (name == 'init')"
+                            "? ((name == 'init')"
+                        |> String.replace
+                            ": (obj[name] = exports[name]);"
+                            "): (obj[name] = exports[name]);"
+                        -- replace reserved word "char"
+                        |> String.replace " char " " char_ "
+                        |> String.replace " char;" " char_;"
+                        |> String.replace " char." " char_."
+                        |> String.replace "\tchar " "\tchar_ "
+                        |> String.replace "(char)" "(char_)"
+                        |> String.replace "(char." "(char_."
+                        -- implement Array.isArray
+                        |> String.replace
+                            "Array.isArray("
+                            "(function(a) { return \"length\" in a })("
+                        -- temporary pseudo-implement JSON
+                        |> String.replace
+                            "JSON.stringify("
+                            "(function(a) { return String(a) })("
+                        -- fix stack overflow
+                        |> String.replace
+                            "var res = (ctr > 500) ? A3("
+                            "var res = (ctr > 100) ? A3("
+                    )
 
             else
                 Task.succeed b
@@ -109,7 +140,6 @@ type Error
     | NoInputFiles
     | JavaScriptError JavaScript.Error
     | PatchError (List Parser.DeadEnd)
-    | LegacyNotImplemented
 
 
 errorToString : Error -> String
@@ -131,9 +161,6 @@ errorToString a =
 
         PatchError b ->
             "Patch error:\n" ++ DeadEnd.toString b
-
-        LegacyNotImplemented ->
-            "Legacy option is not implemented."
 
 
 
