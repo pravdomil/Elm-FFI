@@ -12,7 +12,7 @@ import Task exposing (Task)
 
 main : Program () () ()
 main =
-    JavaScript.cli mainTask
+    JavaScript.commandLineProgram mainTask
 
 
 

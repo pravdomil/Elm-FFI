@@ -1,4 +1,4 @@
-module Interop.JavaScript exposing (Error(..), cli, cliWithStdin, errorToString, run)
+module Interop.JavaScript exposing (Error(..), commandLineProgram, commandLineProgramWithStdin, errorToString, run)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
@@ -124,8 +124,8 @@ errorToString a =
 --
 
 
-cli : ({ args : List String } -> Task String String) -> Program () () ()
-cli fn =
+commandLineProgram : ({ args : List String } -> Task String String) -> Program () () ()
+commandLineProgram fn =
     cliHelper
         (readArgs
             |> Task.map (\v -> { args = v })
@@ -134,8 +134,8 @@ cli fn =
         )
 
 
-cliWithStdin : ({ args : List String, stdin : String } -> Task String String) -> Program () () ()
-cliWithStdin fn =
+commandLineProgramWithStdin : ({ args : List String, stdin : String } -> Task String String) -> Program () () ()
+commandLineProgramWithStdin fn =
     cliHelper
         (Task.map2 (\v1 v2 -> { args = v1, stdin = v2 })
             readArgs
