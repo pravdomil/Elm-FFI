@@ -3427,7 +3427,7 @@ var $author$project$Interop$JavaScript$readArgs = A3(
 	$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.argv },
 	$elm$json$Json$Encode$null,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string));
-var $author$project$Interop$JavaScript$cli = function (fn) {
+var $author$project$Interop$JavaScript$commandLineProgram = function (fn) {
 	return $author$project$Interop$JavaScript$cliHelper(
 		A2(
 			$elm$core$Task$andThen,
@@ -4522,7 +4522,7 @@ var $author$project$ElmFfi$Main$mainTask = function (_v0) {
 								$author$project$ElmFfi$Options$parse(
 									A2($elm$core$List$drop, 2, args)))))))));
 };
-var $author$project$ElmFfi$Main$main = $author$project$Interop$JavaScript$cli($author$project$ElmFfi$Main$mainTask);
+var $author$project$ElmFfi$Main$main = $author$project$Interop$JavaScript$commandLineProgram($author$project$ElmFfi$Main$mainTask);
 var $author$project$Main$main = $author$project$ElmFfi$Main$main;
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)()}});}(this));
