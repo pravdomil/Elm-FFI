@@ -1,6 +1,6 @@
 module ElmFfi.Patch exposing (apply)
 
-import Parser as P exposing ((|.), (|=), Parser)
+import Parser as P exposing ((|.), (|=))
 
 
 apply : String -> Result (List P.DeadEnd) String
@@ -107,14 +107,14 @@ stringToFunction a =
             )
 
 
-parser : Parser (List Fragment)
+parser : P.Parser (List Fragment)
 parser =
     let
-        spaces : Parser ()
+        spaces : P.Parser ()
         spaces =
             P.chompWhile (\v -> v == ' ' || v == '\t' || v == '\n' || v == '\u{000D}')
 
-        loop : List Fragment -> Parser (P.Step (List Fragment) (List Fragment))
+        loop : List Fragment -> P.Parser (P.Step (List Fragment) (List Fragment))
         loop acc =
             P.oneOf
                 [ P.succeed (\_ -> P.Done (List.reverse acc))
@@ -136,10 +136,10 @@ parser =
     P.loop [] loop
 
 
-quotedString : Parser String
+quotedString : P.Parser String
 quotedString =
     let
-        loop : List String -> Parser (P.Step (List String) String)
+        loop : List String -> P.Parser (P.Step (List String) String)
         loop acc =
             P.oneOf
                 [ P.succeed (\v -> P.Loop (v :: acc))

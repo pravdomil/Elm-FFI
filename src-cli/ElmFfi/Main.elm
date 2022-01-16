@@ -1,13 +1,13 @@
 module ElmFfi.Main exposing (..)
 
-import ElmFfi.Options as Options exposing (Options)
-import ElmFfi.Patch as Patch
-import JavaScript as JavaScript
-import Json.Decode as Decode
-import Json.Encode as Encode
+import ElmFfi.Options
+import ElmFfi.Patch
+import JavaScript
+import Json.Decode
+import Json.Encode
 import Parser
-import Parser.DeadEnd as DeadEnd
-import Task exposing (Task)
+import Parser.DeadEnd
+import Task
 
 
 main : Program () () ()
@@ -19,9 +19,9 @@ main =
 --
 
 
-mainTask : { args : List String } -> Task String String
+mainTask : { args : List String } -> Task.Task String String
 mainTask { args } =
-    Options.parse (List.drop 2 args)
+    ElmFfi.Options.parse (List.drop 2 args)
         |> resultToTask
         |> Task.mapError CannotParseArgs
         |> Task.andThen checkFiles
@@ -44,7 +44,7 @@ mainTask { args } =
         |> Task.mapError (errorToString >> (\v -> v ++ "\n"))
 
 
-checkFiles : Options -> Task Error Options
+checkFiles : ElmFfi.Options.Options -> Task.Task Error ElmFfi.Options.Options
 checkFiles a =
     case a.files of
         [] ->
@@ -54,16 +54,16 @@ checkFiles a =
             Task.succeed a
 
 
-patchFile : Options -> String -> Task Error ()
+patchFile : ElmFfi.Options.Options -> String -> Task.Task Error ()
 patchFile opt a =
     let
-        applyPatch : String -> Task Error String
+        applyPatch : String -> Task.Task Error String
         applyPatch b =
-            Patch.apply b
+            ElmFfi.Patch.apply b
                 |> resultToTask
                 |> Task.mapError PatchError
 
-        applyShebang : String -> Task Error String
+        applyShebang : String -> Task.Task Error String
         applyShebang b =
             if opt.shebang then
                 --      0o755
@@ -76,7 +76,7 @@ patchFile opt a =
             else
                 Task.succeed b
 
-        applyRun : String -> Task Error String
+        applyRun : String -> Task.Task Error String
         applyRun b =
             if opt.run then
                 Task.succeed (String.dropRight 16 b ++ "(0)()}});}(this));")
@@ -84,7 +84,7 @@ patchFile opt a =
             else
                 Task.succeed b
 
-        applyLegacy : String -> Task Error String
+        applyLegacy : String -> Task.Task Error String
         applyLegacy b =
             if opt.legacy then
                 Task.succeed
@@ -160,14 +160,14 @@ errorToString a =
             JavaScript.errorToString b
 
         PatchError b ->
-            "Patch error:\n" ++ DeadEnd.toString b
+            "Patch error:\n" ++ Parser.DeadEnd.toString b
 
 
 
 --
 
 
-resultToTask : Result x a -> Task x a
+resultToTask : Result x a -> Task.Task x a
 resultToTask a =
     case a of
         Ok b ->
@@ -181,33 +181,33 @@ resultToTask a =
 --
 
 
-read : String -> Task Error String
+read : String -> Task.Task Error String
 read path =
     JavaScript.run "require('fs/promises').readFile(a, 'utf-8')"
-        (Encode.string path)
-        Decode.string
+        (Json.Encode.string path)
+        Json.Decode.string
         |> Task.mapError JavaScriptError
 
 
-write : String -> String -> Task Error ()
+write : String -> String -> Task.Task Error ()
 write path data =
     JavaScript.run "require('fs/promises').writeFile(a.path, a.data)"
-        (Encode.object
-            [ ( "path", Encode.string path )
-            , ( "data", Encode.string data )
+        (Json.Encode.object
+            [ ( "path", Json.Encode.string path )
+            , ( "data", Json.Encode.string data )
             ]
         )
-        (Decode.succeed ())
+        (Json.Decode.succeed ())
         |> Task.mapError JavaScriptError
 
 
-chmod : String -> Int -> Task Error ()
+chmod : String -> Int -> Task.Task Error ()
 chmod path mode =
     JavaScript.run "require('fs/promises').chmod(a.path, a.mode)"
-        (Encode.object
-            [ ( "path", Encode.string path )
-            , ( "mode", Encode.int mode )
+        (Json.Encode.object
+            [ ( "path", Json.Encode.string path )
+            , ( "mode", Json.Encode.int mode )
             ]
         )
-        (Decode.succeed ())
+        (Json.Decode.succeed ())
         |> Task.mapError JavaScriptError

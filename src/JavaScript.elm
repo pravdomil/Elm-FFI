@@ -3,50 +3,50 @@ module JavaScript exposing (Error(..), commandLineProgram, commandLineProgramWit
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
 
-import Json.Decode as Decode exposing (Decoder)
-import Json.Encode as Encode
-import Task exposing (Task)
+import Json.Decode
+import Json.Encode
+import Task
 
 
-run : String -> Decode.Value -> Decoder b -> Task Error b
+run : String -> Json.Decode.Value -> Json.Decode.Decoder b -> Task.Task Error b
 run code arg decoder =
     let
-        toException : Decode.Value -> Error
+        toException : Json.Decode.Value -> Error
         toException b =
             Exception
                 (b
-                    |> Decode.decodeValue (Decode.at [ "name" ] Decode.string)
+                    |> Json.Decode.decodeValue (Json.Decode.at [ "name" ] Json.Decode.string)
                     |> Result.withDefault ""
                 )
                 (b
-                    |> Decode.decodeValue
-                        (Decode.field "code"
-                            (Decode.oneOf
-                                [ Decode.string
-                                , Decode.int |> Decode.map String.fromInt
+                    |> Json.Decode.decodeValue
+                        (Json.Decode.field "code"
+                            (Json.Decode.oneOf
+                                [ Json.Decode.string
+                                , Json.Decode.int |> Json.Decode.map String.fromInt
                                 ]
                             )
                         )
                     |> Result.withDefault ""
                 )
                 (b
-                    |> Decode.decodeValue
-                        (Decode.oneOf
-                            [ Decode.string
-                            , Decode.field "message" Decode.string
+                    |> Json.Decode.decodeValue
+                        (Json.Decode.oneOf
+                            [ Json.Decode.string
+                            , Json.Decode.field "message" Json.Decode.string
                             ]
                         )
                     |> Result.withDefault ""
                 )
 
-        task : Decode.Value -> Task Error Decode.Value
+        task : Json.Decode.Value -> Task.Task Error Json.Decode.Value
         task arg_ =
             Task.fail FileNotPatched
     in
     task arg
         |> Task.andThen
             (\v ->
-                case v |> Decode.decodeValue decoder of
+                case v |> Json.Decode.decodeValue decoder of
                     Ok b ->
                         Task.succeed b
 
@@ -62,7 +62,7 @@ run code arg decoder =
 type Error
     = FileNotPatched
     | Exception Name Code Message
-    | DecodeError Decode.Error
+    | DecodeError Json.Decode.Error
 
 
 type alias Name =
@@ -117,14 +117,14 @@ errorToString a =
                 ++ (" (" ++ ([ name, code ] |> List.filter (String.isEmpty >> not) |> String.join " ") ++ ")")
 
         DecodeError b ->
-            "There was a decode error. More details:\n" ++ indent (Decode.errorToString b)
+            "There was a decode error. More details:\n" ++ indent (Json.Decode.errorToString b)
 
 
 
 --
 
 
-commandLineProgram : ({ args : List String } -> Task String String) -> Program () () ()
+commandLineProgram : ({ args : List String } -> Task.Task String String) -> Program () () ()
 commandLineProgram fn =
     cliHelper
         (readArgs
@@ -134,7 +134,7 @@ commandLineProgram fn =
         )
 
 
-commandLineProgramWithStdin : ({ args : List String, stdin : String } -> Task String String) -> Program () () ()
+commandLineProgramWithStdin : ({ args : List String, stdin : String } -> Task.Task String String) -> Program () () ()
 commandLineProgramWithStdin fn =
     cliHelper
         (Task.map2 (\v1 v2 -> { args = v1, stdin = v2 })
@@ -149,7 +149,7 @@ commandLineProgramWithStdin fn =
 --
 
 
-cliHelper : Task String String -> Program () () ()
+cliHelper : Task.Task String String -> Program () () ()
 cliHelper a =
     let
         cmd : Cmd ()
@@ -176,36 +176,36 @@ cliHelper a =
         }
 
 
-readArgs : Task Error (List String)
+readArgs : Task.Task Error (List String)
 readArgs =
     run "process.argv"
-        Encode.null
-        (Decode.list Decode.string)
+        Json.Encode.null
+        (Json.Decode.list Json.Decode.string)
 
 
-readStdin : Task Error String
+readStdin : Task.Task Error String
 readStdin =
     run "require('fs').readFileSync(0, 'utf8')"
-        Encode.null
-        Decode.string
+        Json.Encode.null
+        Json.Decode.string
 
 
-writeStdout : String -> Task Error ()
+writeStdout : String -> Task.Task Error ()
 writeStdout data =
     run "process.stdout.write(a)"
-        (Encode.string data)
-        (Decode.succeed ())
+        (Json.Encode.string data)
+        (Json.Decode.succeed ())
 
 
-writeStderr : String -> Task Error ()
+writeStderr : String -> Task.Task Error ()
 writeStderr data =
     run "process.stderr.write(a)"
-        (Encode.string data)
-        (Decode.succeed ())
+        (Json.Encode.string data)
+        (Json.Decode.succeed ())
 
 
-exit : Int -> Task Error ()
+exit : Int -> Task.Task Error ()
 exit code =
     run "process.exit(a)"
-        (Encode.int code)
-        (Decode.succeed ())
+        (Json.Encode.int code)
+        (Json.Decode.succeed ())

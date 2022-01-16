@@ -1,6 +1,6 @@
 module ElmFfi.Options exposing (..)
 
-import Parser as P exposing ((|.), (|=), Parser)
+import Parser as P exposing ((|.), (|=))
 
 
 type alias Options =
@@ -39,10 +39,10 @@ parse a =
     a |> String.join "\u{0000}" |> P.run parser
 
 
-parser : Parser Options
+parser : P.Parser Options
 parser =
     let
-        loop : Options -> Parser (P.Step Options Options)
+        loop : Options -> P.Parser (P.Step Options Options)
         loop acc =
             P.oneOf
                 [ P.succeed (\v -> P.Loop { acc | shebang = v })
@@ -61,13 +61,13 @@ parser =
                     |= P.end
                 ]
 
-        boolArg : String -> Parser Bool
+        boolArg : String -> P.Parser Bool
         boolArg name =
             P.succeed True
                 |. P.symbol ("--" ++ name)
                 |. argEnd
 
-        argument : Parser String
+        argument : P.Parser String
         argument =
             P.getChompedString
                 (P.succeed ()
@@ -76,7 +76,7 @@ parser =
                 )
                 |. argEnd
 
-        argEnd : Parser ()
+        argEnd : P.Parser ()
         argEnd =
             P.oneOf
                 [ P.symbol "\u{0000}"
