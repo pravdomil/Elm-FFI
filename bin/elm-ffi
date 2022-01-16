@@ -3167,7 +3167,7 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Interop$JavaScript$errorToString = function (a) {
+var $author$project$JavaScript$errorToString = function (a) {
 	var indent = function (b) {
 		return A2(
 			$elm$core$String$join,
@@ -3208,14 +3208,14 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 	}
 };
 var $elm$json$Json$Encode$int = _Json_wrap;
-var $author$project$Interop$JavaScript$DecodeError = function (a) {
+var $author$project$JavaScript$DecodeError = function (a) {
 	return {$: 2, a: a};
 };
-var $author$project$Interop$JavaScript$Exception = F3(
+var $author$project$JavaScript$Exception = F3(
 	function (a, b, c) {
 		return {$: 1, a: a, b: b, c: c};
 	});
-var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
+var $author$project$JavaScript$FileNotPatched = {$: 0};
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
@@ -3236,11 +3236,11 @@ var $elm$core$Result$withDefault = F2(
 			return def;
 		}
 	});
-var $author$project$Interop$JavaScript$run = F3(
+var $author$project$JavaScript$run = F3(
 	function (code, arg, decoder) {
 		var toException = function (b) {
 			return A3(
-				$author$project$Interop$JavaScript$Exception,
+				$author$project$JavaScript$Exception,
 				A2(
 					$elm$core$Result$withDefault,
 					'',
@@ -3337,15 +3337,15 @@ var task = function(arg_) {
 				} else {
 					var b = _v0.a;
 					return $elm$core$Task$fail(
-						$author$project$Interop$JavaScript$DecodeError(b));
+						$author$project$JavaScript$DecodeError(b));
 				}
 			},
 			task(arg));
 	});
 var $elm$json$Json$Decode$succeed = _Json_succeed;
-var $author$project$Interop$JavaScript$exit = function (code) {
+var $author$project$JavaScript$exit = function (code) {
 	return A3(
-		$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.exit(a) },
+		$author$project$JavaScript$run, function(a, onCancel) { return process.exit(a) },
 		$elm$json$Json$Encode$int(code),
 		$elm$json$Json$Decode$succeed(0));
 };
@@ -3362,19 +3362,19 @@ var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$core$Platform$worker = _Platform_worker;
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Interop$JavaScript$writeStderr = function (data) {
+var $author$project$JavaScript$writeStderr = function (data) {
 	return A3(
-		$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.stderr.write(a) },
+		$author$project$JavaScript$run, function(a, onCancel) { return process.stderr.write(a) },
 		$elm$json$Json$Encode$string(data),
 		$elm$json$Json$Decode$succeed(0));
 };
-var $author$project$Interop$JavaScript$writeStdout = function (data) {
+var $author$project$JavaScript$writeStdout = function (data) {
 	return A3(
-		$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.stdout.write(a) },
+		$author$project$JavaScript$run, function(a, onCancel) { return process.stdout.write(a) },
 		$elm$json$Json$Encode$string(data),
 		$elm$json$Json$Decode$succeed(0));
 };
-var $author$project$Interop$JavaScript$cliHelper = function (a) {
+var $author$project$JavaScript$cliHelper = function (a) {
 	var cmd = A2(
 		$elm$core$Task$attempt,
 		function (_v6) {
@@ -3385,26 +3385,26 @@ var $author$project$Interop$JavaScript$cliHelper = function (a) {
 			function (v) {
 				return A2(
 					$elm$core$Task$mapError,
-					$author$project$Interop$JavaScript$errorToString,
+					$author$project$JavaScript$errorToString,
 					A2(
 						$elm$core$Task$andThen,
 						function (_v5) {
-							return $author$project$Interop$JavaScript$exit(1);
+							return $author$project$JavaScript$exit(1);
 						},
-						$author$project$Interop$JavaScript$writeStderr(v)));
+						$author$project$JavaScript$writeStderr(v)));
 			},
 			A2(
 				$elm$core$Task$andThen,
 				function (v) {
 					return A2(
 						$elm$core$Task$mapError,
-						$author$project$Interop$JavaScript$errorToString,
+						$author$project$JavaScript$errorToString,
 						A2(
 							$elm$core$Task$andThen,
 							function (_v4) {
-								return $author$project$Interop$JavaScript$exit(0);
+								return $author$project$JavaScript$exit(0);
 							},
-							$author$project$Interop$JavaScript$writeStdout(v)));
+							$author$project$JavaScript$writeStdout(v)));
 				},
 				a)));
 	return $elm$core$Platform$worker(
@@ -3423,24 +3423,24 @@ var $author$project$Interop$JavaScript$cliHelper = function (a) {
 };
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Encode$null = _Json_encodeNull;
-var $author$project$Interop$JavaScript$readArgs = A3(
-	$author$project$Interop$JavaScript$run, function(a, onCancel) { return process.argv },
+var $author$project$JavaScript$readArgs = A3(
+	$author$project$JavaScript$run, function(a, onCancel) { return process.argv },
 	$elm$json$Json$Encode$null,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string));
-var $author$project$Interop$JavaScript$commandLineProgram = function (fn) {
-	return $author$project$Interop$JavaScript$cliHelper(
+var $author$project$JavaScript$commandLineProgram = function (fn) {
+	return $author$project$JavaScript$cliHelper(
 		A2(
 			$elm$core$Task$andThen,
 			fn,
 			A2(
 				$elm$core$Task$mapError,
-				$author$project$Interop$JavaScript$errorToString,
+				$author$project$JavaScript$errorToString,
 				A2(
 					$elm$core$Task$map,
 					function (v) {
 						return {aB: v};
 					},
-					$author$project$Interop$JavaScript$readArgs))));
+					$author$project$JavaScript$readArgs))));
 };
 var $author$project$ElmFfi$Main$CannotParseArgs = function (a) {
 	return {$: 0, a: a};
@@ -3529,7 +3529,7 @@ var $author$project$ElmFfi$Main$errorToString = function (a) {
 			return usage;
 		case 2:
 			var b = a.a;
-			return $author$project$Interop$JavaScript$errorToString(b);
+			return $author$project$JavaScript$errorToString(b);
 		default:
 			var b = a.a;
 			return 'Patch error:\n' + $author$project$Parser$DeadEnd$toString(b);
@@ -4039,7 +4039,7 @@ var $elm$core$String$replace = F3(
 			A2($elm$core$String$split, before, string));
 	});
 var $author$project$ElmFfi$Patch$implementRunTask = function (a) {
-	return A3($elm$core$String$replace, 'var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t};', $author$project$ElmFfi$Patch$fn, a);
+	return A3($elm$core$String$replace, 'var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$JavaScript$FileNotPatched);\n\t\t};', $author$project$ElmFfi$Patch$fn, a);
 };
 var $elm$core$Result$map = F2(
 	function (func, ra) {
@@ -4213,7 +4213,7 @@ var $author$project$ElmFfi$Patch$quotedString = function () {
 		},
 		$elm$parser$Parser$symbol('\''));
 }();
-var $author$project$ElmFfi$Patch$runFnName = '$author$project$Interop$JavaScript' + '$run';
+var $author$project$ElmFfi$Patch$runFnName = '$author$project$JavaScript' + '$run';
 var $author$project$ElmFfi$Patch$parser = function () {
 	var spaces = $elm$parser$Parser$chompWhile(
 		function (v) {
@@ -4334,7 +4334,7 @@ var $author$project$ElmFfi$Main$chmod = F2(
 			$elm$core$Task$mapError,
 			$author$project$ElmFfi$Main$JavaScriptError,
 			A3(
-				$author$project$Interop$JavaScript$run, function(a, onCancel) { return require('fs/promises').chmod(a.path, a.mode) },
+				$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').chmod(a.path, a.mode) },
 				$elm$json$Json$Encode$object(
 					_List_fromArray(
 						[
@@ -4356,7 +4356,7 @@ var $author$project$ElmFfi$Main$read = function (path) {
 		$elm$core$Task$mapError,
 		$author$project$ElmFfi$Main$JavaScriptError,
 		A3(
-			$author$project$Interop$JavaScript$run, function(a, onCancel) { return require('fs/promises').readFile(a, 'utf-8') },
+			$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').readFile(a, 'utf-8') },
 			$elm$json$Json$Encode$string(path),
 			$elm$json$Json$Decode$string));
 };
@@ -4375,7 +4375,7 @@ var $author$project$ElmFfi$Main$write = F2(
 			$elm$core$Task$mapError,
 			$author$project$ElmFfi$Main$JavaScriptError,
 			A3(
-				$author$project$Interop$JavaScript$run, function(a, onCancel) { return require('fs/promises').writeFile(a.path, a.data) },
+				$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').writeFile(a.path, a.data) },
 				$elm$json$Json$Encode$object(
 					_List_fromArray(
 						[
@@ -4522,7 +4522,7 @@ var $author$project$ElmFfi$Main$mainTask = function (_v0) {
 								$author$project$ElmFfi$Options$parse(
 									A2($elm$core$List$drop, 2, args)))))))));
 };
-var $author$project$ElmFfi$Main$main = $author$project$Interop$JavaScript$commandLineProgram($author$project$ElmFfi$Main$mainTask);
+var $author$project$ElmFfi$Main$main = $author$project$JavaScript$commandLineProgram($author$project$ElmFfi$Main$mainTask);
 var $author$project$Main$main = $author$project$ElmFfi$Main$main;
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)()}});}(this));
