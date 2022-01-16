@@ -160,7 +160,7 @@ errorToString a =
             JavaScript.errorToString b
 
         PatchError b ->
-            "Patch error:\n" ++ Parser.DeadEnd.toString b
+            "Patch error:\n" ++ Parser.DeadEnd.listToString b
 
 
 
