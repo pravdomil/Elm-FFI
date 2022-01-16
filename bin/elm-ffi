@@ -3475,7 +3475,7 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
-var $author$project$Parser$DeadEnd$toStringHelper = function (a) {
+var $author$project$Parser$DeadEnd$toString = function (a) {
 	return function () {
 		var _v0 = a.aT;
 		switch (_v0.$) {
@@ -3512,13 +3512,13 @@ var $author$project$Parser$DeadEnd$toStringHelper = function (a) {
 			default:
 				return 'Bad repeat';
 		}
-	}() + (' at row ' + ($elm$core$String$fromInt(a.aV) + (', col ' + ($elm$core$String$fromInt(a.aF) + '.'))));
+	}() + (' at ' + ($elm$core$String$fromInt(a.aV) + (':' + ($elm$core$String$fromInt(a.aF) + '.'))));
 };
-var $author$project$Parser$DeadEnd$toString = function (a) {
+var $author$project$Parser$DeadEnd$listToString = function (a) {
 	return A2(
 		$elm$core$String$join,
 		'\n',
-		A2($elm$core$List$map, $author$project$Parser$DeadEnd$toStringHelper, a));
+		A2($elm$core$List$map, $author$project$Parser$DeadEnd$toString, a));
 };
 var $author$project$ElmFfi$Main$errorToString = function (a) {
 	var usage = 'Usage: elm-ffi [--shebang] [--run] [--legacy] <file.js>...';
@@ -3532,7 +3532,7 @@ var $author$project$ElmFfi$Main$errorToString = function (a) {
 			return $author$project$JavaScript$errorToString(b);
 		default:
 			var b = a.a;
-			return 'Patch error:\n' + $author$project$Parser$DeadEnd$toString(b);
+			return 'Patch error:\n' + $author$project$Parser$DeadEnd$listToString(b);
 	}
 };
 var $elm$parser$Parser$Done = function (a) {
