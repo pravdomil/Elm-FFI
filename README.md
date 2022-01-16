@@ -11,7 +11,7 @@ Read [The Limits of Elm/JS Interop](https://guide.elm-lang.org/interop/limits.ht
 
 ## Usage
 
-1. Use [`Interop.JavaScript`](src/Interop/JavaScript.elm) module.
+1. Use [`JavaScript`](src/JavaScript.elm) module.
 1. `elm make src/Main.elm --output elm.js`
 1. `elm-ffi elm.js`
 

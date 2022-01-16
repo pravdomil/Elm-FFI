@@ -18,7 +18,7 @@ implementRunTask : String -> String
 implementRunTask a =
     a
         |> String.replace
-            "var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);\n\t\t};"
+            "var task = function (arg_) {\n\t\t\treturn $elm$core$Task$fail($author$project$JavaScript$FileNotPatched);\n\t\t};"
             fn
 
 
@@ -84,7 +84,7 @@ type Fragment
 
 runFnName : String
 runFnName =
-    "$author$project$Interop$JavaScript" ++ "$run"
+    "$author$project$JavaScript" ++ "$run"
 
 
 stringToFunction : String -> Result (List P.DeadEnd) String
