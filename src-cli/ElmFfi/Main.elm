@@ -94,6 +94,9 @@ patchFile opt a =
                             "return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;"
                             "return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);"
                         |> String.replace
+                            "return (\n\t\tstring.length <= offset\n\t\t\t? -1\n\t\t\t:\n\t\t(string.charCodeAt(offset) & 0xF800) === 0xD800\n\t\t\t? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)\n\t\t\t:\n\t\t(predicate(_Utils_chr(string[offset]))\n\t\t\t? ((string[offset] === '\\n') ? -2 : (offset + 1))\n\t\t\t: -1\n\t\t)\n\t);"
+                            "if (string.length <= offset) {\n\t\treturn -1\n\t} else if ((string.charCodeAt(offset) & 0xF800) === 0xD800) {\n\t\treturn predicate(__Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1\n\t} else if (predicate(_Utils_chr(string[offset]))) {\n\t\treturn (string[offset] === '\\n') ? -2 : (offset + 1)\n\t} else {\n\t\treturn -1\n\t}"
+                        |> String.replace
                             "? (name == 'init')"
                             "? ((name == 'init')"
                         |> String.replace
