@@ -15,7 +15,7 @@ run code arg decoder =
         toException b =
             Exception
                 (b
-                    |> Json.Decode.decodeValue (Json.Decode.at [ "name" ] Json.Decode.string)
+                    |> Json.Decode.decodeValue (Json.Decode.field "name" Json.Decode.string)
                     |> Result.withDefault ""
                 )
                 (b
