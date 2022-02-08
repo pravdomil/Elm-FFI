@@ -92,29 +92,14 @@ errorToString a =
             "Compiled file needs to be processed via elm-ffi command."
 
         Exception name code msg ->
-            let
-                firstLine : String
-                firstLine =
-                    msg
-                        |> String.split "\n"
-                        |> List.head
-                        |> Maybe.withDefault ""
-                        |> String.trim
-                        |> (\v ->
-                                if String.endsWith "." v then
-                                    v
-
-                                else
-                                    v ++ "."
-                           )
-            in
-            (if String.isEmpty firstLine then
-                "There was an error, but we got no details."
-
-             else
-                firstLine
-            )
-                ++ (" (" ++ ([ name, code ] |> List.filter (String.isEmpty >> not) |> String.join " ") ++ ")")
+            "There was a runtime error. More details:\n"
+                ++ indent
+                    (("name: " ++ name)
+                        ++ "\n"
+                        ++ ("code: " ++ code)
+                        ++ "\n"
+                        ++ ("message: " ++ msg)
+                    )
 
         DecodeError b ->
             "There was a decode error. More details:\n" ++ indent (Json.Decode.errorToString b)
