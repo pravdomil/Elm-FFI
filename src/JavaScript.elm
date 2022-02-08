@@ -65,18 +65,6 @@ type Error
     | DecodeError Json.Decode.Error
 
 
-type alias Name =
-    String
-
-
-type alias Code =
-    String
-
-
-type alias Message =
-    String
-
-
 errorToString : Error -> String
 errorToString a =
     let
@@ -103,6 +91,22 @@ errorToString a =
 
         DecodeError b ->
             "There was a decode error. More details:\n" ++ indent (Json.Decode.errorToString b)
+
+
+
+--
+
+
+type alias Name =
+    String
+
+
+type alias Code =
+    String
+
+
+type alias Message =
+    String
 
 
 
