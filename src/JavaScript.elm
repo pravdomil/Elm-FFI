@@ -85,11 +85,11 @@ errorToString a =
         Exception name code msg ->
             "There was a runtime error. More details:\n"
                 ++ indent
-                    (("name: " ++ name)
+                    (("name: " ++ (\(ErrorName v) -> v) name)
                         ++ "\n"
-                        ++ ("code: " ++ code)
+                        ++ ("code: " ++ (\(ErrorCode v) -> v) code)
                         ++ "\n"
-                        ++ ("message: " ++ msg)
+                        ++ ("message: " ++ (\(ErrorMessage v) -> v) msg)
                     )
 
         DecodeError b ->
