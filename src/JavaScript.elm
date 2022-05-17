@@ -124,11 +124,10 @@ type ErrorMessage
 --
 
 
-commandLineProgram : ({ args : List String } -> Task.Task String String) -> Program () () ()
+commandLineProgram : (List String -> Task.Task String String) -> Program () () ()
 commandLineProgram fn =
     cliHelper
         (readArgs
-            |> Task.map (\v -> { args = v })
             |> Task.mapError errorToString
             |> Task.andThen fn
         )
