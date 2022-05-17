@@ -133,10 +133,10 @@ commandLineProgram fn =
         )
 
 
-commandLineProgramWithStdin : ({ args : List String, stdin : String } -> Task.Task String String) -> Program () () ()
+commandLineProgramWithStdin : ({ arguments : List String, stdin : String } -> Task.Task String String) -> Program () () ()
 commandLineProgramWithStdin fn =
     cliHelper
-        (Task.map2 (\v1 v2 -> { args = v1, stdin = v2 })
+        (Task.map2 (\v1 v2 -> { arguments = v1, stdin = v2 })
             readArgs
             readStdin
             |> Task.mapError errorToString
