@@ -19,8 +19,8 @@ main =
 --
 
 
-mainTask : { args : List String } -> Task.Task String String
-mainTask { args } =
+mainTask : List String -> Task.Task String String
+mainTask args =
     ElmFfi.Options.parse (List.drop 2 args)
         |> resultToTask
         |> Task.mapError CannotParseArgs
