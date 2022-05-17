@@ -1,4 +1,4 @@
-module JavaScript exposing (Error(..), commandLineProgram, commandLineProgramWithStdin, errorToString, run)
+module JavaScript exposing (Error(..), ErrorCode(..), ErrorMessage(..), ErrorName(..), commandLineProgram, commandLineProgramWithStdin, errorToString, run)
 
 {-| Part of <https://github.com/pravdomil/Elm-FFI>.
 -}
@@ -17,6 +17,7 @@ run code arg decoder =
                 (b
                     |> Json.Decode.decodeValue (Json.Decode.field "name" Json.Decode.string)
                     |> Result.withDefault ""
+                    |> ErrorName
                 )
                 (b
                     |> Json.Decode.decodeValue
@@ -28,6 +29,7 @@ run code arg decoder =
                             )
                         )
                     |> Result.withDefault ""
+                    |> ErrorCode
                 )
                 (b
                     |> Json.Decode.decodeValue
@@ -37,6 +39,7 @@ run code arg decoder =
                             ]
                         )
                     |> Result.withDefault ""
+                    |> ErrorMessage
                 )
 
         task : Json.Decode.Value -> Task.Task Error Json.Decode.Value
@@ -61,7 +64,7 @@ run code arg decoder =
 
 type Error
     = FileNotPatched
-    | Exception Name Code Message
+    | Exception ErrorName ErrorCode ErrorMessage
     | DecodeError Json.Decode.Error
 
 
@@ -97,16 +100,24 @@ errorToString a =
 --
 
 
-type alias Name =
-    String
+type ErrorName
+    = ErrorName String
 
 
-type alias Code =
-    String
+
+--
 
 
-type alias Message =
-    String
+type ErrorCode
+    = ErrorCode String
+
+
+
+--
+
+
+type ErrorMessage
+    = ErrorMessage String
 
 
 
