@@ -1,13 +1,12 @@
 module JavaScript exposing (Error(..), ErrorCode(..), ErrorMessage(..), ErrorName(..), commandLineProgram, commandLineProgramWithStdin, errorToString, run)
 
-{-| Part of <https://github.com/pravdomil/Elm-FFI>.
--}
-
 import Json.Decode
 import Json.Encode
 import Task
 
 
+{-| Run JavaScript code.
+-}
 run : String -> Json.Decode.Value -> Json.Decode.Decoder b -> Task.Task Error b
 run code arg decoder =
     let
