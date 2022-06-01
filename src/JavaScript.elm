@@ -10,8 +10,8 @@ import Task
 run : String -> Json.Decode.Value -> Json.Decode.Decoder b -> Task.Task Error b
 run code arg decoder =
     let
-        toException : Json.Decode.Value -> Error
-        toException b =
+        toError : Json.Decode.Value -> Error
+        toError b =
             Exception
                 (b
                     |> Json.Decode.decodeValue (Json.Decode.field "name" Json.Decode.string)

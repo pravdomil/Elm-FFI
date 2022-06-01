@@ -44,7 +44,7 @@ var task = function(arg_) {
     }
 
     function err(a) {
-      if (canceled === false) callback(_Scheduler_fail(toException(_Json_wrap(a))))
+      if (canceled === false) callback(_Scheduler_fail(toError(_Json_wrap(a))))
     }
 
     var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })
