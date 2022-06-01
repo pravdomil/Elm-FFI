@@ -1,4 +1,4 @@
-module JavaScript exposing (Error(..), ErrorCode(..), ErrorMessage(..), ErrorName(..), commandLineProgram, commandLineProgramWithStdin, errorToString, run)
+module JavaScript exposing (Error(..), ErrorCode(..), ErrorMessage(..), ErrorName(..), commandLineProgram, commandLineProgramWithStdin, decodeError, errorToString, run)
 
 import Json.Decode
 import Json.Encode
@@ -11,35 +11,8 @@ run : String -> Json.Decode.Value -> Json.Decode.Decoder b -> Task.Task Error b
 run code arg decoder =
     let
         toError : Json.Decode.Value -> Error
-        toError b =
-            Exception
-                (b
-                    |> Json.Decode.decodeValue (Json.Decode.field "name" Json.Decode.string)
-                    |> Result.withDefault ""
-                    |> ErrorName
-                )
-                (b
-                    |> Json.Decode.decodeValue
-                        (Json.Decode.field "code"
-                            (Json.Decode.oneOf
-                                [ Json.Decode.string
-                                , Json.Decode.int |> Json.Decode.map String.fromInt
-                                ]
-                            )
-                        )
-                    |> Result.withDefault ""
-                    |> ErrorCode
-                )
-                (b
-                    |> Json.Decode.decodeValue
-                        (Json.Decode.oneOf
-                            [ Json.Decode.string
-                            , Json.Decode.field "message" Json.Decode.string
-                            ]
-                        )
-                    |> Result.withDefault ""
-                    |> ErrorMessage
-                )
+        toError =
+            decodeError
 
         task : Json.Decode.Value -> Task.Task Error Json.Decode.Value
         task arg_ =
@@ -93,6 +66,38 @@ errorToString a =
 
         DecodeError b ->
             "There was a decode error. More details:\n" ++ indent (Json.Decode.errorToString b)
+
+
+decodeError : Json.Decode.Value -> Error
+decodeError b =
+    Exception
+        (b
+            |> Json.Decode.decodeValue (Json.Decode.field "name" Json.Decode.string)
+            |> Result.withDefault ""
+            |> ErrorName
+        )
+        (b
+            |> Json.Decode.decodeValue
+                (Json.Decode.field "code"
+                    (Json.Decode.oneOf
+                        [ Json.Decode.string
+                        , Json.Decode.int |> Json.Decode.map String.fromInt
+                        ]
+                    )
+                )
+            |> Result.withDefault ""
+            |> ErrorCode
+        )
+        (b
+            |> Json.Decode.decodeValue
+                (Json.Decode.oneOf
+                    [ Json.Decode.string
+                    , Json.Decode.field "message" Json.Decode.string
+                    ]
+                )
+            |> Result.withDefault ""
+            |> ErrorMessage
+        )
 
 
 
