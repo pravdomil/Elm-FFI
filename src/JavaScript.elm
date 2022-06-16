@@ -1,4 +1,16 @@
-module JavaScript exposing (Error(..), ErrorCode(..), ErrorMessage(..), ErrorName(..), commandLineProgram, commandLineProgramWithStdin, decodeError, errorToString, run)
+module JavaScript exposing
+    ( run
+    , commandLineProgram, commandLineProgramWithStdin
+    , Error(..), ErrorCode(..), ErrorMessage(..), ErrorName(..), errorToString, decodeError
+    )
+
+{-|
+
+@docs run
+@docs commandLineProgram, commandLineProgramWithStdin
+@docs Error, ErrorCode, ErrorMessage, ErrorName, errorToString, decodeError
+
+-}
 
 import Json.Decode
 import Json.Encode
