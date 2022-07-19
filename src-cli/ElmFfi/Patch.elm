@@ -8,6 +8,13 @@ apply a =
     a
         |> stringToFunction
         |> Result.map implementRunTask
+        |> Result.map
+            (String.replace
+                "\tfunction sendToApp(msg, viewMetadata)\n"
+                ("\tscope.ports = ports\n"
+                    ++ "\tfunction sendToApp(msg, viewMetadata)\n"
+                )
+            )
 
 
 
