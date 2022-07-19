@@ -27,17 +27,17 @@ errorCodec =
 
 errorNameCodec : Codec.Codec JavaScript.ErrorName
 errorNameCodec =
-    Codec.string |> Codec.map JavaScript.ErrorName (\(JavaScript.ErrorName v) -> v)
+    Codec.string |> Codec.map (\(JavaScript.ErrorName v) -> v) JavaScript.ErrorName
 
 
 errorCodeCodec : Codec.Codec JavaScript.ErrorCode
 errorCodeCodec =
-    Codec.string |> Codec.map JavaScript.ErrorCode (\(JavaScript.ErrorCode v) -> v)
+    Codec.string |> Codec.map (\(JavaScript.ErrorCode v) -> v) JavaScript.ErrorCode
 
 
 errorMessageCodec : Codec.Codec JavaScript.ErrorMessage
 errorMessageCodec =
-    Codec.string |> Codec.map JavaScript.ErrorMessage (\(JavaScript.ErrorMessage v) -> v)
+    Codec.string |> Codec.map (\(JavaScript.ErrorMessage v) -> v) JavaScript.ErrorMessage
 
 
 jsonDecodeErrorCodec : Codec.Codec Json.Decode.Error
