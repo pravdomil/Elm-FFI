@@ -1880,6 +1880,7 @@ function _Platform_initialize(flagDecoder, args, init, update, subscriptions, st
 	var stepper = stepperBuilder(sendToApp, model);
 	var ports = _Platform_setupEffects(managers, sendToApp);
 
+	scope.ports = ports
 	function sendToApp(msg, viewMetadata)
 	{
 		var pair = A2(update, msg, model);
@@ -4261,8 +4262,11 @@ var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 var $author$project$ElmFfi$Patch$apply = function (a) {
 	return A2(
 		$elm$core$Result$map,
-		$author$project$ElmFfi$Patch$implementRunTask,
-		$author$project$ElmFfi$Patch$stringToFunction(a));
+		A2($elm$core$String$replace, '\tfunction sendToApp(msg, viewMetadata)\n', '\tscope.ports = ports\n' + '\tfunction sendToApp(msg, viewMetadata)\n'),
+		A2(
+			$elm$core$Result$map,
+			$author$project$ElmFfi$Patch$implementRunTask,
+			$author$project$ElmFfi$Patch$stringToFunction(a)));
 };
 var $author$project$ElmFfi$Main$JavaScriptError = function (a) {
 	return {$: 2, a: a};
