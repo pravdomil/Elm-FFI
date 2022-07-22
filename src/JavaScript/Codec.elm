@@ -19,9 +19,9 @@ errorCodec =
                 JavaScript.DecodeError v1 ->
                     fn3 v1
         )
-        |> Codec.variant0 "FileNotPatched" JavaScript.FileNotPatched
-        |> Codec.variant3 "Exception" JavaScript.Exception errorNameCodec errorCodeCodec errorMessageCodec
-        |> Codec.variant1 "DecodeError" JavaScript.DecodeError jsonDecodeErrorCodec
+        |> Codec.variant0 JavaScript.FileNotPatched
+        |> Codec.variant3 JavaScript.Exception errorNameCodec errorCodeCodec errorMessageCodec
+        |> Codec.variant1 JavaScript.DecodeError jsonDecodeErrorCodec
         |> Codec.buildCustom
 
 
@@ -57,8 +57,8 @@ jsonDecodeErrorCodec =
                 Json.Decode.Failure v1 v2 ->
                     fn4 v1 v2
         )
-        |> Codec.variant2 "Field" Json.Decode.Field Codec.string (Codec.lazy (\_ -> jsonDecodeErrorCodec))
-        |> Codec.variant2 "Index" Json.Decode.Index Codec.int (Codec.lazy (\_ -> jsonDecodeErrorCodec))
-        |> Codec.variant1 "OneOf" Json.Decode.OneOf (Codec.list (Codec.lazy (\_ -> jsonDecodeErrorCodec)))
-        |> Codec.variant2 "Failure" Json.Decode.Failure Codec.string Codec.value
+        |> Codec.variant2 Json.Decode.Field Codec.string (Codec.lazy (\_ -> jsonDecodeErrorCodec))
+        |> Codec.variant2 Json.Decode.Index Codec.int (Codec.lazy (\_ -> jsonDecodeErrorCodec))
+        |> Codec.variant1 Json.Decode.OneOf (Codec.list (Codec.lazy (\_ -> jsonDecodeErrorCodec)))
+        |> Codec.variant2 Json.Decode.Failure Codec.string Codec.value
         |> Codec.buildCustom
