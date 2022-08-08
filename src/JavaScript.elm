@@ -81,14 +81,14 @@ errorToString a =
 
 
 decodeError : Json.Decode.Value -> Error
-decodeError b =
+decodeError a =
     Exception
-        (b
+        (a
             |> Json.Decode.decodeValue (Json.Decode.field "name" Json.Decode.string)
             |> Result.withDefault ""
             |> ErrorName
         )
-        (b
+        (a
             |> Json.Decode.decodeValue
                 (Json.Decode.field "code"
                     (Json.Decode.oneOf
@@ -100,7 +100,7 @@ decodeError b =
             |> Result.withDefault ""
             |> ErrorCode
         )
-        (b
+        (a
             |> Json.Decode.decodeValue
                 (Json.Decode.oneOf
                     [ Json.Decode.string
