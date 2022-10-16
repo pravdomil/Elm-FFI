@@ -1,19 +1,17 @@
 module JavaScript exposing
     ( run
-    , commandLineProgram, commandLineProgramWithStdin
     , Error(..), ErrorCode(..), ErrorMessage(..), ErrorName(..), errorToString, decodeError
     )
 
 {-|
 
 @docs run
-@docs commandLineProgram, commandLineProgramWithStdin
+
 @docs Error, ErrorCode, ErrorMessage, ErrorName, errorToString, decodeError
 
 -}
 
 import Json.Decode
-import Json.Encode
 import Task
 
 
@@ -134,93 +132,3 @@ type ErrorCode
 
 type ErrorMessage
     = ErrorMessage String
-
-
-
---
-
-
-commandLineProgram : (List String -> Task.Task String String) -> Program () () ()
-commandLineProgram fn =
-    cliHelper
-        (readArgs
-            |> Task.mapError errorToString
-            |> Task.andThen fn
-        )
-
-
-commandLineProgramWithStdin : ({ arguments : List String, stdin : String } -> Task.Task String String) -> Program () () ()
-commandLineProgramWithStdin fn =
-    cliHelper
-        (Task.map2 (\x x2 -> { arguments = x, stdin = x2 })
-            readArgs
-            readStdin
-            |> Task.mapError errorToString
-            |> Task.andThen fn
-        )
-
-
-
---
-
-
-cliHelper : Task.Task String String -> Program () () ()
-cliHelper a =
-    let
-        cmd : Cmd ()
-        cmd =
-            a
-                |> Task.andThen
-                    (\x ->
-                        writeStdout x
-                            |> Task.andThen (\_ -> exit 0)
-                            |> Task.mapError errorToString
-                    )
-                |> Task.onError
-                    (\x ->
-                        writeStderr x
-                            |> Task.andThen (\_ -> exit 1)
-                            |> Task.mapError errorToString
-                    )
-                |> Task.attempt (\_ -> ())
-    in
-    Platform.worker
-        { init = \_ -> ( (), cmd )
-        , update = \_ _ -> ( (), Cmd.none )
-        , subscriptions = \_ -> Sub.none
-        }
-
-
-readArgs : Task.Task Error (List String)
-readArgs =
-    run "process.argv"
-        Json.Encode.null
-        (Json.Decode.list Json.Decode.string)
-
-
-readStdin : Task.Task Error String
-readStdin =
-    run "require('fs').readFileSync(0, 'utf8')"
-        Json.Encode.null
-        Json.Decode.string
-
-
-writeStdout : String -> Task.Task Error ()
-writeStdout data =
-    run "process.stdout.write(a)"
-        (Json.Encode.string data)
-        (Json.Decode.succeed ())
-
-
-writeStderr : String -> Task.Task Error ()
-writeStderr data =
-    run "process.stderr.write(a)"
-        (Json.Encode.string data)
-        (Json.Decode.succeed ())
-
-
-exit : Int -> Task.Task Error ()
-exit code =
-    run "process.exit(a)"
-        (Json.Encode.int code)
-        (Json.Decode.succeed ())
