@@ -32,8 +32,8 @@ run code arg decoder =
     in
     task arg
         |> Task.andThen
-            (\v ->
-                case v |> Json.Decode.decodeValue decoder of
+            (\x ->
+                case x |> Json.Decode.decodeValue decoder of
                     Ok b ->
                         Task.succeed b
 
@@ -69,11 +69,11 @@ errorToString a =
         Exception name code msg ->
             "There was a runtime error. More details:\n"
                 ++ indent
-                    (("name: " ++ (\(ErrorName v) -> v) name)
+                    (("name: " ++ (\(ErrorName x) -> x) name)
                         ++ "\n"
-                        ++ ("code: " ++ (\(ErrorCode v) -> v) code)
+                        ++ ("code: " ++ (\(ErrorCode x) -> x) code)
                         ++ "\n"
-                        ++ ("message: " ++ (\(ErrorMessage v) -> v) msg)
+                        ++ ("message: " ++ (\(ErrorMessage x) -> x) msg)
                     )
 
         DecodeError b ->
@@ -152,7 +152,7 @@ commandLineProgram fn =
 commandLineProgramWithStdin : ({ arguments : List String, stdin : String } -> Task.Task String String) -> Program () () ()
 commandLineProgramWithStdin fn =
     cliHelper
-        (Task.map2 (\v1 v2 -> { arguments = v1, stdin = v2 })
+        (Task.map2 (\x x2 -> { arguments = x, stdin = x2 })
             readArgs
             readStdin
             |> Task.mapError errorToString
@@ -171,14 +171,14 @@ cliHelper a =
         cmd =
             a
                 |> Task.andThen
-                    (\v ->
-                        writeStdout v
+                    (\x ->
+                        writeStdout x
                             |> Task.andThen (\_ -> exit 0)
                             |> Task.mapError errorToString
                     )
                 |> Task.onError
-                    (\v ->
-                        writeStderr v
+                    (\x ->
+                        writeStderr x
                             |> Task.andThen (\_ -> exit 1)
                             |> Task.mapError errorToString
                     )
