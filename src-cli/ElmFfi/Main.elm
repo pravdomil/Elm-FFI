@@ -8,6 +8,7 @@ import Json.Encode
 import Parser
 import Parser.DeadEnd
 import Task
+import Task.Extra
 
 
 main : Program () () ()
@@ -22,7 +23,7 @@ main =
 mainTask : List String -> Task.Task String String
 mainTask args =
     ElmFfi.Options.parse (List.drop 2 args)
-        |> resultToTask
+        |> Task.Extra.fromResult
         |> Task.mapError CannotParseArgs
         |> Task.andThen checkFiles
         |> Task.andThen (\v -> v.files |> List.map (patchFile v) |> Task.sequence)
@@ -60,7 +61,7 @@ patchFile opt a =
         applyPatch : String -> Task.Task Error String
         applyPatch b =
             ElmFfi.Patch.apply b
-                |> resultToTask
+                |> Task.Extra.fromResult
                 |> Task.mapError PatchError
 
         applyShebang : String -> Task.Task Error String
@@ -164,20 +165,6 @@ errorToString a =
 
         PatchError b ->
             "Patch error:\n" ++ Parser.DeadEnd.listToString b
-
-
-
---
-
-
-resultToTask : Result x a -> Task.Task x a
-resultToTask a =
-    case a of
-        Ok b ->
-            Task.succeed b
-
-        Err b ->
-            Task.fail b
 
 
 
