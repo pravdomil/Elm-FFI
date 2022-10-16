@@ -25,7 +25,7 @@ mainTask args =
         |> Task.Extra.fromResult
         |> Task.mapError CannotParseArgs
         |> Task.andThen checkFiles
-        |> Task.andThen (\v -> v.files |> List.map (patchFile v) |> Task.sequence)
+        |> Task.andThen (\v -> v.files |> List.map (FileSystem.stringToPath >> patchFile v) |> Task.sequence)
         |> Task.map
             (\v ->
                 let
