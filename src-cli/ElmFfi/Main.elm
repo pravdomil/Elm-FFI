@@ -79,7 +79,7 @@ patchFile opt a =
         applyRun : String -> Task.Task Error String
         applyRun b =
             if opt.run then
-                Task.succeed (String.dropRight 16 b ++ "(0)()}});}(this));")
+                Task.succeed (String.dropRight 16 b ++ "(0)({ flags: { global: global } })}});}(this));")
 
             else
                 Task.succeed b
