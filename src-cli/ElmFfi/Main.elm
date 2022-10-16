@@ -8,11 +8,12 @@ import Parser
 import Parser.DeadEnd
 import Task
 import Task.Extra
+import Worker
 
 
 main : Program () () ()
 main =
-    JavaScript.commandLineProgram mainTask
+    Worker.commandLine mainTask
 
 
 
