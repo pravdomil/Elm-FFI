@@ -57,38 +57,34 @@ checkFiles a =
 
 patchFile : ElmFfi.Options.Options -> String -> Task.Task Error ()
 patchFile opt a =
-    let
-        applyPatch : String -> Task.Task Error String
-        applyPatch b =
-            ElmFfi.Patch.apply b
-                |> Task.Extra.fromResult
-                |> Task.mapError PatchError
-
-        applyShebang : String -> Task.Task Error String
-        applyShebang b =
-            if opt.shebang then
-                --      0o755
-                chmod a 0x01ED
-                    |> Task.map
-                        (\_ ->
-                            "#!/usr/bin/env node\n" ++ b
-                        )
-
-            else
-                Task.succeed b
-
-        applyRun : String -> Task.Task Error String
-        applyRun b =
-            if opt.run then
-                Task.succeed (String.dropRight 16 b ++ "(0)({ flags: { global: global } })}});}(this));")
-
-            else
-                Task.succeed b
-    in
     read a
-        |> Task.andThen applyPatch
-        |> Task.andThen applyShebang
-        |> Task.andThen applyRun
+        |> Task.andThen
+            (\x ->
+                ElmFfi.Patch.apply x
+                    |> Task.Extra.fromResult
+                    |> Task.mapError PatchError
+            )
+        |> Task.andThen
+            (\x ->
+                if opt.shebang then
+                    --      0o755
+                    chmod a 0x01ED
+                        |> Task.map
+                            (\_ ->
+                                "#!/usr/bin/env node\n" ++ x
+                            )
+
+                else
+                    Task.succeed x
+            )
+        |> Task.map
+            (\x ->
+                if opt.run then
+                    String.dropRight 16 x ++ "(0)({ flags: { global: global } })}});}(this));"
+
+                else
+                    x
+            )
         |> Task.map
             (\x ->
                 if opt.legacy then
