@@ -3189,7 +3189,7 @@ var $elm$core$Result$withDefault = F2(
 			return def;
 		}
 	});
-var $author$project$JavaScript$decodeError = function (b) {
+var $author$project$JavaScript$decodeError = function (a) {
 	return A3(
 		$author$project$JavaScript$Exception,
 		A2(
@@ -3198,7 +3198,7 @@ var $author$project$JavaScript$decodeError = function (b) {
 			A2(
 				$elm$json$Json$Decode$decodeValue,
 				A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
-				b)),
+				a)),
 		A2(
 			$elm$core$Result$withDefault,
 			'',
@@ -3213,7 +3213,7 @@ var $author$project$JavaScript$decodeError = function (b) {
 								$elm$json$Json$Decode$string,
 								A2($elm$json$Json$Decode$map, $elm$core$String$fromInt, $elm$json$Json$Decode$int)
 							]))),
-				b)),
+				a)),
 		A2(
 			$elm$core$Result$withDefault,
 			'',
@@ -3225,7 +3225,7 @@ var $author$project$JavaScript$decodeError = function (b) {
 							$elm$json$Json$Decode$string,
 							A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string)
 						])),
-				b)));
+				a)));
 };
 var $elm$core$Task$fail = _Scheduler_fail;
 var $author$project$JavaScript$run = F3(
@@ -4356,7 +4356,7 @@ var $author$project$ElmFfi$Main$patchFile = F2(
 		};
 		var applyRun = function (b) {
 			return opt.aX ? $elm$core$Task$succeed(
-				A2($elm$core$String$dropRight, 16, b) + '(0)()}});}(this));') : $elm$core$Task$succeed(b);
+				A2($elm$core$String$dropRight, 16, b) + '(0)({ flags: { global: global } })}});}(this));') : $elm$core$Task$succeed(b);
 		};
 		var applyPatch = function (b) {
 			return A2(
