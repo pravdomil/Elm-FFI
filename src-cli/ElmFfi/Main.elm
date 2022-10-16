@@ -25,23 +25,23 @@ mainTask args =
         |> Task.Extra.fromResult
         |> Task.mapError CannotParseArgs
         |> Task.andThen checkFiles
-        |> Task.andThen (\v -> v.files |> List.map (FileSystem.stringToPath >> patchFile v) |> Task.sequence)
+        |> Task.andThen (\x -> x.files |> List.map (FileSystem.stringToPath >> patchFile x) |> Task.sequence)
         |> Task.map
-            (\v ->
+            (\x ->
                 let
                     count : String
                     count =
-                        case List.length v of
+                        case List.length x of
                             1 ->
                                 "1 file"
 
-                            vv ->
-                                String.fromInt vv ++ " files"
+                            x2 ->
+                                String.fromInt x2 ++ " files"
                 in
                 "Elm FFI patched " ++ count ++ "."
             )
-        |> Task.map (\v -> v ++ "\n")
-        |> Task.mapError (errorToString >> (\v -> v ++ "\n"))
+        |> Task.map (\x -> x ++ "\n")
+        |> Task.mapError (errorToString >> (\x -> x ++ "\n"))
 
 
 checkFiles : ElmFfi.Options.Options -> Task.Task Error ElmFfi.Options.Options

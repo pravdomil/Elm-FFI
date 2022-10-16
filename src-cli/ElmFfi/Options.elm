@@ -45,15 +45,15 @@ parser =
         loop : Options -> P.Parser (P.Step Options Options)
         loop acc =
             P.oneOf
-                [ P.succeed (\v -> P.Loop { acc | shebang = v })
+                [ P.succeed (\x -> P.Loop { acc | shebang = x })
                     |= boolArg "shebang"
-                , P.succeed (\v -> P.Loop { acc | run = v })
+                , P.succeed (\x -> P.Loop { acc | run = x })
                     |= boolArg "run"
-                , P.succeed (\v -> P.Loop { acc | legacy = v })
+                , P.succeed (\x -> P.Loop { acc | legacy = x })
                     |= boolArg "legacy"
 
                 --
-                , P.succeed (\v -> P.Loop { acc | files = v :: acc.files })
+                , P.succeed (\x -> P.Loop { acc | files = x :: acc.files })
                     |= argument
 
                 --
@@ -71,7 +71,7 @@ parser =
         argument =
             P.getChompedString
                 (P.succeed ()
-                    |. P.chompIf (\v -> v /= '-' && v /= '\u{0000}')
+                    |. P.chompIf (\x -> x /= '-' && x /= '\u{0000}')
                     |. P.chompUntilEndOr "\u{0000}"
                 )
                 |. argEnd

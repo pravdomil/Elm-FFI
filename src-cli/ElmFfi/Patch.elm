@@ -99,11 +99,11 @@ stringToFunction a =
     a
         |> P.run parser
         |> Result.map
-            (\v ->
-                v
+            (\x ->
+                x
                     |> List.map
-                        (\vv ->
-                            case vv of
+                        (\x2 ->
+                            case x2 of
                                 Code b ->
                                     b
 
@@ -119,7 +119,7 @@ parser =
     let
         spaces : P.Parser ()
         spaces =
-            P.chompWhile (\v -> v == ' ' || v == '\t' || v == '\n' || v == '\u{000D}')
+            P.chompWhile (\x -> x == ' ' || x == '\t' || x == '\n' || x == '\u{000D}')
 
         loop : List Fragment -> P.Parser (P.Step (List Fragment) (List Fragment))
         loop acc =
@@ -128,7 +128,7 @@ parser =
                     |= P.end
                 , P.succeed (\_ -> P.Loop (Code (runFnName ++ " = ") :: acc))
                     |= P.symbol (runFnName ++ " = ")
-                , P.succeed (\v -> P.Loop (Run v :: acc))
+                , P.succeed (\x -> P.Loop (Run x :: acc))
                     |. P.symbol runFnName
                     |. spaces
                     |. P.symbol ","
@@ -136,7 +136,7 @@ parser =
                     |= quotedString
                     |. spaces
                     |. P.symbol ","
-                , P.succeed (\v -> P.Loop (Code v :: acc))
+                , P.succeed (\x -> P.Loop (Code x :: acc))
                     |= P.getChompedString (P.chompUntilEndOr runFnName)
                 ]
     in
@@ -149,7 +149,7 @@ quotedString =
         loop : List String -> P.Parser (P.Step (List String) String)
         loop acc =
             P.oneOf
-                [ P.succeed (\v -> P.Loop (v :: acc))
+                [ P.succeed (\x -> P.Loop (x :: acc))
                     |. P.symbol "\\"
                     |= P.oneOf
                         [ P.succeed (\_ -> "\n")
@@ -163,8 +163,8 @@ quotedString =
                         ]
                 , P.succeed (\_ -> P.Done (String.join "" (List.reverse acc)))
                     |= P.symbol "'"
-                , P.succeed (\v -> P.Loop (v :: acc))
-                    |= P.getChompedString (P.chompWhile (\v -> v /= '\\' && v /= '\''))
+                , P.succeed (\x -> P.Loop (x :: acc))
+                    |= P.getChompedString (P.chompWhile (\x -> x /= '\\' && x /= '\''))
                 ]
     in
     P.symbol "'"
