@@ -4,8 +4,6 @@ import ElmFfi.Options
 import ElmFfi.Patch
 import FileSystem
 import JavaScript
-import Json.Decode
-import Json.Encode
 import Parser
 import Parser.DeadEnd
 import Task
@@ -70,7 +68,8 @@ patchFile opt path =
             (\x ->
                 if opt.shebang then
                     --      0o755
-                    chmod path 0x01ED
+                    FileSystem.chmod path 0x01ED
+                        |> Task.mapError ChmodError
                         |> Task.map
                             (\_ ->
                                 "#!/usr/bin/env node\n" ++ x
@@ -177,19 +176,3 @@ errorToString a =
 
         PatchError b ->
             "Patch error:\n" ++ Parser.DeadEnd.listToString b
-
-
-
---
-
-
-chmod : String -> Int -> Task.Task Error ()
-chmod path mode =
-    JavaScript.run "require('fs/promises').chmod(a.path, a.mode)"
-        (Json.Encode.object
-            [ ( "path", Json.Encode.string path )
-            , ( "mode", Json.Encode.int mode )
-            ]
-        )
-        (Json.Decode.succeed ())
-        |> Task.mapError ChmodError
