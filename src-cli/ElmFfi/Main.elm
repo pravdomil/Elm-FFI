@@ -166,13 +166,13 @@ errorToString a =
             usage
 
         ReadError b ->
-            JavaScript.errorToString b
+            "Read error:\n" ++ JavaScript.errorToString b
 
         ChmodError b ->
-            JavaScript.errorToString b
+            "Chmod error:\n" ++ JavaScript.errorToString b
 
         WriteError b ->
-            JavaScript.errorToString b
+            "Write error:\n" ++ JavaScript.errorToString b
 
         PatchError b ->
             "Patch error:\n" ++ Parser.DeadEnd.listToString b
