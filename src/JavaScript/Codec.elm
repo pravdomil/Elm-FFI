@@ -42,23 +42,26 @@ errorMessageCodec =
 
 jsonDecodeErrorCodec : Codec.Codec Json.Decode.Error
 jsonDecodeErrorCodec =
-    Codec.custom
-        (\fn1 fn2 fn3 fn4 v ->
-            case v of
-                Json.Decode.Field v1 v2 ->
-                    fn1 v1 v2
+    Codec.lazy
+        (\() ->
+            Codec.custom
+                (\fn1 fn2 fn3 fn4 v ->
+                    case v of
+                        Json.Decode.Field v1 v2 ->
+                            fn1 v1 v2
 
-                Json.Decode.Index v1 v2 ->
-                    fn2 v1 v2
+                        Json.Decode.Index v1 v2 ->
+                            fn2 v1 v2
 
-                Json.Decode.OneOf v1 ->
-                    fn3 v1
+                        Json.Decode.OneOf v1 ->
+                            fn3 v1
 
-                Json.Decode.Failure v1 v2 ->
-                    fn4 v1 v2
+                        Json.Decode.Failure v1 v2 ->
+                            fn4 v1 v2
+                )
+                |> Codec.variant2 Json.Decode.Field Codec.string (Codec.lazy (\_ -> jsonDecodeErrorCodec))
+                |> Codec.variant2 Json.Decode.Index Codec.int (Codec.lazy (\_ -> jsonDecodeErrorCodec))
+                |> Codec.variant1 Json.Decode.OneOf (Codec.list (Codec.lazy (\_ -> jsonDecodeErrorCodec)))
+                |> Codec.variant2 Json.Decode.Failure Codec.string Codec.value
+                |> Codec.buildCustom
         )
-        |> Codec.variant2 Json.Decode.Field Codec.string (Codec.lazy (\_ -> jsonDecodeErrorCodec))
-        |> Codec.variant2 Json.Decode.Index Codec.int (Codec.lazy (\_ -> jsonDecodeErrorCodec))
-        |> Codec.variant1 Json.Decode.OneOf (Codec.list (Codec.lazy (\_ -> jsonDecodeErrorCodec)))
-        |> Codec.variant2 Json.Decode.Failure Codec.string Codec.value
-        |> Codec.buildCustom
