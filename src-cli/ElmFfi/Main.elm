@@ -57,8 +57,8 @@ checkFiles a =
 
 
 patchFile : ElmFfi.Options.Options -> FileSystem.Path -> Task.Task Error ()
-patchFile opt a =
-    FileSystem.read a
+patchFile opt path =
+    FileSystem.read path
         |> Task.mapError JavaScriptError
         |> Task.andThen
             (\x ->
@@ -70,7 +70,7 @@ patchFile opt a =
             (\x ->
                 if opt.shebang then
                     --      0o755
-                    chmod a 0x01ED
+                    chmod path 0x01ED
                         |> Task.map
                             (\_ ->
                                 "#!/usr/bin/env node\n" ++ x
@@ -95,7 +95,11 @@ patchFile opt a =
                 else
                     x
             )
-        |> Task.andThen (write a)
+        |> Task.andThen
+            (\x ->
+                FileSystem.write path x
+                    |> Task.mapError JavaScriptError
+            )
 
 
 applyLegacy : String -> String
@@ -169,18 +173,6 @@ errorToString a =
 
 
 --
-
-
-write : String -> String -> Task.Task Error ()
-write path data =
-    JavaScript.run "require('fs/promises').writeFile(a.path, a.data)"
-        (Json.Encode.object
-            [ ( "path", Json.Encode.string path )
-            , ( "data", Json.Encode.string data )
-            ]
-        )
-        (Json.Decode.succeed ())
-        |> Task.mapError JavaScriptError
 
 
 chmod : String -> Int -> Task.Task Error ()
