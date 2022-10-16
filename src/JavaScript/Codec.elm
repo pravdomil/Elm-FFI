@@ -8,16 +8,16 @@ import Json.Decode
 errorCodec : Codec.Codec JavaScript.Error
 errorCodec =
     Codec.custom
-        (\fn1 fn2 fn3 v ->
-            case v of
+        (\fn1 fn2 fn3 x ->
+            case x of
                 JavaScript.FileNotPatched ->
                     fn1
 
-                JavaScript.Exception v1 v2 v3 ->
-                    fn2 v1 v2 v3
+                JavaScript.Exception x1 x2 x3 ->
+                    fn2 x1 x2 x3
 
-                JavaScript.DecodeError v1 ->
-                    fn3 v1
+                JavaScript.DecodeError x1 ->
+                    fn3 x1
         )
         |> Codec.variant0 JavaScript.FileNotPatched
         |> Codec.variant3 JavaScript.Exception errorNameCodec errorCodeCodec errorMessageCodec
@@ -27,17 +27,17 @@ errorCodec =
 
 errorNameCodec : Codec.Codec JavaScript.ErrorName
 errorNameCodec =
-    Codec.string |> Codec.map (\(JavaScript.ErrorName v) -> v) JavaScript.ErrorName
+    Codec.string |> Codec.map (\(JavaScript.ErrorName x) -> x) JavaScript.ErrorName
 
 
 errorCodeCodec : Codec.Codec JavaScript.ErrorCode
 errorCodeCodec =
-    Codec.string |> Codec.map (\(JavaScript.ErrorCode v) -> v) JavaScript.ErrorCode
+    Codec.string |> Codec.map (\(JavaScript.ErrorCode x) -> x) JavaScript.ErrorCode
 
 
 errorMessageCodec : Codec.Codec JavaScript.ErrorMessage
 errorMessageCodec =
-    Codec.string |> Codec.map (\(JavaScript.ErrorMessage v) -> v) JavaScript.ErrorMessage
+    Codec.string |> Codec.map (\(JavaScript.ErrorMessage x) -> x) JavaScript.ErrorMessage
 
 
 jsonDecodeErrorCodec : Codec.Codec Json.Decode.Error
@@ -45,23 +45,23 @@ jsonDecodeErrorCodec =
     Codec.lazy
         (\() ->
             Codec.custom
-                (\fn1 fn2 fn3 fn4 v ->
-                    case v of
-                        Json.Decode.Field v1 v2 ->
-                            fn1 v1 v2
+                (\fn1 fn2 fn3 fn4 x ->
+                    case x of
+                        Json.Decode.Field x1 x2 ->
+                            fn1 x1 x2
 
-                        Json.Decode.Index v1 v2 ->
-                            fn2 v1 v2
+                        Json.Decode.Index x1 x2 ->
+                            fn2 x1 x2
 
-                        Json.Decode.OneOf v1 ->
-                            fn3 v1
+                        Json.Decode.OneOf x1 ->
+                            fn3 x1
 
-                        Json.Decode.Failure v1 v2 ->
-                            fn4 v1 v2
+                        Json.Decode.Failure x1 x2 ->
+                            fn4 x1 x2
                 )
-                |> Codec.variant2 Json.Decode.Field Codec.string (Codec.lazy (\_ -> jsonDecodeErrorCodec))
-                |> Codec.variant2 Json.Decode.Index Codec.int (Codec.lazy (\_ -> jsonDecodeErrorCodec))
-                |> Codec.variant1 Json.Decode.OneOf (Codec.list (Codec.lazy (\_ -> jsonDecodeErrorCodec)))
+                |> Codec.variant2 Json.Decode.Field Codec.string jsonDecodeErrorCodec
+                |> Codec.variant2 Json.Decode.Index Codec.int jsonDecodeErrorCodec
+                |> Codec.variant1 Json.Decode.OneOf (Codec.list jsonDecodeErrorCodec)
                 |> Codec.variant2 Json.Decode.Failure Codec.string Codec.value
                 |> Codec.buildCustom
         )
