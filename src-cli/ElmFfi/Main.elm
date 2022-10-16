@@ -38,9 +38,8 @@ mainTask args =
                             x2 ->
                                 String.fromInt x2 ++ " files"
                 in
-                "Elm FFI patched " ++ count ++ "."
+                "Elm FFI patched " ++ count ++ ".\n"
             )
-        |> Task.map (\x -> x ++ "\n")
         |> Task.mapError (errorToString >> (\x -> x ++ "\n"))
 
 
