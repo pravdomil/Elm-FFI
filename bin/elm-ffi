@@ -1357,53 +1357,6 @@ function _String_fromList(chars)
 
 
 
-function _Char_toCode(char)
-{
-	var code = char.charCodeAt(0);
-	if (0xD800 <= code && code <= 0xDBFF)
-	{
-		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
-	}
-	return code;
-}
-
-function _Char_fromCode(code)
-{
-	return _Utils_chr(
-		(code < 0 || 0x10FFFF < code)
-			? '\uFFFD'
-			:
-		(code <= 0xFFFF)
-			? String.fromCharCode(code)
-			:
-		(code -= 0x10000,
-			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
-		)
-	);
-}
-
-function _Char_toUpper(char)
-{
-	return _Utils_chr(char.toUpperCase());
-}
-
-function _Char_toLower(char)
-{
-	return _Utils_chr(char.toLowerCase());
-}
-
-function _Char_toLocaleUpper(char)
-{
-	return _Utils_chr(char.toLocaleUpperCase());
-}
-
-function _Char_toLocaleLower(char)
-{
-	return _Utils_chr(char.toLocaleLowerCase());
-}
-
-
-
 /**_UNUSED/
 function _Json_errorToString(error)
 {
@@ -1833,6 +1786,53 @@ function _Json_addEntry(func)
 }
 
 var _Json_encodeNull = _Json_wrap(null);
+
+
+
+function _Char_toCode(char)
+{
+	var code = char.charCodeAt(0);
+	if (0xD800 <= code && code <= 0xDBFF)
+	{
+		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
+	}
+	return code;
+}
+
+function _Char_fromCode(code)
+{
+	return _Utils_chr(
+		(code < 0 || 0x10FFFF < code)
+			? '\uFFFD'
+			:
+		(code <= 0xFFFF)
+			? String.fromCharCode(code)
+			:
+		(code -= 0x10000,
+			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
+		)
+	);
+}
+
+function _Char_toUpper(char)
+{
+	return _Utils_chr(char.toUpperCase());
+}
+
+function _Char_toLower(char)
+{
+	return _Utils_chr(char.toLowerCase());
+}
+
+function _Char_toLocaleUpper(char)
+{
+	return _Utils_chr(char.toLocaleUpperCase());
+}
+
+function _Char_toLocaleLower(char)
+{
+	return _Utils_chr(char.toLocaleLowerCase());
+}
 
 
 
@@ -2573,19 +2573,69 @@ var $elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
 	});
+var $elm$core$Basics$append = _Utils_append;
+var $elm$core$Basics$False = 1;
+var $elm$core$Basics$add = _Basics_add;
+var $elm$core$Maybe$Just = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$core$Maybe$Nothing = {$: 1};
+var $elm$core$String$all = _String_all;
+var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
+var $elm$json$Json$Decode$Failure = F2(
+	function (a, b) {
+		return {$: 3, a: a, b: b};
+	});
+var $elm$json$Json$Decode$Field = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var $elm$json$Json$Decode$Index = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
 var $elm$core$Result$Ok = function (a) {
 	return {$: 0, a: a};
 };
-var $elm$core$Basics$identity = function (x) {
-	return x;
+var $elm$json$Json$Decode$OneOf = function (a) {
+	return {$: 2, a: a};
 };
-var $elm$core$Task$Perform = $elm$core$Basics$identity;
-var $elm$core$Task$succeed = _Scheduler_succeed;
-var $elm$core$Task$init = $elm$core$Task$succeed(0);
-var $elm$core$Basics$add = _Basics_add;
+var $elm$core$Array$branchFactor = 32;
+var $elm$core$Array$Array_elm_builtin = F4(
+	function (a, b, c, d) {
+		return {$: 0, a: a, b: b, c: c, d: d};
+	});
+var $elm$core$Elm$JsArray$empty = _JsArray_empty;
+var $elm$core$Basics$ceiling = _Basics_ceiling;
+var $elm$core$Basics$fdiv = _Basics_fdiv;
+var $elm$core$Basics$logBase = F2(
+	function (base, number) {
+		return _Basics_log(number) / _Basics_log(base);
+	});
+var $elm$core$Basics$toFloat = _Basics_toFloat;
+var $elm$core$Array$shiftStep = $elm$core$Basics$ceiling(
+	A2($elm$core$Basics$logBase, 2, $elm$core$Array$branchFactor));
+var $elm$core$Array$empty = A4($elm$core$Array$Array_elm_builtin, 0, $elm$core$Array$shiftStep, $elm$core$Elm$JsArray$empty, $elm$core$Elm$JsArray$empty);
+var $elm$core$Elm$JsArray$initialize = _JsArray_initialize;
+var $elm$core$Array$Leaf = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$core$Basics$apL = F2(
+	function (f, x) {
+		return f(x);
+	});
+var $elm$core$Basics$eq = _Utils_equal;
+var $elm$core$Basics$floor = _Basics_floor;
+var $elm$core$Elm$JsArray$length = _JsArray_length;
+var $elm$core$Basics$gt = _Utils_gt;
+var $elm$core$Basics$max = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) > 0) ? x : y;
+	});
+var $elm$core$Basics$mul = _Basics_mul;
 var $elm$core$List$foldl = F3(
 	function (func, acc, list) {
 		foldl:
@@ -2605,134 +2655,128 @@ var $elm$core$List$foldl = F3(
 			}
 		}
 	});
-var $elm$core$Basics$gt = _Utils_gt;
 var $elm$core$List$reverse = function (list) {
 	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
 };
-var $elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
+var $elm$core$Basics$sub = _Basics_sub;
+var $elm$core$Array$SubTree = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
+var $elm$core$Array$compressNodes = F2(
+	function (nodes, acc) {
+		compressNodes:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, nodes);
+			var node = _v0.a;
+			var remainingNodes = _v0.b;
+			var newAcc = A2(
+				$elm$core$List$cons,
+				$elm$core$Array$SubTree(node),
+				acc);
+			if (!remainingNodes.b) {
+				return $elm$core$List$reverse(newAcc);
 			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							$elm$core$List$foldl,
-							fn,
-							acc,
-							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
+				var $temp$nodes = remainingNodes,
+					$temp$acc = newAcc;
+				nodes = $temp$nodes;
+				acc = $temp$acc;
+				continue compressNodes;
 			}
 		}
 	});
-var $elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
+var $elm$core$Tuple$first = function (_v0) {
+	var x = _v0.a;
+	return x;
+};
+var $elm$core$Array$treeFromBuilder = F2(
+	function (nodeList, nodeListSize) {
+		treeFromBuilder:
+		while (true) {
+			var newNodeSize = $elm$core$Basics$ceiling(nodeListSize / $elm$core$Array$branchFactor);
+			if (newNodeSize === 1) {
+				return A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, nodeList).a;
+			} else {
+				var $temp$nodeList = A2($elm$core$Array$compressNodes, nodeList, _List_Nil),
+					$temp$nodeListSize = newNodeSize;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue treeFromBuilder;
+			}
+		}
 	});
-var $elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						$elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
+var $elm$core$Array$builderToArray = F2(
+	function (reverseNodeList, builder) {
+		if (!builder.e) {
+			return A4(
+				$elm$core$Array$Array_elm_builtin,
+				$elm$core$Elm$JsArray$length(builder.g),
+				$elm$core$Array$shiftStep,
+				$elm$core$Elm$JsArray$empty,
+				builder.g);
+		} else {
+			var treeLen = builder.e * $elm$core$Array$branchFactor;
+			var depth = $elm$core$Basics$floor(
+				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.h) : builder.h;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.e);
+			return A4(
+				$elm$core$Array$Array_elm_builtin,
+				$elm$core$Elm$JsArray$length(builder.g) + treeLen,
+				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
+				tree,
+				builder.g);
+		}
 	});
-var $elm$core$Task$map = F2(
-	function (func, taskA) {
-		return A2(
-			$elm$core$Task$andThen,
-			function (a) {
-				return $elm$core$Task$succeed(
-					func(a));
-			},
-			taskA);
-	});
-var $elm$core$Task$map2 = F3(
-	function (func, taskA, taskB) {
-		return A2(
-			$elm$core$Task$andThen,
-			function (a) {
+var $elm$core$Basics$idiv = _Basics_idiv;
+var $elm$core$Basics$lt = _Utils_lt;
+var $elm$core$Array$initializeHelp = F5(
+	function (fn, fromIndex, len, nodeList, tail) {
+		initializeHelp:
+		while (true) {
+			if (fromIndex < 0) {
 				return A2(
-					$elm$core$Task$andThen,
-					function (b) {
-						return $elm$core$Task$succeed(
-							A2(func, a, b));
-					},
-					taskB);
-			},
-			taskA);
+					$elm$core$Array$builderToArray,
+					false,
+					{h: nodeList, e: (len / $elm$core$Array$branchFactor) | 0, g: tail});
+			} else {
+				var leaf = $elm$core$Array$Leaf(
+					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
+				var $temp$fn = fn,
+					$temp$fromIndex = fromIndex - $elm$core$Array$branchFactor,
+					$temp$len = len,
+					$temp$nodeList = A2($elm$core$List$cons, leaf, nodeList),
+					$temp$tail = tail;
+				fn = $temp$fn;
+				fromIndex = $temp$fromIndex;
+				len = $temp$len;
+				nodeList = $temp$nodeList;
+				tail = $temp$tail;
+				continue initializeHelp;
+			}
+		}
 	});
-var $elm$core$Task$sequence = function (tasks) {
-	return A3(
-		$elm$core$List$foldr,
-		$elm$core$Task$map2($elm$core$List$cons),
-		$elm$core$Task$succeed(_List_Nil),
-		tasks);
+var $elm$core$Basics$le = _Utils_le;
+var $elm$core$Basics$remainderBy = _Basics_remainderBy;
+var $elm$core$Array$initialize = F2(
+	function (len, fn) {
+		if (len <= 0) {
+			return $elm$core$Array$empty;
+		} else {
+			var tailLen = len % $elm$core$Array$branchFactor;
+			var tail = A3($elm$core$Elm$JsArray$initialize, tailLen, len - tailLen, fn);
+			var initialFromIndex = (len - tailLen) - $elm$core$Array$branchFactor;
+			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
+		}
+	});
+var $elm$core$Basics$True = 0;
+var $elm$core$Result$isOk = function (result) {
+	if (!result.$) {
+		return true;
+	} else {
+		return false;
+	}
 };
-var $elm$json$Json$Decode$Failure = F2(
-	function (a, b) {
-		return {$: 3, a: a, b: b};
-	});
-var $elm$json$Json$Decode$Field = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
-var $elm$json$Json$Decode$Index = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
-	});
-var $elm$json$Json$Decode$OneOf = function (a) {
-	return {$: 2, a: a};
-};
-var $elm$core$Basics$False = 1;
-var $elm$core$Maybe$Just = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$core$Maybe$Nothing = {$: 1};
-var $elm$core$String$all = _String_all;
-var $elm$core$Basics$and = _Basics_and;
-var $elm$core$Basics$append = _Utils_append;
 var $elm$json$Json$Encode$encode = _Json_encode;
 var $elm$core$String$fromInt = _String_fromNumber;
 var $elm$core$String$join = F2(
@@ -2764,8 +2808,6 @@ var $elm$core$List$length = function (xs) {
 		xs);
 };
 var $elm$core$List$map2 = _List_map2;
-var $elm$core$Basics$le = _Utils_le;
-var $elm$core$Basics$sub = _Basics_sub;
 var $elm$core$List$rangeHelp = F3(
 	function (lo, hi, list) {
 		rangeHelp:
@@ -2922,154 +2964,162 @@ var $elm$json$Json$Decode$errorToStringHelp = F2(
 			}
 		}
 	});
-var $elm$core$Array$branchFactor = 32;
-var $elm$core$Array$Array_elm_builtin = F4(
-	function (a, b, c, d) {
-		return {$: 0, a: a, b: b, c: c, d: d};
-	});
-var $elm$core$Elm$JsArray$empty = _JsArray_empty;
-var $elm$core$Basics$ceiling = _Basics_ceiling;
-var $elm$core$Basics$fdiv = _Basics_fdiv;
-var $elm$core$Basics$logBase = F2(
-	function (base, number) {
-		return _Basics_log(number) / _Basics_log(base);
-	});
-var $elm$core$Basics$toFloat = _Basics_toFloat;
-var $elm$core$Array$shiftStep = $elm$core$Basics$ceiling(
-	A2($elm$core$Basics$logBase, 2, $elm$core$Array$branchFactor));
-var $elm$core$Array$empty = A4($elm$core$Array$Array_elm_builtin, 0, $elm$core$Array$shiftStep, $elm$core$Elm$JsArray$empty, $elm$core$Elm$JsArray$empty);
-var $elm$core$Elm$JsArray$initialize = _JsArray_initialize;
-var $elm$core$Array$Leaf = function (a) {
-	return {$: 1, a: a};
-};
-var $elm$core$Basics$apL = F2(
-	function (f, x) {
-		return f(x);
-	});
-var $elm$core$Basics$eq = _Utils_equal;
-var $elm$core$Basics$floor = _Basics_floor;
-var $elm$core$Elm$JsArray$length = _JsArray_length;
-var $elm$core$Basics$max = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) > 0) ? x : y;
-	});
-var $elm$core$Basics$mul = _Basics_mul;
-var $elm$core$Array$SubTree = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
-var $elm$core$Array$compressNodes = F2(
-	function (nodes, acc) {
-		compressNodes:
-		while (true) {
-			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, nodes);
-			var node = _v0.a;
-			var remainingNodes = _v0.b;
-			var newAcc = A2(
-				$elm$core$List$cons,
-				$elm$core$Array$SubTree(node),
-				acc);
-			if (!remainingNodes.b) {
-				return $elm$core$List$reverse(newAcc);
+var $elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
 			} else {
-				var $temp$nodes = remainingNodes,
-					$temp$acc = newAcc;
-				nodes = $temp$nodes;
-				acc = $temp$acc;
-				continue compressNodes;
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							$elm$core$List$foldl,
+							fn,
+							acc,
+							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
 			}
 		}
 	});
-var $elm$core$Tuple$first = function (_v0) {
-	var x = _v0.a;
+var $elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var $elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						$elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var $author$project$JavaScript$errorToString = function (a) {
+	var indent = function (b) {
+		return A2(
+			$elm$core$String$join,
+			'\n',
+			A2(
+				$elm$core$List$map,
+				$elm$core$Basics$append('  '),
+				A2($elm$core$String$split, '\n', b)));
+	};
+	switch (a.$) {
+		case 0:
+			return 'Compiled file needs to be processed via elm-ffi command.';
+		case 1:
+			var name = a.a;
+			var code = a.b;
+			var msg = a.c;
+			return 'There was a runtime error. More details:\n' + indent(
+				('name: ' + function (_v1) {
+					var x = _v1;
+					return x;
+				}(name)) + ('\n' + (('code: ' + function (_v2) {
+					var x = _v2;
+					return x;
+				}(code)) + ('\n' + ('message: ' + function (_v3) {
+					var x = _v3;
+					return x;
+				}(msg))))));
+		default:
+			var b = a.a;
+			return 'There was a decode error. More details:\n' + indent(
+				$elm$json$Json$Decode$errorToString(b));
+	}
+};
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$Task$succeed = _Scheduler_succeed;
+var $elm$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			$elm$core$Task$andThen,
+			function (a) {
+				return $elm$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var $elm$core$Task$onError = _Scheduler_onError;
+var $author$project$Task$Extra$andAlwaysThen = F2(
+	function (toTask, a) {
+		return A2(
+			$elm$core$Task$andThen,
+			toTask,
+			A2(
+				$elm$core$Task$onError,
+				A2($elm$core$Basics$composeR, $elm$core$Result$Err, $elm$core$Task$succeed),
+				A2($elm$core$Task$map, $elm$core$Result$Ok, a)));
+	});
+var $elm$core$Basics$identity = function (x) {
 	return x;
 };
-var $elm$core$Array$treeFromBuilder = F2(
-	function (nodeList, nodeListSize) {
-		treeFromBuilder:
-		while (true) {
-			var newNodeSize = $elm$core$Basics$ceiling(nodeListSize / $elm$core$Array$branchFactor);
-			if (newNodeSize === 1) {
-				return A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, nodeList).a;
-			} else {
-				var $temp$nodeList = A2($elm$core$Array$compressNodes, nodeList, _List_Nil),
-					$temp$nodeListSize = newNodeSize;
-				nodeList = $temp$nodeList;
-				nodeListSize = $temp$nodeListSize;
-				continue treeFromBuilder;
-			}
-		}
-	});
-var $elm$core$Array$builderToArray = F2(
-	function (reverseNodeList, builder) {
-		if (!builder.e) {
-			return A4(
-				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.g),
-				$elm$core$Array$shiftStep,
-				$elm$core$Elm$JsArray$empty,
-				builder.g);
-		} else {
-			var treeLen = builder.e * $elm$core$Array$branchFactor;
-			var depth = $elm$core$Basics$floor(
-				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.h) : builder.h;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.e);
-			return A4(
-				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.g) + treeLen,
-				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
-				tree,
-				builder.g);
-		}
-	});
-var $elm$core$Basics$idiv = _Basics_idiv;
-var $elm$core$Basics$lt = _Utils_lt;
-var $elm$core$Array$initializeHelp = F5(
-	function (fn, fromIndex, len, nodeList, tail) {
-		initializeHelp:
-		while (true) {
-			if (fromIndex < 0) {
+var $elm$core$Task$Perform = $elm$core$Basics$identity;
+var $elm$core$Task$init = $elm$core$Task$succeed(0);
+var $elm$core$Task$map2 = F3(
+	function (func, taskA, taskB) {
+		return A2(
+			$elm$core$Task$andThen,
+			function (a) {
 				return A2(
-					$elm$core$Array$builderToArray,
-					false,
-					{h: nodeList, e: (len / $elm$core$Array$branchFactor) | 0, g: tail});
-			} else {
-				var leaf = $elm$core$Array$Leaf(
-					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
-				var $temp$fn = fn,
-					$temp$fromIndex = fromIndex - $elm$core$Array$branchFactor,
-					$temp$len = len,
-					$temp$nodeList = A2($elm$core$List$cons, leaf, nodeList),
-					$temp$tail = tail;
-				fn = $temp$fn;
-				fromIndex = $temp$fromIndex;
-				len = $temp$len;
-				nodeList = $temp$nodeList;
-				tail = $temp$tail;
-				continue initializeHelp;
-			}
-		}
+					$elm$core$Task$andThen,
+					function (b) {
+						return $elm$core$Task$succeed(
+							A2(func, a, b));
+					},
+					taskB);
+			},
+			taskA);
 	});
-var $elm$core$Basics$remainderBy = _Basics_remainderBy;
-var $elm$core$Array$initialize = F2(
-	function (len, fn) {
-		if (len <= 0) {
-			return $elm$core$Array$empty;
-		} else {
-			var tailLen = len % $elm$core$Array$branchFactor;
-			var tail = A3($elm$core$Elm$JsArray$initialize, tailLen, len - tailLen, fn);
-			var initialFromIndex = (len - tailLen) - $elm$core$Array$branchFactor;
-			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
-		}
-	});
-var $elm$core$Basics$True = 0;
-var $elm$core$Result$isOk = function (result) {
-	if (!result.$) {
-		return true;
-	} else {
-		return false;
-	}
+var $elm$core$Task$sequence = function (tasks) {
+	return A3(
+		$elm$core$List$foldr,
+		$elm$core$Task$map2($elm$core$List$cons),
+		$elm$core$Task$succeed(_List_Nil),
+		tasks);
 };
 var $elm$core$Platform$sendToApp = _Platform_sendToApp;
 var $elm$core$Task$spawnCmd = F2(
@@ -3110,7 +3160,6 @@ var $elm$core$Basics$composeL = F3(
 		return g(
 			f(x));
 	});
-var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
 	function (resultToMessage, task) {
 		return $elm$core$Task$command(
@@ -3128,40 +3177,6 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
-var $author$project$JavaScript$errorToString = function (a) {
-	var indent = function (b) {
-		return A2(
-			$elm$core$String$join,
-			'\n',
-			A2(
-				$elm$core$List$map,
-				$elm$core$Basics$append('  '),
-				A2($elm$core$String$split, '\n', b)));
-	};
-	switch (a.$) {
-		case 0:
-			return 'Compiled file needs to be processed via elm-ffi command.';
-		case 1:
-			var name = a.a;
-			var code = a.b;
-			var msg = a.c;
-			return 'There was a runtime error. More details:\n' + indent(
-				('name: ' + function (_v1) {
-					var v = _v1;
-					return v;
-				}(name)) + ('\n' + (('code: ' + function (_v2) {
-					var v = _v2;
-					return v;
-				}(code)) + ('\n' + ('message: ' + function (_v3) {
-					var v = _v3;
-					return v;
-				}(msg))))));
-		default:
-			var b = a.a;
-			return 'There was a decode error. More details:\n' + indent(
-				$elm$json$Json$Decode$errorToString(b));
-	}
-};
 var $elm$json$Json$Encode$int = _Json_wrap;
 var $author$project$JavaScript$DecodeError = function (a) {
 	return {$: 2, a: a};
@@ -3280,8 +3295,8 @@ var task = function(arg_) {
     
 		return A2(
 			$elm$core$Task$andThen,
-			function (v) {
-				var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, v);
+			function (x) {
+				var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, x);
 				if (!_v0.$) {
 					var b = _v0.a;
 					return $elm$core$Task$succeed(b);
@@ -3294,7 +3309,7 @@ var task = function(arg_) {
 			task(arg));
 	});
 var $elm$json$Json$Decode$succeed = _Json_succeed;
-var $author$project$JavaScript$exit = function (code) {
+var $author$project$Process$Extra$hardExit = function (code) {
 	return A3(
 		$author$project$JavaScript$run, function(a, onCancel) { return process.exit(a) },
 		$elm$json$Json$Encode$int(code),
@@ -3313,51 +3328,52 @@ var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$core$Platform$worker = _Platform_worker;
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$JavaScript$writeStderr = function (data) {
+var $author$project$Worker$writeStderr = function (a) {
 	return A3(
 		$author$project$JavaScript$run, function(a, onCancel) { return process.stderr.write(a) },
-		$elm$json$Json$Encode$string(data),
+		$elm$json$Json$Encode$string(a),
 		$elm$json$Json$Decode$succeed(0));
 };
-var $author$project$JavaScript$writeStdout = function (data) {
+var $author$project$Worker$writeStdout = function (a) {
 	return A3(
 		$author$project$JavaScript$run, function(a, onCancel) { return process.stdout.write(a) },
-		$elm$json$Json$Encode$string(data),
+		$elm$json$Json$Encode$string(a),
 		$elm$json$Json$Decode$succeed(0));
 };
-var $author$project$JavaScript$cliHelper = function (a) {
+var $author$project$Worker$helper = function (a) {
 	var cmd = A2(
 		$elm$core$Task$attempt,
-		function (_v6) {
+		function (_v7) {
 			return 0;
 		},
 		A2(
-			$elm$core$Task$onError,
-			function (v) {
-				return A2(
-					$elm$core$Task$mapError,
-					$author$project$JavaScript$errorToString,
-					A2(
-						$elm$core$Task$andThen,
-						function (_v5) {
-							return $author$project$JavaScript$exit(1);
-						},
-						$author$project$JavaScript$writeStderr(v)));
-			},
-			A2(
-				$elm$core$Task$andThen,
-				function (v) {
+			$author$project$Task$Extra$andAlwaysThen,
+			function (x) {
+				if (!x.$) {
+					var x2 = x.a;
 					return A2(
 						$elm$core$Task$mapError,
 						$author$project$JavaScript$errorToString,
 						A2(
 							$elm$core$Task$andThen,
-							function (_v4) {
-								return $author$project$JavaScript$exit(0);
+							function (_v5) {
+								return $author$project$Process$Extra$hardExit(0);
 							},
-							$author$project$JavaScript$writeStdout(v)));
-				},
-				a)));
+							$author$project$Worker$writeStdout(x2)));
+				} else {
+					var x2 = x.a;
+					return A2(
+						$elm$core$Task$mapError,
+						$author$project$JavaScript$errorToString,
+						A2(
+							$elm$core$Task$andThen,
+							function (_v6) {
+								return $author$project$Process$Extra$hardExit(1);
+							},
+							$author$project$Worker$writeStderr(x2)));
+				}
+			},
+			a));
 	return $elm$core$Platform$worker(
 		{
 			aN: function (_v0) {
@@ -3374,16 +3390,16 @@ var $author$project$JavaScript$cliHelper = function (a) {
 };
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Encode$null = _Json_encodeNull;
-var $author$project$JavaScript$readArgs = A3(
+var $author$project$Worker$readArgs = A3(
 	$author$project$JavaScript$run, function(a, onCancel) { return process.argv },
 	$elm$json$Json$Encode$null,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string));
-var $author$project$JavaScript$commandLineProgram = function (fn) {
-	return $author$project$JavaScript$cliHelper(
+var $author$project$Worker$commandLine = function (fn) {
+	return $author$project$Worker$helper(
 		A2(
 			$elm$core$Task$andThen,
 			fn,
-			A2($elm$core$Task$mapError, $author$project$JavaScript$errorToString, $author$project$JavaScript$readArgs)));
+			A2($elm$core$Task$mapError, $author$project$JavaScript$errorToString, $author$project$Worker$readArgs)));
 };
 var $author$project$ElmFfi$Main$CannotParseArgs = function (a) {
 	return {$: 0, a: a};
@@ -3397,11 +3413,6 @@ var $author$project$ElmFfi$Main$checkFiles = function (a) {
 		return $elm$core$Task$succeed(a);
 	}
 };
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -3477,10 +3488,25 @@ var $author$project$ElmFfi$Main$errorToString = function (a) {
 			return usage;
 		case 2:
 			var b = a.a;
-			return $author$project$JavaScript$errorToString(b);
+			return 'Read error:\n' + $author$project$JavaScript$errorToString(b);
+		case 3:
+			var b = a.a;
+			return 'Chmod error:\n' + $author$project$JavaScript$errorToString(b);
+		case 4:
+			var b = a.a;
+			return 'Write error:\n' + $author$project$JavaScript$errorToString(b);
 		default:
 			var b = a.a;
 			return 'Patch error:\n' + $author$project$Parser$DeadEnd$listToString(b);
+	}
+};
+var $author$project$Task$Extra$fromResult = function (a) {
+	if (!a.$) {
+		var b = a.a;
+		return $elm$core$Task$succeed(b);
+	} else {
+		var b = a.a;
+		return $elm$core$Task$fail(b);
 	}
 };
 var $elm$parser$Parser$Done = function (a) {
@@ -3835,8 +3861,8 @@ var $author$project$ElmFfi$Options$parser = function () {
 					$elm$parser$Parser$ignorer,
 					$elm$parser$Parser$succeed(0),
 					$elm$parser$Parser$chompIf(
-						function (v) {
-							return (v !== '-') && (v !== '\u0000');
+						function (x) {
+							return (x !== '-') && (x !== '\u0000');
 						})),
 				$elm$parser$Parser$chompUntilEndOr('\u0000'))),
 		argEnd);
@@ -3856,42 +3882,42 @@ var $author$project$ElmFfi$Options$parser = function () {
 					A2(
 					$elm$parser$Parser$keeper,
 					$elm$parser$Parser$succeed(
-						function (v) {
+						function (x) {
 							return $elm$parser$Parser$Loop(
 								_Utils_update(
 									acc,
-									{aY: v}));
+									{aY: x}));
 						}),
 					boolArg('shebang')),
 					A2(
 					$elm$parser$Parser$keeper,
 					$elm$parser$Parser$succeed(
-						function (v) {
+						function (x) {
 							return $elm$parser$Parser$Loop(
 								_Utils_update(
 									acc,
-									{aX: v}));
+									{aX: x}));
 						}),
 					boolArg('run')),
 					A2(
 					$elm$parser$Parser$keeper,
 					$elm$parser$Parser$succeed(
-						function (v) {
+						function (x) {
 							return $elm$parser$Parser$Loop(
 								_Utils_update(
 									acc,
-									{aP: v}));
+									{aP: x}));
 						}),
 					boolArg('legacy')),
 					A2(
 					$elm$parser$Parser$keeper,
 					$elm$parser$Parser$succeed(
-						function (v) {
+						function (x) {
 							return $elm$parser$Parser$Loop(
 								_Utils_update(
 									acc,
 									{
-										V: A2($elm$core$List$cons, v, acc.V)
+										V: A2($elm$core$List$cons, x, acc.V)
 									}));
 						}),
 					argument),
@@ -3979,8 +4005,17 @@ var $author$project$ElmFfi$Options$parse = function (a) {
 		$author$project$ElmFfi$Options$parser,
 		A2($elm$core$String$join, '\u0000', a));
 };
-var $author$project$ElmFfi$Main$PatchError = function (a) {
+var $author$project$ElmFfi$Main$ChmodError = function (a) {
 	return {$: 3, a: a};
+};
+var $author$project$ElmFfi$Main$PatchError = function (a) {
+	return {$: 5, a: a};
+};
+var $author$project$ElmFfi$Main$ReadError = function (a) {
+	return {$: 2, a: a};
+};
+var $author$project$ElmFfi$Main$WriteError = function (a) {
+	return {$: 4, a: a};
 };
 var $author$project$ElmFfi$Patch$fn = '\nvar task = function(arg_) {\n  return _Scheduler_binding(function(callback) {\n    var canceled = false\n    var cancelFn = undefined\n\n    function onCancel(a) {\n      cancelFn = a\n    }\n\n    function try_(fn) {\n      try       { return { $: 0, a: fn() } }\n      catch (e) { return { $: 1, a: e    } }\n    }\n\n    function ok(a) {\n      if (canceled === false) callback(_Scheduler_succeed(_Json_wrap(a)))\n    }\n\n    function err(a) {\n      if (canceled === false) callback(_Scheduler_fail(toError(_Json_wrap(a))))\n    }\n\n    var a = try_(function() { return code(_Json_unwrap(arg_), onCancel) })\n\n    if (a.$ === 0) {\n      if (typeof Promise !== "undefined" && a.a instanceof Promise) {\n        a.a.then(ok).catch(err)\n      }\n      else {\n        ok(a.a)\n      }\n    }\n    else {\n      err(a.a)\n    }\n\n    return function() {\n      if (cancelFn) {\n        var a = try_(cancelFn)\n        if (a.$ === 1) err(a.a)\n      }\n      canceled = true\n    }\n  })\n};\n    ';
 var $elm$core$String$replace = F3(
@@ -4096,9 +4131,9 @@ var $author$project$ElmFfi$Patch$quotedString = function () {
 					A2(
 						$elm$parser$Parser$ignorer,
 						$elm$parser$Parser$succeed(
-							function (v) {
+							function (x) {
 								return $elm$parser$Parser$Loop(
-									A2($elm$core$List$cons, v, acc));
+									A2($elm$core$List$cons, x, acc));
 							}),
 						$elm$parser$Parser$symbol('\\')),
 					$elm$parser$Parser$oneOf(
@@ -4147,14 +4182,14 @@ var $author$project$ElmFfi$Patch$quotedString = function () {
 					A2(
 					$elm$parser$Parser$keeper,
 					$elm$parser$Parser$succeed(
-						function (v) {
+						function (x) {
 							return $elm$parser$Parser$Loop(
-								A2($elm$core$List$cons, v, acc));
+								A2($elm$core$List$cons, x, acc));
 						}),
 					$elm$parser$Parser$getChompedString(
 						$elm$parser$Parser$chompWhile(
-							function (v) {
-								return (v !== '\\') && (v !== '\'');
+							function (x) {
+								return (x !== '\\') && (x !== '\'');
 							})))
 				]));
 	};
@@ -4168,8 +4203,8 @@ var $author$project$ElmFfi$Patch$quotedString = function () {
 var $author$project$ElmFfi$Patch$runFnName = '$author$project$JavaScript' + '$run';
 var $author$project$ElmFfi$Patch$parser = function () {
 	var spaces = $elm$parser$Parser$chompWhile(
-		function (v) {
-			return (v === ' ') || ((v === '\t') || ((v === '\n') || (v === '\u000D')));
+		function (x) {
+			return (x === ' ') || ((x === '\t') || ((x === '\n') || (x === '\u000D')));
 		});
 	var loop = function (acc) {
 		return $elm$parser$Parser$oneOf(
@@ -4205,11 +4240,11 @@ var $author$project$ElmFfi$Patch$parser = function () {
 								A2(
 									$elm$parser$Parser$ignorer,
 									$elm$parser$Parser$succeed(
-										function (v) {
+										function (x) {
 											return $elm$parser$Parser$Loop(
 												A2(
 													$elm$core$List$cons,
-													$author$project$ElmFfi$Patch$Run(v),
+													$author$project$ElmFfi$Patch$Run(x),
 													acc));
 										}),
 									$elm$parser$Parser$symbol($author$project$ElmFfi$Patch$runFnName)),
@@ -4223,11 +4258,11 @@ var $author$project$ElmFfi$Patch$parser = function () {
 					A2(
 					$elm$parser$Parser$keeper,
 					$elm$parser$Parser$succeed(
-						function (v) {
+						function (x) {
 							return $elm$parser$Parser$Loop(
 								A2(
 									$elm$core$List$cons,
-									$author$project$ElmFfi$Patch$Code(v),
+									$author$project$ElmFfi$Patch$Code(x),
 									acc));
 						}),
 					$elm$parser$Parser$getChompedString(
@@ -4240,22 +4275,22 @@ var $elm$core$String$trim = _String_trim;
 var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 	return A2(
 		$elm$core$Result$map,
-		function (v) {
+		function (x) {
 			return A2(
 				$elm$core$String$join,
 				'',
 				A2(
 					$elm$core$List$map,
-					function (vv) {
-						if (!vv.$) {
-							var b = vv.a;
+					function (x2) {
+						if (!x2.$) {
+							var b = x2.a;
 							return b;
 						} else {
-							var b = vv.a;
+							var b = x2.a;
 							return $author$project$ElmFfi$Patch$runFnName + (', function(a, onCancel) { return ' + ($elm$core$String$trim(b) + ' },'));
 						}
 					},
-					v));
+					x));
 		},
 		A2($elm$parser$Parser$run, $author$project$ElmFfi$Patch$parser, a));
 };
@@ -4268,8 +4303,56 @@ var $author$project$ElmFfi$Patch$apply = function (a) {
 			$author$project$ElmFfi$Patch$implementRunTask,
 			$author$project$ElmFfi$Patch$stringToFunction(a)));
 };
-var $author$project$ElmFfi$Main$JavaScriptError = function (a) {
-	return {$: 2, a: a};
+var $author$project$ElmFfi$Main$applyLegacy = function (a) {
+	return A3(
+		$elm$core$String$replace,
+		'var res = (ctr > 500) ? A3(',
+		'var res = (ctr > 100) ? A3(',
+		A3(
+			$elm$core$String$replace,
+			'JSON.stringify(',
+			'(function(a) { return String(a) })(',
+			A3(
+				$elm$core$String$replace,
+				'Array.isArray(',
+				'(function(a) { return \"length\" in a })(',
+				A3(
+					$elm$core$String$replace,
+					'(char.',
+					'(char_.',
+					A3(
+						$elm$core$String$replace,
+						'(char)',
+						'(char_)',
+						A3(
+							$elm$core$String$replace,
+							'\tchar ',
+							'\tchar_ ',
+							A3(
+								$elm$core$String$replace,
+								' char.',
+								' char_.',
+								A3(
+									$elm$core$String$replace,
+									' char;',
+									' char_;',
+									A3(
+										$elm$core$String$replace,
+										' char ',
+										' char_ ',
+										A3(
+											$elm$core$String$replace,
+											': (obj[name] = exports[name]);',
+											'): (obj[name] = exports[name]);',
+											A3(
+												$elm$core$String$replace,
+												'? (name == \'init\')',
+												'? ((name == \'init\')',
+												A3(
+													$elm$core$String$replace,
+													'return (\n\t\tstring.length <= offset\n\t\t\t? -1\n\t\t\t:\n\t\t(string.charCodeAt(offset) & 0xF800) === 0xD800\n\t\t\t? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)\n\t\t\t:\n\t\t(predicate(_Utils_chr(string[offset]))\n\t\t\t? ((string[offset] === \'\\n\') ? -2 : (offset + 1))\n\t\t\t: -1\n\t\t)\n\t);',
+													'if (string.length <= offset) {\n\t\treturn -1\n\t} else if ((string.charCodeAt(offset) & 0xF800) === 0xD800) {\n\t\treturn predicate(__Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1\n\t} else if (predicate(_Utils_chr(string[offset]))) {\n\t\treturn (string[offset] === \'\\n\') ? -2 : (offset + 1)\n\t} else {\n\t\treturn -1\n\t}',
+													A3($elm$core$String$replace, 'return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;', 'return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);', a)))))))))))));
 };
 var $elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
@@ -4284,204 +4367,146 @@ var $elm$json$Json$Encode$object = function (pairs) {
 			_Json_emptyObject(0),
 			pairs));
 };
-var $author$project$ElmFfi$Main$chmod = F2(
-	function (path, mode) {
-		return A2(
-			$elm$core$Task$mapError,
-			$author$project$ElmFfi$Main$JavaScriptError,
-			A3(
-				$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').chmod(a.path, a.mode) },
-				$elm$json$Json$Encode$object(
-					_List_fromArray(
-						[
-							_Utils_Tuple2(
-							'path',
-							$elm$json$Json$Encode$string(path)),
-							_Utils_Tuple2(
-							'mode',
-							$elm$json$Json$Encode$int(mode))
-						])),
-				$elm$json$Json$Decode$succeed(0)));
+var $author$project$FileSystem$chmod = F2(
+	function (_v0, mode) {
+		var a = _v0;
+		return A3(
+			$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').chmod(a.path, a.mode) },
+			$elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'path',
+						$elm$json$Json$Encode$string(a)),
+						_Utils_Tuple2(
+						'mode',
+						$elm$json$Json$Encode$int(mode))
+					])),
+			$elm$json$Json$Decode$succeed(0));
 	});
 var $elm$core$String$dropRight = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3($elm$core$String$slice, 0, -n, string);
 	});
-var $author$project$ElmFfi$Main$read = function (path) {
-	return A2(
-		$elm$core$Task$mapError,
-		$author$project$ElmFfi$Main$JavaScriptError,
-		A3(
-			$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').readFile(a, 'utf-8') },
-			$elm$json$Json$Encode$string(path),
-			$elm$json$Json$Decode$string));
+var $author$project$FileSystem$read = function (_v0) {
+	var a = _v0;
+	return A3(
+		$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').readFile(a, 'utf-8') },
+		$elm$json$Json$Encode$string(a),
+		$elm$json$Json$Decode$string);
 };
-var $author$project$ElmFfi$Main$resultToTask = function (a) {
-	if (!a.$) {
-		var b = a.a;
-		return $elm$core$Task$succeed(b);
-	} else {
-		var b = a.a;
-		return $elm$core$Task$fail(b);
-	}
-};
-var $author$project$ElmFfi$Main$write = F2(
-	function (path, data) {
-		return A2(
-			$elm$core$Task$mapError,
-			$author$project$ElmFfi$Main$JavaScriptError,
-			A3(
-				$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').writeFile(a.path, a.data) },
-				$elm$json$Json$Encode$object(
-					_List_fromArray(
-						[
-							_Utils_Tuple2(
-							'path',
-							$elm$json$Json$Encode$string(path)),
-							_Utils_Tuple2(
-							'data',
-							$elm$json$Json$Encode$string(data))
-						])),
-				$elm$json$Json$Decode$succeed(0)));
+var $author$project$FileSystem$write = F2(
+	function (_v0, data) {
+		var a = _v0;
+		return A3(
+			$author$project$JavaScript$run, function(a, onCancel) { return require('fs/promises').writeFile(a.path, a.data) },
+			$elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'path',
+						$elm$json$Json$Encode$string(a)),
+						_Utils_Tuple2(
+						'data',
+						$elm$json$Json$Encode$string(data))
+					])),
+			$elm$json$Json$Decode$succeed(0));
 	});
 var $author$project$ElmFfi$Main$patchFile = F2(
-	function (opt, a) {
-		var applyShebang = function (b) {
-			return opt.aY ? A2(
-				$elm$core$Task$map,
-				function (_v0) {
-					return '#!/usr/bin/env node\n' + b;
-				},
-				A2($author$project$ElmFfi$Main$chmod, a, 493)) : $elm$core$Task$succeed(b);
-		};
-		var applyRun = function (b) {
-			return opt.aX ? $elm$core$Task$succeed(
-				A2($elm$core$String$dropRight, 16, b) + '(0)({ flags: { global: global } })}});}(this));') : $elm$core$Task$succeed(b);
-		};
-		var applyPatch = function (b) {
-			return A2(
-				$elm$core$Task$mapError,
-				$author$project$ElmFfi$Main$PatchError,
-				$author$project$ElmFfi$Main$resultToTask(
-					$author$project$ElmFfi$Patch$apply(b)));
-		};
-		var applyLegacy = function (b) {
-			return opt.aP ? $elm$core$Task$succeed(
-				A3(
-					$elm$core$String$replace,
-					'var res = (ctr > 500) ? A3(',
-					'var res = (ctr > 100) ? A3(',
-					A3(
-						$elm$core$String$replace,
-						'JSON.stringify(',
-						'(function(a) { return String(a) })(',
-						A3(
-							$elm$core$String$replace,
-							'Array.isArray(',
-							'(function(a) { return \"length\" in a })(',
-							A3(
-								$elm$core$String$replace,
-								'(char.',
-								'(char_.',
-								A3(
-									$elm$core$String$replace,
-									'(char)',
-									'(char_)',
-									A3(
-										$elm$core$String$replace,
-										'\tchar ',
-										'\tchar_ ',
-										A3(
-											$elm$core$String$replace,
-											' char.',
-											' char_.',
-											A3(
-												$elm$core$String$replace,
-												' char;',
-												' char_;',
-												A3(
-													$elm$core$String$replace,
-													' char ',
-													' char_ ',
-													A3(
-														$elm$core$String$replace,
-														': (obj[name] = exports[name]);',
-														'): (obj[name] = exports[name]);',
-														A3(
-															$elm$core$String$replace,
-															'? (name == \'init\')',
-															'? ((name == \'init\')',
-															A3(
-																$elm$core$String$replace,
-																'return (\n\t\tstring.length <= offset\n\t\t\t? -1\n\t\t\t:\n\t\t(string.charCodeAt(offset) & 0xF800) === 0xD800\n\t\t\t? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)\n\t\t\t:\n\t\t(predicate(_Utils_chr(string[offset]))\n\t\t\t? ((string[offset] === \'\\n\') ? -2 : (offset + 1))\n\t\t\t: -1\n\t\t)\n\t);',
-																'if (string.length <= offset) {\n\t\treturn -1\n\t} else if ((string.charCodeAt(offset) & 0xF800) === 0xD800) {\n\t\treturn predicate(__Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1\n\t} else if (predicate(_Utils_chr(string[offset]))) {\n\t\treturn (string[offset] === \'\\n\') ? -2 : (offset + 1)\n\t} else {\n\t\treturn -1\n\t}',
-																A3($elm$core$String$replace, 'return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;', 'return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);', b)))))))))))))) : $elm$core$Task$succeed(b);
-		};
+	function (opt, path) {
 		return A2(
 			$elm$core$Task$andThen,
-			$author$project$ElmFfi$Main$write(a),
+			function (x) {
+				return A2(
+					$elm$core$Task$mapError,
+					$author$project$ElmFfi$Main$WriteError,
+					A2($author$project$FileSystem$write, path, x));
+			},
 			A2(
-				$elm$core$Task$andThen,
-				applyLegacy,
+				$elm$core$Task$map,
+				function (x) {
+					return opt.aP ? $author$project$ElmFfi$Main$applyLegacy(x) : x;
+				},
 				A2(
-					$elm$core$Task$andThen,
-					applyRun,
+					$elm$core$Task$map,
+					function (x) {
+						return opt.aX ? (A2($elm$core$String$dropRight, 16, x) + '(0)({ flags: { global: global } })}});}(this));') : x;
+					},
 					A2(
 						$elm$core$Task$andThen,
-						applyShebang,
+						function (x) {
+							return opt.aY ? A2(
+								$elm$core$Task$map,
+								function (_v0) {
+									return '#!/usr/bin/env node\n' + x;
+								},
+								A2(
+									$elm$core$Task$mapError,
+									$author$project$ElmFfi$Main$ChmodError,
+									A2($author$project$FileSystem$chmod, path, 493))) : $elm$core$Task$succeed(x);
+						},
 						A2(
 							$elm$core$Task$andThen,
-							applyPatch,
-							$author$project$ElmFfi$Main$read(a))))));
+							function (x) {
+								return A2(
+									$elm$core$Task$mapError,
+									$author$project$ElmFfi$Main$PatchError,
+									$author$project$Task$Extra$fromResult(
+										$author$project$ElmFfi$Patch$apply(x)));
+							},
+							A2(
+								$elm$core$Task$mapError,
+								$author$project$ElmFfi$Main$ReadError,
+								$author$project$FileSystem$read(path)))))));
 	});
+var $author$project$FileSystem$Path = $elm$core$Basics$identity;
+var $author$project$FileSystem$stringToPath = $elm$core$Basics$identity;
 var $author$project$ElmFfi$Main$mainTask = function (args) {
 	return A2(
 		$elm$core$Task$mapError,
 		A2(
 			$elm$core$Basics$composeR,
 			$author$project$ElmFfi$Main$errorToString,
-			function (v) {
-				return v + '\n';
+			function (x) {
+				return x + '\n';
 			}),
 		A2(
 			$elm$core$Task$map,
-			function (v) {
-				return v + '\n';
+			function (x) {
+				var count = function () {
+					var _v0 = $elm$core$List$length(x);
+					if (_v0 === 1) {
+						return '1 file';
+					} else {
+						var x2 = _v0;
+						return $elm$core$String$fromInt(x2) + ' files';
+					}
+				}();
+				return 'Elm FFI patched ' + (count + '.\n');
 			},
 			A2(
-				$elm$core$Task$map,
-				function (v) {
-					var count = function () {
-						var _v0 = $elm$core$List$length(v);
-						if (_v0 === 1) {
-							return '1 file';
-						} else {
-							var vv = _v0;
-							return $elm$core$String$fromInt(vv) + ' files';
-						}
-					}();
-					return 'Elm FFI patched ' + (count + '.');
+				$elm$core$Task$andThen,
+				function (x) {
+					return $elm$core$Task$sequence(
+						A2(
+							$elm$core$List$map,
+							A2(
+								$elm$core$Basics$composeR,
+								$author$project$FileSystem$stringToPath,
+								$author$project$ElmFfi$Main$patchFile(x)),
+							x.V));
 				},
 				A2(
 					$elm$core$Task$andThen,
-					function (v) {
-						return $elm$core$Task$sequence(
-							A2(
-								$elm$core$List$map,
-								$author$project$ElmFfi$Main$patchFile(v),
-								v.V));
-					},
+					$author$project$ElmFfi$Main$checkFiles,
 					A2(
-						$elm$core$Task$andThen,
-						$author$project$ElmFfi$Main$checkFiles,
-						A2(
-							$elm$core$Task$mapError,
-							$author$project$ElmFfi$Main$CannotParseArgs,
-							$author$project$ElmFfi$Main$resultToTask(
-								$author$project$ElmFfi$Options$parse(
-									A2($elm$core$List$drop, 2, args)))))))));
+						$elm$core$Task$mapError,
+						$author$project$ElmFfi$Main$CannotParseArgs,
+						$author$project$Task$Extra$fromResult(
+							$author$project$ElmFfi$Options$parse(
+								A2($elm$core$List$drop, 2, args))))))));
 };
-var $author$project$ElmFfi$Main$main = $author$project$JavaScript$commandLineProgram($author$project$ElmFfi$Main$mainTask);
+var $author$project$ElmFfi$Main$main = $author$project$Worker$commandLine($author$project$ElmFfi$Main$mainTask);
 var $author$project$Main$main = $author$project$ElmFfi$Main$main;
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(0))(0)()}});}(this));
+	$elm$json$Json$Decode$succeed(0))(0)({ flags: { global: global } })}});}(this));
