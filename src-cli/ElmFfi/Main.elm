@@ -84,20 +84,19 @@ patchFile opt a =
 
             else
                 Task.succeed b
-
-        applyLegacy_ : String -> Task.Task Error String
-        applyLegacy_ b =
-            if opt.legacy then
-                Task.succeed (applyLegacy b)
-
-            else
-                Task.succeed b
     in
     read a
         |> Task.andThen applyPatch
         |> Task.andThen applyShebang
         |> Task.andThen applyRun
-        |> Task.andThen applyLegacy_
+        |> Task.map
+            (\x ->
+                if opt.legacy then
+                    applyLegacy x
+
+                else
+                    x
+            )
         |> Task.andThen (write a)
 
 
