@@ -85,44 +85,10 @@ patchFile opt a =
             else
                 Task.succeed b
 
-        applyLegacy : String -> Task.Task Error String
-        applyLegacy b =
+        applyLegacy_ : String -> Task.Task Error String
+        applyLegacy_ b =
             if opt.legacy then
-                Task.succeed
-                    (b
-                        -- fix nested ternary operator
-                        |> String.replace
-                            "return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;"
-                            "return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);"
-                        |> String.replace
-                            "return (\n\t\tstring.length <= offset\n\t\t\t? -1\n\t\t\t:\n\t\t(string.charCodeAt(offset) & 0xF800) === 0xD800\n\t\t\t? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)\n\t\t\t:\n\t\t(predicate(_Utils_chr(string[offset]))\n\t\t\t? ((string[offset] === '\\n') ? -2 : (offset + 1))\n\t\t\t: -1\n\t\t)\n\t);"
-                            "if (string.length <= offset) {\n\t\treturn -1\n\t} else if ((string.charCodeAt(offset) & 0xF800) === 0xD800) {\n\t\treturn predicate(__Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1\n\t} else if (predicate(_Utils_chr(string[offset]))) {\n\t\treturn (string[offset] === '\\n') ? -2 : (offset + 1)\n\t} else {\n\t\treturn -1\n\t}"
-                        |> String.replace
-                            "? (name == 'init')"
-                            "? ((name == 'init')"
-                        |> String.replace
-                            ": (obj[name] = exports[name]);"
-                            "): (obj[name] = exports[name]);"
-                        -- replace reserved word "char"
-                        |> String.replace " char " " char_ "
-                        |> String.replace " char;" " char_;"
-                        |> String.replace " char." " char_."
-                        |> String.replace "\tchar " "\tchar_ "
-                        |> String.replace "(char)" "(char_)"
-                        |> String.replace "(char." "(char_."
-                        -- implement Array.isArray
-                        |> String.replace
-                            "Array.isArray("
-                            "(function(a) { return \"length\" in a })("
-                        -- temporary pseudo-implement JSON
-                        |> String.replace
-                            "JSON.stringify("
-                            "(function(a) { return String(a) })("
-                        -- fix stack overflow
-                        |> String.replace
-                            "var res = (ctr > 500) ? A3("
-                            "var res = (ctr > 100) ? A3("
-                    )
+                Task.succeed (applyLegacy b)
 
             else
                 Task.succeed b
@@ -131,8 +97,45 @@ patchFile opt a =
         |> Task.andThen applyPatch
         |> Task.andThen applyShebang
         |> Task.andThen applyRun
-        |> Task.andThen applyLegacy
+        |> Task.andThen applyLegacy_
         |> Task.andThen (write a)
+
+
+applyLegacy : String -> String
+applyLegacy a =
+    a
+        -- fix nested ternary operator
+        |> String.replace
+            "return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;"
+            "return x === y ? /*EQ*/ 0 : (x < y ? /*LT*/ -1 : /*GT*/ 1);"
+        |> String.replace
+            "return (\n\t\tstring.length <= offset\n\t\t\t? -1\n\t\t\t:\n\t\t(string.charCodeAt(offset) & 0xF800) === 0xD800\n\t\t\t? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)\n\t\t\t:\n\t\t(predicate(_Utils_chr(string[offset]))\n\t\t\t? ((string[offset] === '\\n') ? -2 : (offset + 1))\n\t\t\t: -1\n\t\t)\n\t);"
+            "if (string.length <= offset) {\n\t\treturn -1\n\t} else if ((string.charCodeAt(offset) & 0xF800) === 0xD800) {\n\t\treturn predicate(__Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1\n\t} else if (predicate(_Utils_chr(string[offset]))) {\n\t\treturn (string[offset] === '\\n') ? -2 : (offset + 1)\n\t} else {\n\t\treturn -1\n\t}"
+        |> String.replace
+            "? (name == 'init')"
+            "? ((name == 'init')"
+        |> String.replace
+            ": (obj[name] = exports[name]);"
+            "): (obj[name] = exports[name]);"
+        -- replace reserved word "char"
+        |> String.replace " char " " char_ "
+        |> String.replace " char;" " char_;"
+        |> String.replace " char." " char_."
+        |> String.replace "\tchar " "\tchar_ "
+        |> String.replace "(char)" "(char_)"
+        |> String.replace "(char." "(char_."
+        -- implement Array.isArray
+        |> String.replace
+            "Array.isArray("
+            "(function(a) { return \"length\" in a })("
+        -- temporary pseudo-implement JSON
+        |> String.replace
+            "JSON.stringify("
+            "(function(a) { return String(a) })("
+        -- fix stack overflow
+        |> String.replace
+            "var res = (ctr > 500) ? A3("
+            "var res = (ctr > 100) ? A3("
 
 
 
