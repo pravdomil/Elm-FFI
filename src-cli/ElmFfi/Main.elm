@@ -2,6 +2,7 @@ module ElmFfi.Main exposing (..)
 
 import ElmFfi.Options
 import ElmFfi.Patch
+import FileSystem
 import JavaScript
 import Json.Decode
 import Json.Encode
@@ -55,9 +56,10 @@ checkFiles a =
             Task.succeed a
 
 
-patchFile : ElmFfi.Options.Options -> String -> Task.Task Error ()
+patchFile : ElmFfi.Options.Options -> FileSystem.Path -> Task.Task Error ()
 patchFile opt a =
-    read a
+    FileSystem.read a
+        |> Task.mapError JavaScriptError
         |> Task.andThen
             (\x ->
                 ElmFfi.Patch.apply x
@@ -167,14 +169,6 @@ errorToString a =
 
 
 --
-
-
-read : String -> Task.Task Error String
-read path =
-    JavaScript.run "require('fs/promises').readFile(a, 'utf-8')"
-        (Json.Encode.string path)
-        Json.Decode.string
-        |> Task.mapError JavaScriptError
 
 
 write : String -> String -> Task.Task Error ()
