@@ -59,7 +59,7 @@ checkFiles a =
 patchFile : ElmFfi.Options.Options -> FileSystem.Path -> Task.Task Error ()
 patchFile opt path =
     FileSystem.read path
-        |> Task.mapError JavaScriptError
+        |> Task.mapError ReadError
         |> Task.andThen
             (\x ->
                 ElmFfi.Patch.apply x
@@ -98,7 +98,7 @@ patchFile opt path =
         |> Task.andThen
             (\x ->
                 FileSystem.write path x
-                    |> Task.mapError JavaScriptError
+                    |> Task.mapError WriteError
             )
 
 
@@ -146,7 +146,9 @@ applyLegacy a =
 type Error
     = CannotParseArgs (List Parser.DeadEnd)
     | NoInputFiles
-    | JavaScriptError JavaScript.Error
+    | ReadError JavaScript.Error
+    | ChmodError JavaScript.Error
+    | WriteError JavaScript.Error
     | PatchError (List Parser.DeadEnd)
 
 
@@ -164,7 +166,13 @@ errorToString a =
         NoInputFiles ->
             usage
 
-        JavaScriptError b ->
+        ReadError b ->
+            JavaScript.errorToString b
+
+        ChmodError b ->
+            JavaScript.errorToString b
+
+        WriteError b ->
             JavaScript.errorToString b
 
         PatchError b ->
@@ -184,4 +192,4 @@ chmod path mode =
             ]
         )
         (Json.Decode.succeed ())
-        |> Task.mapError JavaScriptError
+        |> Task.mapError ChmodError
