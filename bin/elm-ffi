@@ -4297,11 +4297,14 @@ var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 var $author$project$ElmFfi$Patch$apply = function (a) {
 	return A2(
 		$elm$core$Result$map,
-		A2($elm$core$String$replace, '\tfunction sendToApp(msg, viewMetadata)\n', '\tscope.ports = ports\n' + '\tfunction sendToApp(msg, viewMetadata)\n'),
+		A2($elm$core$String$replace, 'var $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail(\'Compiled file needs to be processed via elm-ffi command.\');', 'var $author$project$JavaScript$Decoder$bytes = __Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? __Result_Ok(a) : __Json_expecting(\'a Buffer\', a) });'),
 		A2(
 			$elm$core$Result$map,
-			$author$project$ElmFfi$Patch$implementRunTask,
-			$author$project$ElmFfi$Patch$stringToFunction(a)));
+			A2($elm$core$String$replace, '\tfunction sendToApp(msg, viewMetadata)\n', '\tscope.ports = ports\n' + '\tfunction sendToApp(msg, viewMetadata)\n'),
+			A2(
+				$elm$core$Result$map,
+				$author$project$ElmFfi$Patch$implementRunTask,
+				$author$project$ElmFfi$Patch$stringToFunction(a))));
 };
 var $author$project$ElmFfi$Main$applyLegacy = function (a) {
 	return A3(
@@ -4509,4 +4512,4 @@ var $author$project$ElmFfi$Main$mainTask = function (args) {
 var $author$project$ElmFfi$Main$main = $author$project$Worker$commandLine($author$project$ElmFfi$Main$mainTask);
 var $author$project$Main$main = $author$project$ElmFfi$Main$main;
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(0))(0)({ flags: { global: global } })}});}(this));
+	$elm$json$Json$Decode$succeed(0))(0)({ flags: { global: this } })}});}(this));
