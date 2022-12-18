@@ -4297,7 +4297,7 @@ var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 var $author$project$ElmFfi$Patch$apply = function (a) {
 	return A2(
 		$elm$core$Result$map,
-		A2($elm$core$String$replace, '\t\t\t\tvar nextNode = _VirtualDom_node(\'body\')(_List_Nil)(doc.body);\n', '\t\t\t\tvar nextNode = _VirtualDom_node(args.node.localName)(_List_Nil)(doc.body);\n'),
+		A2($elm$core$String$replace, '\t\t\t\tvar nextNode = _VirtualDom_node(\'body\')(_List_Nil)(doc.', '\t\t\t\tvar nextNode = _VirtualDom_node(args.node.localName)(_List_Nil)(doc.'),
 		A2(
 			$elm$core$Result$map,
 			A2($elm$core$String$replace, '\t\t\tvar bodyNode = _VirtualDom_doc.body;\n', '\t\t\tvar bodyNode = args.node;\n'),
