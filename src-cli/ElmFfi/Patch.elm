@@ -27,8 +27,8 @@ apply a =
             )
         |> Result.map
             (String.replace
-                "\t\t\t\tvar nextNode = _VirtualDom_node('body')(_List_Nil)(doc.body);\n"
-                "\t\t\t\tvar nextNode = _VirtualDom_node(args.node.localName)(_List_Nil)(doc.body);\n"
+                "\t\t\t\tvar nextNode = _VirtualDom_node('body')(_List_Nil)(doc."
+                "\t\t\t\tvar nextNode = _VirtualDom_node(args.node.localName)(_List_Nil)(doc."
             )
 
 
