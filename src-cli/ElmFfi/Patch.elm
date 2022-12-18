@@ -20,6 +20,16 @@ apply a =
                 "var $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');"
                 "var $author$project$JavaScript$Decoder$bytes = __Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? __Result_Ok(a) : __Json_expecting('a Buffer', a) });"
             )
+        |> Result.map
+            (String.replace
+                "\t\t\tvar bodyNode = _VirtualDom_doc.body;\n"
+                "\t\t\tvar bodyNode = args.node;\n"
+            )
+        |> Result.map
+            (String.replace
+                "\t\t\t\tvar nextNode = _VirtualDom_node('body')(_List_Nil)(doc.body);\n"
+                "\t\t\t\tvar nextNode = _VirtualDom_node(args.node.localName)(_List_Nil)(doc.body);\n"
+            )
 
 
 
