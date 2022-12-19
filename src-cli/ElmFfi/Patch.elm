@@ -23,12 +23,12 @@ apply a =
         |> Result.map
             (String.replace
                 "\t\t\tvar bodyNode = _VirtualDom_doc.body;\n"
-                "\t\t\tvar bodyNode = args.node;\n"
+                "\t\t\tvar bodyNode = args.node ? args.node : _VirtualDom_doc.body;\n"
             )
         |> Result.map
             (String.replace
                 "\t\t\t\tvar nextNode = _VirtualDom_node('body')(_List_Nil)(doc."
-                "\t\t\t\tvar nextNode = _VirtualDom_node(args.node.localName)(_List_Nil)(doc."
+                "\t\t\t\tvar nextNode = _VirtualDom_node(bodyNode.localName)(_List_Nil)(doc."
             )
 
 
