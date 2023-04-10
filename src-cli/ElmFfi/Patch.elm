@@ -27,6 +27,16 @@ apply a =
             )
         |> Result.map
             (String.replace
+                "var $author$project$JavaScript$Decoder$timePosix = $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');"
+                "var $author$project$JavaScript$Decoder$timePosix = __Json_decodePrim(function(a) { return a instanceof Date ? __Result_Ok($elm$time$Time$millisToPosix(a)) : __Json_expecting('a Date', a) });"
+            )
+        |> Result.map
+            (String.replace
+                "var $author$project$JavaScript$Encoder$timePosix = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};"
+                "var $author$project$JavaScript$Encoder$timePosix = function (a) { return _Json_wrap(new Date(a)) };"
+            )
+        |> Result.map
+            (String.replace
                 "\t\t\tvar bodyNode = _VirtualDom_doc.body;\n"
                 "\t\t\tvar bodyNode = args.node ? args.node : _VirtualDom_doc.body;\n"
             )
