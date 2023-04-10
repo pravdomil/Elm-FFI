@@ -45,6 +45,11 @@ apply a =
                 "\t\t\t\tvar nextNode = _VirtualDom_node('body')(_List_Nil)(doc."
                 "\t\t\t\tvar nextNode = _VirtualDom_node(bodyNode.localName)(_List_Nil)(doc."
             )
+        |> Result.map
+            (String.replace
+                "\n\tvar flags = 'g';"
+                "\n\tvar flags = 'gu';"
+            )
 
 
 
