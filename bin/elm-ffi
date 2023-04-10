@@ -1858,9 +1858,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aN,
-		impl.a0,
-		impl.a_,
+		impl.aP,
+		impl.a6,
+		impl.a4,
 		function() { return function() {} }
 	);
 });
@@ -3376,13 +3376,13 @@ var $author$project$Worker$helper = function (a) {
 			a));
 	return $elm$core$Platform$worker(
 		{
-			aN: function (_v0) {
+			aP: function (_v0) {
 				return _Utils_Tuple2(0, cmd);
 			},
-			a_: function (_v1) {
+			a4: function (_v1) {
 				return $elm$core$Platform$Sub$none;
 			},
-			a0: F2(
+			a6: F2(
 				function (_v2, _v3) {
 					return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
 				})
@@ -3436,7 +3436,7 @@ var $elm$core$List$drop = F2(
 	});
 var $author$project$Parser$DeadEnd$toString = function (a) {
 	return function () {
-		var _v0 = a.aU;
+		var _v0 = a.aZ;
 		switch (_v0.$) {
 			case 0:
 				var b = _v0.a;
@@ -3471,7 +3471,7 @@ var $author$project$Parser$DeadEnd$toString = function (a) {
 			default:
 				return 'Bad repeat';
 		}
-	}() + (' at ' + ($elm$core$String$fromInt(a.aW) + (':' + ($elm$core$String$fromInt(a.aG) + '.'))));
+	}() + (' at ' + ($elm$core$String$fromInt(a.a$) + (':' + ($elm$core$String$fromInt(a.aH) + '.'))));
 };
 var $author$project$Parser$DeadEnd$listToString = function (a) {
 	return A2(
@@ -3531,7 +3531,7 @@ var $elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var $elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {aG: col, aH: contextStack, aU: problem, aW: row};
+		return {aH: col, aI: contextStack, aZ: problem, a$: row};
 	});
 var $elm$parser$Parser$Advanced$Empty = {$: 0};
 var $elm$parser$Parser$Advanced$fromState = F2(
@@ -3539,7 +3539,7 @@ var $elm$parser$Parser$Advanced$fromState = F2(
 		return A2(
 			$elm$parser$Parser$Advanced$AddRight,
 			$elm$parser$Parser$Advanced$Empty,
-			A4($elm$parser$Parser$Advanced$DeadEnd, s.aW, s.aG, x, s.c));
+			A4($elm$parser$Parser$Advanced$DeadEnd, s.a$, s.aH, x, s.c));
 	});
 var $elm$parser$Parser$Advanced$isSubChar = _Parser_isSubChar;
 var $elm$core$Basics$negate = function (n) {
@@ -3556,11 +3556,11 @@ var $elm$parser$Parser$Advanced$chompIf = F2(
 				$elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{aG: 1, c: s.c, d: s.d, b: s.b + 1, aW: s.aW + 1, a: s.a}) : A3(
+				{aH: 1, c: s.c, d: s.d, b: s.b + 1, a$: s.a$ + 1, a: s.a}) : A3(
 				$elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{aG: s.aG + 1, c: s.c, d: s.d, b: newOffset, aW: s.aW, a: s.a}));
+				{aH: s.aH + 1, c: s.c, d: s.d, b: newOffset, a$: s.a$, a: s.a}));
 		};
 	});
 var $elm$parser$Parser$chompIf = function (isGood) {
@@ -3569,7 +3569,7 @@ var $elm$parser$Parser$chompIf = function (isGood) {
 var $elm$core$String$length = _String_length;
 var $elm$parser$Parser$Advanced$chompUntilEndOr = function (str) {
 	return function (s) {
-		var _v0 = A5(_Parser_findSubString, str, s.b, s.aW, s.aG, s.a);
+		var _v0 = A5(_Parser_findSubString, str, s.b, s.a$, s.aH, s.a);
 		var newOffset = _v0.a;
 		var newRow = _v0.b;
 		var newCol = _v0.c;
@@ -3578,7 +3578,7 @@ var $elm$parser$Parser$Advanced$chompUntilEndOr = function (str) {
 			$elm$parser$Parser$Advanced$Good,
 			_Utils_cmp(s.b, adjustedOffset) < 0,
 			0,
-			{aG: newCol, c: s.c, d: s.d, b: adjustedOffset, aW: newRow, a: s.a});
+			{aH: newCol, c: s.c, d: s.d, b: adjustedOffset, a$: newRow, a: s.a});
 	};
 };
 var $elm$parser$Parser$chompUntilEndOr = $elm$parser$Parser$Advanced$chompUntilEndOr;
@@ -3823,7 +3823,7 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 	var expecting = _v0.b;
 	var progress = !$elm$core$String$isEmpty(str);
 	return function (s) {
-		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.aW, s.aG, s.a);
+		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.a$, s.aH, s.a);
 		var newOffset = _v1.a;
 		var newRow = _v1.b;
 		var newCol = _v1.c;
@@ -3834,7 +3834,7 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 			$elm$parser$Parser$Advanced$Good,
 			progress,
 			0,
-			{aG: newCol, c: s.c, d: s.d, b: newOffset, aW: newRow, a: s.a});
+			{aH: newCol, c: s.c, d: s.d, b: newOffset, a$: newRow, a: s.a});
 	};
 };
 var $elm$parser$Parser$Advanced$symbol = $elm$parser$Parser$Advanced$token;
@@ -3886,7 +3886,7 @@ var $author$project$ElmFfi$Options$parser = function () {
 							return $elm$parser$Parser$Loop(
 								_Utils_update(
 									acc,
-									{aY: x}));
+									{a1: x}));
 						}),
 					boolArg('shebang')),
 					A2(
@@ -3896,7 +3896,7 @@ var $author$project$ElmFfi$Options$parser = function () {
 							return $elm$parser$Parser$Loop(
 								_Utils_update(
 									acc,
-									{aX: x}));
+									{a0: x}));
 						}),
 					boolArg('run')),
 					A2(
@@ -3906,7 +3906,7 @@ var $author$project$ElmFfi$Options$parser = function () {
 							return $elm$parser$Parser$Loop(
 								_Utils_update(
 									acc,
-									{aP: x}));
+									{aR: x}));
 						}),
 					boolArg('legacy')),
 					A2(
@@ -3937,15 +3937,15 @@ var $author$project$ElmFfi$Options$parser = function () {
 	};
 	return A2(
 		$elm$parser$Parser$loop,
-		{V: _List_Nil, aP: false, aX: false, aY: false},
+		{V: _List_Nil, aR: false, a0: false, a1: false},
 		loop);
 }();
 var $elm$parser$Parser$DeadEnd = F3(
 	function (row, col, problem) {
-		return {aG: col, aU: problem, aW: row};
+		return {aH: col, aZ: problem, a$: row};
 	});
 var $elm$parser$Parser$problemToDeadEnd = function (p) {
-	return A3($elm$parser$Parser$DeadEnd, p.aW, p.aG, p.aU);
+	return A3($elm$parser$Parser$DeadEnd, p.a$, p.aH, p.aZ);
 };
 var $elm$parser$Parser$Advanced$bagToList = F2(
 	function (bag, list) {
@@ -3977,7 +3977,7 @@ var $elm$parser$Parser$Advanced$run = F2(
 	function (_v0, src) {
 		var parse = _v0;
 		var _v1 = parse(
-			{aG: 1, c: _List_Nil, d: 1, b: 0, aW: 1, a: src});
+			{aH: 1, c: _List_Nil, d: 1, b: 0, a$: 1, a: src});
 		if (!_v1.$) {
 			var value = _v1.b;
 			return $elm$core$Result$Ok(value);
@@ -4055,7 +4055,7 @@ var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
 					$elm$parser$Parser$Advanced$Good,
 					_Utils_cmp(s0.b, offset) < 0,
 					0,
-					{aG: col, c: s0.c, d: s0.d, b: offset, aW: row, a: s0.a});
+					{aH: col, c: s0.c, d: s0.d, b: offset, a$: row, a: s0.a});
 			} else {
 				if (_Utils_eq(newOffset, -2)) {
 					var $temp$isGood = isGood,
@@ -4087,7 +4087,7 @@ var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
 	});
 var $elm$parser$Parser$Advanced$chompWhile = function (isGood) {
 	return function (s) {
-		return A5($elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.aW, s.aG, s);
+		return A5($elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.a$, s.aH, s);
 	};
 };
 var $elm$parser$Parser$chompWhile = $elm$parser$Parser$Advanced$chompWhile;
@@ -4297,20 +4297,38 @@ var $author$project$ElmFfi$Patch$stringToFunction = function (a) {
 var $author$project$ElmFfi$Patch$apply = function (a) {
 	return A2(
 		$elm$core$Result$map,
-		A2($elm$core$String$replace, '\t\t\t\tvar nextNode = _VirtualDom_node(\'body\')(_List_Nil)(doc.', '\t\t\t\tvar nextNode = _VirtualDom_node(bodyNode.localName)(_List_Nil)(doc.'),
+		A2($elm$core$String$replace, '\nvar $author$project$Browser$Extra$safeReplaceUrl = $elm$browser$Browser$Navigation$replaceUrl;', '\nvar $author$project$Browser$Extra$safeReplaceUrl = F2(function(key, url) { return A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() { try { history.replaceState({}, \'\', url) } catch (e) {} })) });'),
 		A2(
 			$elm$core$Result$map,
-			A2($elm$core$String$replace, '\t\t\tvar bodyNode = _VirtualDom_doc.body;\n', '\t\t\tvar bodyNode = args.node ? args.node : _VirtualDom_doc.body;\n'),
+			A2($elm$core$String$replace, '\nvar $author$project$Browser$Extra$safePushUrl = $elm$browser$Browser$Navigation$pushUrl;', '\nvar $author$project$Browser$Extra$safePushUrl = F2(function(key, url) { return A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() { try { history.pushState({}, \'\', url) } catch (e) {} })) });'),
 			A2(
 				$elm$core$Result$map,
-				A2($elm$core$String$replace, 'var $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail(\'Compiled file needs to be processed via elm-ffi command.\');', 'var $author$project$JavaScript$Decoder$bytes = __Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? __Result_Ok(a) : __Json_expecting(\'a Buffer\', a) });'),
+				A2($elm$core$String$replace, '\n\tvar flags = \'g\';', '\n\tvar flags = \'gu\';'),
 				A2(
 					$elm$core$Result$map,
-					A2($elm$core$String$replace, '\tfunction sendToApp(msg, viewMetadata)\n', '\tscope.ports = ports\n' + '\tfunction sendToApp(msg, viewMetadata)\n'),
+					A2($elm$core$String$replace, '\t\t\t\tvar nextNode = _VirtualDom_node(\'body\')(_List_Nil)(doc.', '\t\t\t\tvar nextNode = _VirtualDom_node(bodyNode.localName)(_List_Nil)(doc.'),
 					A2(
 						$elm$core$Result$map,
-						$author$project$ElmFfi$Patch$implementRunTask,
-						$author$project$ElmFfi$Patch$stringToFunction(a))))));
+						A2($elm$core$String$replace, '\t\t\tvar bodyNode = _VirtualDom_doc.body;\n', '\t\t\tvar bodyNode = args.node ? args.node : _VirtualDom_doc.body;\n'),
+						A2(
+							$elm$core$Result$map,
+							A2($elm$core$String$replace, 'var $author$project$JavaScript$Encoder$timePosix = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};', 'var $author$project$JavaScript$Encoder$timePosix = function (a) { return _Json_wrap(new Date(a)) };'),
+							A2(
+								$elm$core$Result$map,
+								A2($elm$core$String$replace, 'var $author$project$JavaScript$Decoder$timePosix = function () {\n\tvar _v0 = $elm$time$Time$millisToPosix;\n\treturn $elm$json$Json$Decode$fail(\'Compiled file needs to be processed via elm-ffi command.\');\n}();', 'var $author$project$JavaScript$Decoder$timePosix = __Json_decodePrim(function(a) { return a instanceof Date ? __Result_Ok($elm$time$Time$millisToPosix(a.valueOf())) : __Json_expecting(\'a Date\', a) });'),
+								A2(
+									$elm$core$Result$map,
+									A2($elm$core$String$replace, 'var $author$project$JavaScript$Encoder$bytes = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};', 'var $author$project$JavaScript$Encoder$bytes = function (a) { return _Json_wrap(a.buffer) };'),
+									A2(
+										$elm$core$Result$map,
+										A2($elm$core$String$replace, 'var $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail(\'Compiled file needs to be processed via elm-ffi command.\');', 'var $author$project$JavaScript$Decoder$bytes = __Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? __Result_Ok(new DataView(a)) : __Json_expecting(\'a Buffer\', a) });'),
+										A2(
+											$elm$core$Result$map,
+											A2($elm$core$String$replace, '\tfunction sendToApp(msg, viewMetadata)\n', '\tscope.ports = ports\n' + '\tfunction sendToApp(msg, viewMetadata)\n'),
+											A2(
+												$elm$core$Result$map,
+												$author$project$ElmFfi$Patch$implementRunTask,
+												$author$project$ElmFfi$Patch$stringToFunction(a))))))))))));
 };
 var $author$project$ElmFfi$Main$applyLegacy = function (a) {
 	return A3(
@@ -4434,17 +4452,17 @@ var $author$project$ElmFfi$Main$patchFile = F2(
 			A2(
 				$elm$core$Task$map,
 				function (x) {
-					return opt.aP ? $author$project$ElmFfi$Main$applyLegacy(x) : x;
+					return opt.aR ? $author$project$ElmFfi$Main$applyLegacy(x) : x;
 				},
 				A2(
 					$elm$core$Task$map,
 					function (x) {
-						return opt.aX ? (A2($elm$core$String$dropRight, 16, x) + '(0)({ flags: { global: this } })}});}(this));') : x;
+						return opt.a0 ? (A2($elm$core$String$dropRight, 16, x) + '(0)({ flags: { global: this } })}});}(this));') : x;
 					},
 					A2(
 						$elm$core$Task$andThen,
 						function (x) {
-							return opt.aY ? A2(
+							return opt.a1 ? A2(
 								$elm$core$Task$map,
 								function (_v0) {
 									return '#!/usr/bin/env node\n' + x;
