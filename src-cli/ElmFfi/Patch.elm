@@ -22,6 +22,11 @@ apply a =
             )
         |> Result.map
             (String.replace
+                "var $author$project$JavaScript$Encoder$bytes = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};"
+                "var $author$project$JavaScript$Encoder$bytes = function (a) { return _Json_wrap(a.buffer) };"
+            )
+        |> Result.map
+            (String.replace
                 "\t\t\tvar bodyNode = _VirtualDom_doc.body;\n"
                 "\t\t\tvar bodyNode = args.node ? args.node : _VirtualDom_doc.body;\n"
             )
