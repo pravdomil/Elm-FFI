@@ -50,6 +50,16 @@ apply a =
                 "\n\tvar flags = 'g';"
                 "\n\tvar flags = 'gu';"
             )
+        |> Result.map
+            (String.replace
+                "\nvar $author$project$Browser$Extra$safePushUrl = $elm$browser$Browser$Navigation$pushUrl;"
+                "\nvar $author$project$Browser$Extra$safePushUrl = F2(function(key, url) { return A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() { try { history.pushState({}, '', url) } catch (e) {} })) });"
+            )
+        |> Result.map
+            (String.replace
+                "\nvar $author$project$Browser$Extra$safeReplaceUrl = $elm$browser$Browser$Navigation$replaceUrl;"
+                "\nvar $author$project$Browser$Extra$safeReplaceUrl = F2(function(key, url) { return A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() { try { history.replaceState({}, '', url) } catch (e) {} })) });"
+            )
 
 
 
