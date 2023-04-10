@@ -27,8 +27,8 @@ apply a =
             )
         |> Result.map
             (String.replace
-                "var $author$project$JavaScript$Decoder$timePosix = $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');"
-                "var $author$project$JavaScript$Decoder$timePosix = __Json_decodePrim(function(a) { return a instanceof Date ? __Result_Ok($elm$time$Time$millisToPosix(a)) : __Json_expecting('a Date', a) });"
+                "var $author$project$JavaScript$Decoder$timePosix = function () {\n\tvar _v0 = $elm$time$Time$millisToPosix;\n\treturn $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');\n}();"
+                "var $author$project$JavaScript$Decoder$timePosix = __Json_decodePrim(function(a) { return a instanceof Date ? __Result_Ok($elm$time$Time$millisToPosix(a.valueOf())) : __Json_expecting('a Date', a) });"
             )
         |> Result.map
             (String.replace
