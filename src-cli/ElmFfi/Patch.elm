@@ -32,8 +32,8 @@ apply a =
             )
         |> Result.map
             (String.replace
-                "var $author$project$JavaScript$Encoder$timePosix = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};"
-                "var $author$project$JavaScript$Encoder$timePosix = function (a) { return _Json_wrap(new Date(a)) };"
+                "var $author$project$JavaScript$Encoder$timePosix = function (_v0) {\n\tvar _v0 = $elm$time$Time$posixToMillis;\n\treturn $elm$json$Json$Encode$null;\n};"
+                "var $author$project$JavaScript$Encoder$timePosix = function (a) { return _Json_wrap(new Date($elm$time$Time$posixToMillis(a))) };"
             )
         |> Result.map
             (String.replace

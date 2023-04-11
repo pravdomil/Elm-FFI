@@ -12,4 +12,8 @@ bytes _ =
 
 timePosix : Time.Posix -> Json.Encode.Value
 timePosix _ =
+    let
+        _ =
+            Time.posixToMillis
+    in
     Json.Encode.null
