@@ -4303,32 +4303,38 @@ var $author$project$ElmFfi$Patch$apply = function (a) {
 			A2($elm$core$String$replace, '\nvar $author$project$Browser$Extra$safePushUrl = $elm$browser$Browser$Navigation$pushUrl;', '\nvar $author$project$Browser$Extra$safePushUrl = F2(function(key, url) { return A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() { try { history.pushState({}, \'\', url) } catch (e) {} })) });'),
 			A2(
 				$elm$core$Result$map,
-				A2($elm$core$String$replace, '\n\tvar flags = \'g\';', '\n\tvar flags = \'gu\';'),
+				A2($elm$core$String$replace, '\n\t\thistory.replaceState({}, \'\', url);', '\n\t\ttry { history.replaceState({}, \'\', url) } catch (e) {}'),
 				A2(
 					$elm$core$Result$map,
-					A2($elm$core$String$replace, '\t\t\t\tvar nextNode = _VirtualDom_node(\'body\')(_List_Nil)(doc.', '\t\t\t\tvar nextNode = _VirtualDom_node(bodyNode.localName)(_List_Nil)(doc.'),
+					A2($elm$core$String$replace, '\n\t\thistory.pushState({}, \'\', url);', '\n\t\ttry { history.pushState({}, \'\', url) } catch (e) {}'),
 					A2(
 						$elm$core$Result$map,
-						A2($elm$core$String$replace, '\t\t\tvar bodyNode = _VirtualDom_doc.body;\n', '\t\t\tvar bodyNode = args.node ? args.node : _VirtualDom_doc.body;\n'),
+						A2($elm$core$String$replace, '\n\tvar flags = \'g\';', '\n\tvar flags = \'gu\';'),
 						A2(
 							$elm$core$Result$map,
-							A2($elm$core$String$replace, 'var $author$project$JavaScript$Encoder$timePosix = function (_v0) {\n\tvar _v1 = $elm$time$Time$posixToMillis;\n\treturn $elm$json$Json$Encode$null;\n};', 'var $author$project$JavaScript$Encoder$timePosix = function (a) { return _Json_wrap(new Date($elm$time$Time$posixToMillis(a))) };'),
+							A2($elm$core$String$replace, '\t\t\t\tvar nextNode = _VirtualDom_node(\'body\')(_List_Nil)(doc.', '\t\t\t\tvar nextNode = _VirtualDom_node(bodyNode.localName)(_List_Nil)(doc.'),
 							A2(
 								$elm$core$Result$map,
-								A2($elm$core$String$replace, 'var $author$project$JavaScript$Decoder$timePosix = function () {\n\tvar _v0 = $elm$time$Time$millisToPosix;\n\treturn $elm$json$Json$Decode$fail(\'Compiled file needs to be processed via elm-ffi command.\');\n}();', 'var $author$project$JavaScript$Decoder$timePosix = _Json_decodePrim(function(a) { return a instanceof Date ? $elm$core$Result$Ok($elm$time$Time$millisToPosix(a.valueOf())) : __Json_expecting(\'a Date\', a) });'),
+								A2($elm$core$String$replace, '\t\t\tvar bodyNode = _VirtualDom_doc.body;\n', '\t\t\tvar bodyNode = args.node ? args.node : _VirtualDom_doc.body;\n'),
 								A2(
 									$elm$core$Result$map,
-									A2($elm$core$String$replace, 'var $author$project$JavaScript$Encoder$bytes = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};', 'var $author$project$JavaScript$Encoder$bytes = function (a) { return _Json_wrap(a.buffer) };'),
+									A2($elm$core$String$replace, 'var $author$project$JavaScript$Encoder$timePosix = function (_v0) {\n\tvar _v1 = $elm$time$Time$posixToMillis;\n\treturn $elm$json$Json$Encode$null;\n};', 'var $author$project$JavaScript$Encoder$timePosix = function (a) { return _Json_wrap(new Date($elm$time$Time$posixToMillis(a))) };'),
 									A2(
 										$elm$core$Result$map,
-										A2($elm$core$String$replace, 'var $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail(\'Compiled file needs to be processed via elm-ffi command.\');', 'var $author$project$JavaScript$Decoder$bytes = _Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? $elm$core$Result$Ok(new DataView(a)) : __Json_expecting(\'a Buffer\', a) });'),
+										A2($elm$core$String$replace, 'var $author$project$JavaScript$Decoder$timePosix = function () {\n\tvar _v0 = $elm$time$Time$millisToPosix;\n\treturn $elm$json$Json$Decode$fail(\'Compiled file needs to be processed via elm-ffi command.\');\n}();', 'var $author$project$JavaScript$Decoder$timePosix = _Json_decodePrim(function(a) { return a instanceof Date ? $elm$core$Result$Ok($elm$time$Time$millisToPosix(a.valueOf())) : __Json_expecting(\'a Date\', a) });'),
 										A2(
 											$elm$core$Result$map,
-											A2($elm$core$String$replace, '\tfunction sendToApp(msg, viewMetadata)\n', '\tscope.ports = ports\n' + '\tfunction sendToApp(msg, viewMetadata)\n'),
+											A2($elm$core$String$replace, 'var $author$project$JavaScript$Encoder$bytes = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};', 'var $author$project$JavaScript$Encoder$bytes = function (a) { return _Json_wrap(a.buffer) };'),
 											A2(
 												$elm$core$Result$map,
-												$author$project$ElmFfi$Patch$implementRunTask,
-												$author$project$ElmFfi$Patch$stringToFunction(a))))))))))));
+												A2($elm$core$String$replace, 'var $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail(\'Compiled file needs to be processed via elm-ffi command.\');', 'var $author$project$JavaScript$Decoder$bytes = _Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? $elm$core$Result$Ok(new DataView(a)) : __Json_expecting(\'a Buffer\', a) });'),
+												A2(
+													$elm$core$Result$map,
+													A2($elm$core$String$replace, '\tfunction sendToApp(msg, viewMetadata)\n', '\tscope.ports = ports\n' + '\tfunction sendToApp(msg, viewMetadata)\n'),
+													A2(
+														$elm$core$Result$map,
+														$author$project$ElmFfi$Patch$implementRunTask,
+														$author$project$ElmFfi$Patch$stringToFunction(a))))))))))))));
 };
 var $author$project$ElmFfi$Main$applyLegacy = function (a) {
 	return A3(
@@ -4536,4 +4542,4 @@ var $author$project$ElmFfi$Main$mainTask = function (args) {
 var $author$project$ElmFfi$Main$main = $author$project$Worker$commandLine($author$project$ElmFfi$Main$mainTask);
 var $author$project$Main$main = $author$project$ElmFfi$Main$main;
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(0))(0)({ flags: { global: this } })}});}(this));
+	$elm$json$Json$Decode$succeed(0))(0)({ flags: { global: typeof globalThis === "undefined" ? this : globalThis } })}});}(this));
