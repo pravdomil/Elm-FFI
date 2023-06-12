@@ -4457,7 +4457,7 @@ var $author$project$ElmFfi$Main$patchFile = F2(
 				A2(
 					$elm$core$Task$map,
 					function (x) {
-						return opt.a0 ? (A2($elm$core$String$dropRight, 16, x) + '(0)({ flags: { global: this } })}});}(this));') : x;
+						return opt.a0 ? (A2($elm$core$String$dropRight, 16, x) + '(0)({ flags: { global: typeof globalThis === \"undefined\" ? this : globalThis } })}});}(this));') : x;
 					},
 					A2(
 						$elm$core$Task$andThen,
