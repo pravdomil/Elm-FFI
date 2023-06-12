@@ -81,7 +81,7 @@ patchFile opt path =
         |> Task.map
             (\x ->
                 if opt.run then
-                    String.dropRight 16 x ++ "(0)({ flags: { global: this } })}});}(this));"
+                    String.dropRight 16 x ++ "(0)({ flags: { global: typeof globalThis === \"undefined\" ? this : globalThis } })}});}(this));"
 
                 else
                     x
