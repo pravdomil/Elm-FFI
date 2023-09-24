@@ -81,32 +81,39 @@ errorToString a =
 decodeError : Json.Decode.Value -> Error
 decodeError a =
     Exception
-        (a
-            |> Json.Decode.decodeValue (Json.Decode.field "name" Json.Decode.string)
-            |> Result.withDefault ""
-            |> ErrorName
+        (ErrorName
+            (Result.withDefault ""
+                (Json.Decode.decodeValue
+                    (Json.Decode.field "name" Json.Decode.string)
+                    a
+                )
+            )
         )
-        (a
-            |> Json.Decode.decodeValue
-                (Json.Decode.field "code"
+        (ErrorCode
+            (Result.withDefault ""
+                (Json.Decode.decodeValue
+                    (Json.Decode.field "code"
+                        (Json.Decode.oneOf
+                            [ Json.Decode.string
+                            , Json.Decode.map String.fromInt Json.Decode.int
+                            ]
+                        )
+                    )
+                    a
+                )
+            )
+        )
+        (ErrorMessage
+            (Result.withDefault ""
+                (Json.Decode.decodeValue
                     (Json.Decode.oneOf
                         [ Json.Decode.string
-                        , Json.Decode.int |> Json.Decode.map String.fromInt
+                        , Json.Decode.field "message" Json.Decode.string
                         ]
                     )
+                    a
                 )
-            |> Result.withDefault ""
-            |> ErrorCode
-        )
-        (a
-            |> Json.Decode.decodeValue
-                (Json.Decode.oneOf
-                    [ Json.Decode.string
-                    , Json.Decode.field "message" Json.Decode.string
-                    ]
-                )
-            |> Result.withDefault ""
-            |> ErrorMessage
+            )
         )
 
 
