@@ -16,4 +16,5 @@ export PATH="$PWD/node_modules/.bin:$PATH"
 # Compile application.
 elm make src-cli/Main.elm --output bin/elm-ffi.js --optimize
 elm-ffi bin/elm-ffi.js --run --shebang
+elm-minify bin/elm-ffi.js
 mv bin/elm-ffi.js bin/elm-ffi
