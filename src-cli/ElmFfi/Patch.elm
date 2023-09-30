@@ -60,6 +60,11 @@ apply a =
                 "\n\t\thistory.replaceState({}, '', url);"
                 "\n\t\ttry { history.replaceState({}, '', url) } catch (e) {}"
             )
+        |> Result.map
+            (String.replace
+                "\nvar $author$project$Basics$Extra$referenceEqual = F2(\n\tfunction (a, b) {\n\t\treturn false;\n\t});\n"
+                "\nvar $author$project$Basics$Extra$referenceEqual = F2(\n\tfunction (a, b) {\n\t\treturn a === b;\n\t});\n"
+            )
 
 
 
