@@ -65,6 +65,11 @@ apply a =
                 "\nvar $author$project$Basics$Extra$referenceEqual = F2(\n\tfunction (a, b) {\n\t\treturn false;\n\t});\n"
                 "\nvar $author$project$Basics$Extra$referenceEqual = F2(\n\tfunction (a, b) {\n\t\treturn a === b;\n\t});\n"
             )
+        |> Result.map
+            (String.replace
+                "\nvar $author$project$Basics$Extra$memorize = function (fn) {\n\treturn function (x) {\n\t\treturn fn(x);\n\t};\n};\n"
+                "\nvar $author$project$Basics$Extra$memorize = function (fn) {\n\tvar a = undefined\n\tvar b = undefined\n\treturn function (x) {\n\t\tif (a !== x) { b = fn(x); a = x; }\n\t\treturn b\n\t};\n};\n"
+            )
 
 
 
