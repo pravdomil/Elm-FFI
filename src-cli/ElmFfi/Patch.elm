@@ -52,8 +52,8 @@ apply a =
             )
         |> Result.map
             (String.replace
-                "\n\t\thistory.pushState({}, '', url);"
-                "\n\t\ttry { history.pushState({}, '', url) } catch (e) {}"
+                "\nvar _Browser_pushUrl = F2(function(key, url)\n{\n\treturn A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() {\n\t\thistory.pushState({}, '', url)\n\t\tkey();\n\t}));\n});\n"
+                "\nvar _Browser_pushUrl = F2(function(key, url)\n{\n\treturn A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() {\n\t\ttry { history.pushState({}, '', url); key(); } catch (e) {}\n\t}));\n});\n"
             )
         |> Result.map
             (String.replace
