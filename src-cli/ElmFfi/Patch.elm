@@ -57,8 +57,8 @@ apply a =
             )
         |> Result.map
             (String.replace
-                "\n\t\thistory.replaceState({}, '', url);"
-                "\n\t\ttry { history.replaceState({}, '', url) } catch (e) {}"
+                "\nvar _Browser_replaceUrl = F2(function(key, url)\n{\n\treturn A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() {\n\t\thistory.replaceState({}, '', url);\n\t\tkey();\n\t}));\n});\n"
+                "\nvar _Browser_replaceUrl = F2(function(key, url)\n{\n\treturn A2($elm$core$Task$perform, $elm$core$Basics$never, _Scheduler_binding(function() {\n\t\ttry { history.replaceState({}, '', url); key(); } catch (e) {}\n\t}));\n});\n"
             )
         |> Result.map
             (String.replace
