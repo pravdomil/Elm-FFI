@@ -17,23 +17,23 @@ apply a =
             )
         |> Result.map
             (String.replace
-                "var $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');"
-                "var $author$project$JavaScript$Decoder$bytes = _Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? $elm$core$Result$Ok(new DataView(a)) : __Json_expecting('a Buffer', a) });"
+                "\nvar $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');\n"
+                "\nvar $author$project$JavaScript$Decoder$bytes = _Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? $elm$core$Result$Ok(new DataView(a)) : __Json_expecting('a Buffer', a) });\n"
             )
         |> Result.map
             (String.replace
-                "var $author$project$JavaScript$Encoder$bytes = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};"
-                "var $author$project$JavaScript$Encoder$bytes = function (a) { return _Json_wrap(a.buffer) };"
+                "\nvar $author$project$JavaScript$Encoder$bytes = function (_v0) {\n\treturn $elm$json$Json$Encode$null;\n};\n"
+                "\nvar $author$project$JavaScript$Encoder$bytes = function (a) { return _Json_wrap(a.buffer) };\n"
             )
         |> Result.map
             (String.replace
-                "var $author$project$JavaScript$Decoder$timePosix = function () {\n\tvar _v0 = $elm$time$Time$millisToPosix;\n\treturn $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');\n}();"
-                "var $author$project$JavaScript$Decoder$timePosix = _Json_decodePrim(function(a) { return a instanceof Date ? $elm$core$Result$Ok($elm$time$Time$millisToPosix(a.valueOf())) : __Json_expecting('a Date', a) });"
+                "\nvar $author$project$JavaScript$Decoder$timePosix = function () {\n\tvar _v0 = $elm$time$Time$millisToPosix;\n\treturn $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');\n}();\n"
+                "\nvar $author$project$JavaScript$Decoder$timePosix = _Json_decodePrim(function(a) { return a instanceof Date ? $elm$core$Result$Ok($elm$time$Time$millisToPosix(a.valueOf())) : __Json_expecting('a Date', a) });\n"
             )
         |> Result.map
             (String.replace
-                "var $author$project$JavaScript$Encoder$timePosix = function (_v0) {\n\tvar _v1 = $elm$time$Time$posixToMillis;\n\treturn $elm$json$Json$Encode$null;\n};"
-                "var $author$project$JavaScript$Encoder$timePosix = function (a) { return _Json_wrap(new Date($elm$time$Time$posixToMillis(a))) };"
+                "\nvar $author$project$JavaScript$Encoder$timePosix = function (_v0) {\n\tvar _v1 = $elm$time$Time$posixToMillis;\n\treturn $elm$json$Json$Encode$null;\n};\n"
+                "\nvar $author$project$JavaScript$Encoder$timePosix = function (a) { return _Json_wrap(new Date($elm$time$Time$posixToMillis(a))) };\n"
             )
         |> Result.map
             (String.replace
