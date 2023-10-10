@@ -70,6 +70,11 @@ apply a =
                 "\nvar $author$project$Basics$Extra$memorize = function (fn) {\n\treturn function (x) {\n\t\treturn fn(x);\n\t};\n};\n"
                 "\nvar $author$project$Basics$Extra$memorize = function (fn) {\n\tvar a = undefined\n\tvar b = undefined\n\treturn function (x) {\n\t\tif (a !== x) { b = fn(x); a = x; }\n\t\treturn b\n\t};\n};\n"
             )
+        |> Result.map
+            (String.replace
+                "\nvar $author$project$Task$Extra$toCmdHelper = function (a) {\n\treturn $elm$core$Platform$Cmd$none;\n};\n"
+                "\nvar $author$project$Task$Extra$toCmdHelper = function (a) {\n\tvar task = A2($elm$core$Task$andThen, function (b) { return _Scheduler_binding(function (c) {}) }, a);\n\treturn A2($elm$core$Task$perform, $elm$core$Basics$never, task);\n};\n"
+            )
 
 
 
