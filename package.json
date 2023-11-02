@@ -2,6 +2,7 @@
   "name": "elm-ffi",
   "bin": "bin/elm-ffi",
   "devDependencies": {
+    "elm": "^0.19.1-6",
     "elm-codec": "github:pravdomil/elm-codec",
     "elm-ffi": "github:pravdomil/elm-ffi",
     "elm-ffi-node": "github:pravdomil/elm-ffi-node",
