@@ -18,7 +18,7 @@ apply a =
         |> Result.map
             (String.replace
                 "\nvar $author$project$JavaScript$Decoder$bytes = $elm$json$Json$Decode$fail('Compiled file needs to be processed via elm-ffi command.');\n"
-                "\nvar $author$project$JavaScript$Decoder$bytes = _Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? $elm$core$Result$Ok(new DataView(a)) : __Json_expecting('a Buffer', a) });\n"
+                "\nvar $author$project$JavaScript$Decoder$bytes = _Json_decodePrim(function(a) { return a instanceof ArrayBuffer ? $elm$core$Result$Ok(new DataView(a)) : _Json_expecting('a Buffer', a) });\n"
             )
         |> Result.map
             (String.replace
